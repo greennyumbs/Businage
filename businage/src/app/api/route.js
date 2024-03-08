@@ -34,18 +34,13 @@ export async function GET(req) {
 
 // add new product
 export async function POST() {
+
     try {
         const { data, error } = await supabase
-            .from('Product_stock')
+            .from('Brand')
             .insert([
                 {
-                    product_name: 'Product Name 2',
-                    brand_id: 1,
-                    sell_price: 3000,
-                    avg_cost: 1000,
-                    quantity: 3,
-                    selling_status: true,
-                    trade_in_quantity: 1
+                    brand_name: 'Pumadas',
                 }
             ])
             .select()
@@ -63,12 +58,37 @@ export async function POST() {
     }
 }
 
-
+// Edit product
 export async function PUT() {
-    return Response.json({
-        message: `PUT method called`,
-    });
-}
+    const params = req.nextUrl.searchParams
+    const product = {
+      product_name: params.get("product_name"),
+      sell_price: params.get("sell_price"),
+      brand_id: params.get("brand_id"),
+      selling_status: params.get("selling_status"),
+    }
+  
+    // Get product_id from request (assuming it's a parameter)
+    const productId = params.get("product_id");
+  
+    try {
+      const { error } = await supabase
+        .from('Product_stock')
+        .update(product)
+        .eq('product_id', productId);
+  
+      if (error) {
+        return Response.json({ error: 'Failed to update product' });
+      }
+  
+      return Response.json({
+        message: `Product with ID ${productId} updated successfully`,
+      });
+    } catch (error) {
+      // Handle any other errors gracefully
+      return Response.json({ error: 'Failed to update product' });
+    }
+  }
 
 
 export async function DELETE() {
