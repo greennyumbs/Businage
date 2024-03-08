@@ -5,11 +5,21 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // GET all products
-export async function GET() {
+export async function GET(req) {
+    const params = req.nextUrl.searchParams
+    const brand_id = params.get("brand_id")
+
     try {
-        const { data, error } = await supabase
+        const query = supabase
             .from('Product_stock')
-            .select('*')
+            .select('*');
+
+        if (brand_id) {
+            // Include brand_id filter if it's not null
+            query.eq('brand_id', brand_id);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             throw new Error(error.message);
