@@ -59,7 +59,7 @@ export async function POST() {
 }
 
 // Edit product
-export async function PUT() {
+export async function PUT(req) {
     const params = req.nextUrl.searchParams
     const product = {
       product_name: params.get("product_name"),
@@ -70,6 +70,7 @@ export async function PUT() {
   
     // Get product_id from request (assuming it's a parameter)
     const productId = params.get("product_id");
+    console.log(productId)
   
     try {
       const { error } = await supabase
