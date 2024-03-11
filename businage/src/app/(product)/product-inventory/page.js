@@ -9,6 +9,7 @@ import {
   TableCell,
   getKeyValue,
   Spinner,
+  Link,
 } from "@nextui-org/react";
 import { NextUIProvider } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
@@ -77,7 +78,7 @@ function Inventory() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <NextUIProvider>
+    <>
       <Table isStriped>
         <TableHeader columns={colData}>
           {(column) => (
@@ -99,7 +100,9 @@ function Inventory() {
           )}
         </TableBody>
       </Table>
-    </NextUIProvider>
+      <Link href="/product-visualization">go home</Link>
+      {/* This is for testing client-side routing */}
+    </>
   );
 }
 
