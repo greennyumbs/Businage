@@ -9,18 +9,11 @@ const URL = 'http://localhost:3000/';
 
 // GET all products
 export async function GET(req) {
-    const params = req.nextUrl.searchParams
-    const brand_id = params.get("brand_id")
 
     try {
         const query = supabase
-            .from('Product_stock')
+            .from('Brand')
             .select('*');
-
-        if (brand_id) {
-            // Include brand_id filter if it's not null
-            query.eq('brand_id', brand_id);
-        }
         
         const { data, error } = await query;
 
@@ -28,17 +21,7 @@ export async function GET(req) {
             throw new Error(error.message);
         }
 
-        const lastUpdateResponse = await axios.get(`${URL}api/latestUpdate`);
-        const lastUpdateData = lastUpdateResponse.data;
-        console.log(lastUpdateData)
-
-        // map through the data and add the latest_update property
-        const updatedData = data.map(item => ({
-            ...item,
-            latest_update: lastUpdateData[item.product_id]
-        }));
-
-        return Response.json(updatedData);
+        return Response.json(data);
     } catch (error) {
         // Handle any errors gracefully
         return Response.json({ error: 'Failed to fetch data' });
