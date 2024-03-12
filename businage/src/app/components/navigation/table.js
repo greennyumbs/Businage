@@ -100,9 +100,9 @@ function ProductTable({ rowData, colData, isLoading }) {
 
   return (
     <>
-      <div className="min-w-max h-screen flex items-center justify-center">
+      <div className="min-w-max h-screen flex mt-20 justify-center">
         <Table
-          className="w-2/3"
+          className="w-4/5"
           isStriped
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
@@ -137,7 +137,22 @@ function ProductTable({ rowData, colData, isLoading }) {
             {(row) => (
               <TableRow key={row.name}>
                 {(columnKey) => (
-                  <TableCell>{getKeyValue(row, columnKey)}</TableCell>
+                  <TableCell>
+                    {columnKey === "selling_status"
+                      ? row.selling_status
+                        ? "In stock"
+                        : "Not available"
+                      : columnKey === "expense_date"
+                      ? new Date(row.expense_date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })
+                      : getKeyValue(row, columnKey)}
+                  </TableCell>
                 )}
               </TableRow>
             )}
