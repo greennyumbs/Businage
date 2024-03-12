@@ -122,6 +122,7 @@ export async function POST(req) {
             products: allProductsToPost,
             expense_id: data[0].expense_id
         }).toString();
+
         console.log("Query String")
         console.log(queryString)
         

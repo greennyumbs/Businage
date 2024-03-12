@@ -37,8 +37,8 @@ export async function POST(req) {
     for (let i = 0; i < products.length; i++) {
         const brandName = products[i][0][0][0];
         const productName = products[i][1][0][0];
-        const quantity = products[i][1][1][0];
-        const cost = products[i][1][1][1];
+        const quantity = parseInt(products[i][1][1][0]);
+        const cost = parseFloat(products[i][1][1][1]);
 
         res.push({
             brand_name: brandName,
@@ -120,6 +120,42 @@ export async function POST(req) {
     console.log('finalQuery')
     console.log(finalQuery);
 
+    const desiredVariable = finalQuery.map(({ expense_id, product_id, cost, quantity }) => {
+        // Find the corresponding entry in extractedData
+        const product = extractedData.find(item => item.product_id === product_id);
+    
+        // Extract avg_cost and initial_quantity from the product if found, otherwise set them to null
+        let { avg_cost, quantity: initial_quantity } = product || { avg_cost: null, quantity: null };
+    
+        // Calculate the new avg_cost
+        if (avg_cost !== null && initial_quantity !== null) {
+            avg_cost = ((avg_cost * initial_quantity) + (cost * quantity)) / (quantity + initial_quantity);
+        }
+    
+        // Update quantity
+        quantity += initial_quantity;
+    
+        // Return the desired object with only product_id, avg_cost, and quantity
+        return {
+            product_id,
+            avg_cost,
+            quantity
+        };
+    });
+    
+    console.log('desiredVariable');
+    console.log(desiredVariable);
+
+    // update avg_cost and quantity
+    for (const { product_id, avg_cost, quantity } of desiredVariable) {
+        const { data, error } = await supabase
+            .from('Product_stock')
+            .update({ avg_cost, quantity })
+            .eq('product_id', product_id);
+        
+        console.log(`Updated product with product_id ${product_id}`)
+    }
+    
     try {
         const { data, error } = await supabase
             .from('Expense_detail')

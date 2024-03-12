@@ -70,7 +70,7 @@ export async function POST(req) {
         product_name,
         // cost,
         brand_id,
-        quantity
+        // quantity
     }));
 
     console.log('finalQuery')
