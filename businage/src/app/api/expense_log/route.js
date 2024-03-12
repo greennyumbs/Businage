@@ -10,12 +10,29 @@ const URL = 'http://localhost:3000/';
 export async function POST(req) {
     const params = req.nextUrl.searchParams
     const productsToPost = params.get("products")
-    let products = params.get("products")
-    products = products.split("|")
-    products = products.map(item => item.split(","))
-    products = products.map(item => item.map(item => item.split(":")))
-    products = products.map(item => item.map(item => item.map(item => item.split("-"))))
-    console.log(products)
+
+    let products = []
+
+    if (productsToPost) {
+        let oldProducts = params.get("products")
+        oldProducts = oldProducts.split("|")
+        oldProducts = oldProducts.map(item => item.split(","))
+        oldProducts = oldProducts.map(item => item.map(item => item.split(":")))
+        oldProducts = oldProducts.map(item => item.map(item => item.map(item => item.split("-"))))
+        console.log(oldProducts)
+        products = products.concat(oldProducts)
+    }
+
+    const newBrands = params.get("newBrands")
+    
+    if (newBrands) {
+        const queryAddNewBrands = new URLSearchParams({
+            newBrands: newBrands
+        }).toString()
+
+        const addNewBrandsResponse = await axios.post(`${URL}api/newbrand?${queryAddNewBrands}`)
+        console.log(addNewBrandsResponse.data)
+    }
 
     const newProductsToPost = params.get("newProducts")
 
@@ -31,6 +48,7 @@ export async function POST(req) {
         const queryAddNewProducts = new URLSearchParams({
             newProducts: newProductsToPost
         }).toString();
+        console.log("queryAddNewProducts")
         console.log(queryAddNewProducts)
 
         const addNewProductsResponse = await axios.post(`${URL}api/newproduct?${queryAddNewProducts}`);
@@ -90,8 +108,18 @@ export async function POST(req) {
             throw new Error(error.message);
         }
 
+        // Check if any of oldProducts or newProducts exist
+        let allProductsToPost = productsToPost+'|'+newProductsToPost;
+        if(!newProductsToPost) {
+            allProductsToPost = allProductsToPost.slice(0,-5)
+        }
+        else if (!productsToPost) {
+            allProductsToPost = allProductsToPost.slice(5)
+        }
+
         const queryString = new URLSearchParams({
-            products: productsToPost+'|'+newProductsToPost,
+            // products: productsToPost+'|'+newProductsToPost,
+            products: allProductsToPost,
             expense_id: data[0].expense_id
         }).toString();
         console.log("Query String")

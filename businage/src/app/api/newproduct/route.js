@@ -14,7 +14,12 @@ export async function POST(req) {
     newProducts = newProducts.map(item => item.split(","))
     newProducts = newProducts.map(item => item.map(item => item.split(":")))
     newProducts = newProducts.map(item => item.map(item => item.map(item => item.split("-"))))
+
+    console.log("newProducts| newproductAPI")
     console.log(newProducts)
+    newProducts.forEach((item) => {
+        console.log(item)
+    })
 
     let res = [];
     for (let i = 0; i < newProducts.length; i++) {

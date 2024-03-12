@@ -5,23 +5,22 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function GET(req) {
     try {
-
         const query = supabase
             .from('Expense_detail')
             .select('product_id, Expense_log(expense_date)')
 
         const { data, error } = await query;
         // console.log(data)
-        // console.log(data)
         const expenseDates = data.map(item =>
             item.Expense_log.expense_date + '|' + item.product_id);
+        // console.log(expenseDates)
         expenseDates.forEach((item, index) => {
             expenseDates[index] = item.split('|');
         });
         // console.log(expenseDates)
 
         const latestTimestamps = {};
-
+        
         expenseDates.forEach(entry => {
             const [timestamp, productId] = entry;
             const currentTimestamp = new Date(timestamp);
