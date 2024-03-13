@@ -111,12 +111,15 @@ function ProductTable({ rowData, colData, isLoading }) {
             //Pagination
             <div className="flex w-full justify-center">
               <Pagination
-                // isCompact
+                isCompact
                 showControls
                 showShadow
                 page={page}
                 total={pages}
-                onChange={(page) => setPage(page)}
+                onChange={(page) => {
+                  setPage(page);
+                  console.log(page);
+                }}
               />
             </div>
           }
@@ -137,7 +140,7 @@ function ProductTable({ rowData, colData, isLoading }) {
             {(row) => (
               <TableRow key={row.name}>
                 {(columnKey) => (
-                  <TableCell>
+                  <TableCell className="py-3">
                     {columnKey === "selling_status"
                       ? row.selling_status
                         ? "In stock"

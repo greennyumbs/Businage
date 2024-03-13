@@ -1,4 +1,4 @@
-import ProductTable from "@/app/components/navigation/table";
+import ProductTable from "@/app/components/table/table";
 import axios from "axios";
 import React from "react";
 
