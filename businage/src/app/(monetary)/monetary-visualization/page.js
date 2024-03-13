@@ -1,9 +1,11 @@
-import React from 'react'
+"use client";
+import React from 'react';
+import MonetaryVisualCard from '@/app/_component/MonetaryVisualCard'
 
 function MonetaryVisualize() {
-  return (
-    <div>MonetaryVisualize</div>
-  )
+    return (
+        <MonetaryVisualCard />
+    );
 }
 
-export default MonetaryVisualize
+export default MonetaryVisualize;
