@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.box {
+    @apply p-4 rounded-large shadow-small bg-content1
+}
+
+
+/* .shadow-small {
+    --tw-shadow: var(--nextui-box-shadow-small);
+    --tw-shadow-colored: var(--nextui-box-shadow-small);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+} */
+
+
+/* --tw-shadow: var(--nextui-box-shadow-small);
+    --tw-shadow-colored: var(--nextui-box-shadow-small);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); */
