@@ -14,7 +14,7 @@ function ExpenseForm() {
     })
 
   return (
-    <div className='bg-white rounded-md shadow-md p-unit-lg w-5/6 mx-auto'>
+    <div className='box w-5/6 mx-auto'>
         <form
             onSubmit={(e)=>{
             e.preventDefault()
