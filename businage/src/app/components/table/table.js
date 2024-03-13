@@ -137,33 +137,40 @@ function ProductTable({ rowData, colData, isLoading }) {
             isLoading={isLoading}
             loadingContent={<Spinner label="Loading Product Stock..." />}
           >
-            {(row) => (
-              <TableRow key={row.name}>
-                {(columnKey) => (
-                  <TableCell className="py-3">
-                    {columnKey === "selling_status"
-                      ? row.selling_status
-                        ? "In stock"
-                        : "Not available"
-                      : columnKey === "expense_date"
-                      ? new Date(row.expense_date).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })
-                      : getKeyValue(row, columnKey)}
-                  </TableCell>
-                )}
-              </TableRow>
-            )}
+            {(row) => {
+              return (
+                <TableRow key={row.product_id}>
+                  {(columnKey) => (
+                    <TableCell className="py-4">
+                      {columnKey === "selling_status" ? (
+                        row.selling_status ? (
+                          <p className="text-green-500">In stock</p>
+                        ) : (
+                          <p className="text-red-600">Not available</p>
+                        )
+                      ) : columnKey === "latest_update" ? (
+                        new Date(row.latest_update).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          }
+                        )
+                      ) : (
+                        getKeyValue(row, columnKey)
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
+              );
+            }}
           </TableBody>
         </Table>
       </div>
-      {/* <Link href="/product-visualization">go home</Link> */}
-      {/* This is for testing client-side routing */}
     </>
   );
 }

@@ -4,11 +4,11 @@ import React from "react";
 
 const colData = [
   {
-    key: "expense_date",
+    key: "latest_update",
     label: "Expense date",
   },
   {
-    key: "brand_name",
+    key: "brand_id",
     label: "Brand name",
   },
   {
@@ -37,9 +37,7 @@ let loading = true;
 
 const getProduct = async () => {
   try {
-    const res = await axios.get(
-      "https://65f066cfda8c6584131ba062.mockapi.io/api/product/ProductStock"
-    );
+    const res = await axios.get("http://localhost:3000/api/products");
     loading = false;
     return res.data; // Return the data instead of the entire response
   } catch (error) {
