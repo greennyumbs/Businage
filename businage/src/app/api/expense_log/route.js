@@ -12,6 +12,7 @@ export async function POST(req) {
     const productsToPost = body.product
     const newBrands = body.newBrands
     const newProductsToPost = body.newProducts
+    const userTimestamp = body.timestamp // user's timestamp
 
     let products = []
 
@@ -71,7 +72,7 @@ export async function POST(req) {
         const dateTimeUTC7 = new Date(currentTimestamp + offsetMilliseconds);
 
         // Format the datetime string
-        const formattedDateTime = dateTimeUTC7.toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
+        const formattedDateTime = userTimestamp ? userTimestamp : dateTimeUTC7.toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
 
         return formattedDateTime;
     };
