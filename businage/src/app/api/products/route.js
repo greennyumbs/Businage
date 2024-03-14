@@ -22,7 +22,7 @@ export async function GET(req) {
             // Include brand_id filter if it's not null
             query.eq('brand_id', brand_id);
         }
-        
+
         const { data, error } = await query;
 
         if (error) {
@@ -74,30 +74,27 @@ export async function POST() {
 
 // Edit product
 export async function PUT(req) {
-    const params = req.nextUrl.searchParams
-    const product = {
-        product_name: params.get("product_name"),
-        sell_price: params.get("sell_price"),
-        brand_id: params.get("brand_id"),
-        selling_status: params.get("selling_status"),
-    }
+    const body = await req.json()
+    console.log(body)
+    const product = body.product
 
-    // Get product_id from request (assuming it's a parameter)
-    const productId = params.get("product_id");
-    console.log(productId)
+    const { product_id, ...filteredProduct } = product;
+
+    console.log(filteredProduct);
+    console.log(product_id);
 
     try {
         const { error } = await supabase
             .from('Product_stock')
             .update(product)
-            .eq('product_id', productId);
+            .eq('product_id', product_id);
 
         if (error) {
             return Response.json({ error: 'Failed to update product' });
         }
 
         return Response.json({
-            message: `Product with ID ${productId} updated successfully`,
+            message: `Product with ID ${product_id} updated successfully`,
         });
     } catch (error) {
         // Handle any other errors gracefully
