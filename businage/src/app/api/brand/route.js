@@ -51,34 +51,31 @@ export async function POST() {
 
 // Edit product
 export async function PUT(req) {
-    const params = req.nextUrl.searchParams
-    const product = {
-        product_name: params.get("product_name"),
-        sell_price: params.get("sell_price"),
-        brand_id: params.get("brand_id"),
-        selling_status: params.get("selling_status"),
-    }
+    const body = await req.json()
+    console.log(body)
+    const brand = body.brand
+    console.log(brand)
+    const { brand_id, ...filteredBrand } = brand;
 
-    // Get product_id from request (assuming it's a parameter)
-    const productId = params.get("product_id");
-    console.log(productId)
+    console.log(filteredBrand);
+    console.log(brand_id);
 
     try {
         const { error } = await supabase
-            .from('Product_stock')
-            .update(product)
-            .eq('product_id', productId);
+            .from('Brand')
+            .update(brand)
+            .eq('brand_id', brand_id);
 
         if (error) {
-            return Response.json({ error: 'Failed to update product' });
+            return Response.json({ error: 'Failed to update brand' });
         }
 
         return Response.json({
-            message: `Product with ID ${productId} updated successfully`,
+            message: `Brand with ID ${brand_id} updated successfully`,
         });
     } catch (error) {
         // Handle any other errors gracefully
-        return Response.json({ error: 'Failed to update product' });
+        return Response.json({ error: 'Failed to update brand' });
     }
 }
 

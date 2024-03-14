@@ -103,8 +103,26 @@ export async function PUT(req) {
 }
 
 
-export async function DELETE() {
-    return Response.json({
-        message: `DELETE method called`,
-    });
+export async function DELETE(req) {
+    const body = await req.json()
+    const product_id = body.product_id
+    console.log(product_id)
+
+    try {
+        const { error } = await supabase
+            .from('Product_stock')
+            .delete()
+            .eq('product_id', product_id);
+        
+        if (error) {
+            return Response.json({ error: 'Failed to delete product' });
+        }
+
+        return Response.json({
+            message: `Product with ID ${product_id} deleted successfully`,
+        });
+    } catch (error) {
+        // Handle any other errors gracefully
+        return Response.json({ error: 'Failed to delete product' });
+    }
 }
