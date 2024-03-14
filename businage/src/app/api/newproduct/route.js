@@ -7,26 +7,21 @@ import axios from 'axios'
 const URL = 'http://localhost:3000/'
 
 export async function POST(req) {
-    const params = req.nextUrl.searchParams
-    let newProducts = params.get("newProducts")
-
-    newProducts = newProducts.split("|")
-    newProducts = newProducts.map(item => item.split(","))
-    newProducts = newProducts.map(item => item.map(item => item.split(":")))
-    newProducts = newProducts.map(item => item.map(item => item.map(item => item.split("-"))))
+    const newProducts = await req.json()
+    // const newProducts = body.newProducts
 
     console.log("newProducts| newproductAPI")
     console.log(newProducts)
-    newProducts.forEach((item) => {
-        console.log(item)
-    })
+    // newProducts.forEach((item) => {
+    //     console.log(item)
+    // })
 
     let res = [];
     for (let i = 0; i < newProducts.length; i++) {
-        const brandName = newProducts[i][0][0][0];
-        const productName = newProducts[i][1][0][0];
-        const quantity = parseInt(newProducts[i][1][1][0]);
-        const cost = newProducts[i][1][1][1];
+        const brandName = newProducts[i].brand_name;
+        const productName = newProducts[i].product_name;
+        const quantity = parseInt(newProducts[i].quantity);
+        // const cost = parseFloat(newProducts[i].cost);
 
         res.push({
             brand_name: brandName,
@@ -55,15 +50,6 @@ export async function POST(req) {
 
     console.log('mappedRes')
     console.log(mappedRes)
-
-    // // Create a map of brandData with brand_id as key
-    // const brandDataMap = brandData.reduce((map, brand) => {
-    //     map[brand.brand_id] = brand.brand_name;
-    //     return map;
-    // }, {});
-
-    // console.log('brandDataMap')
-    // console.log(brandDataMap)
 
     const finalQuery = mappedRes.map(({ product_name, brand_id, quantity }) => ({
         // expense_id,

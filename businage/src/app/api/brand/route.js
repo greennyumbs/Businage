@@ -9,11 +9,10 @@ const URL = 'http://localhost:3000/';
 
 // GET all products
 export async function GET(req) {
-
     try {
         const query = supabase
             .from('Brand')
-            .select('*');
+            .select('*')
         
         const { data, error } = await query;
 
@@ -30,15 +29,11 @@ export async function GET(req) {
 
 // add new product
 export async function POST() {
-
+    
     try {
         const { data, error } = await supabase
             .from('Brand')
-            .insert([
-                {
-                    brand_name: 'Pumadas',
-                }
-            ])
+            .insert(brand)
             .select()
 
         if (error) {

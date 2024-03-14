@@ -8,58 +8,44 @@ import axios from 'axios';
 const URL = 'http://localhost:3000/';
 
 export async function POST(req) {
-    const params = req.nextUrl.searchParams
-    const productsToPost = params.get("products")
+    const body = await req.json()
+    const productsToPost = body.product
+    const newBrands = body.newBrands
+    const newProductsToPost = body.newProducts
 
     let products = []
 
+    console.log("Products to Post")
+    console.log(productsToPost)
+
     if (productsToPost) {
-        let oldProducts = params.get("products")
-        oldProducts = oldProducts.split("|")
-        oldProducts = oldProducts.map(item => item.split(","))
-        oldProducts = oldProducts.map(item => item.map(item => item.split(":")))
-        oldProducts = oldProducts.map(item => item.map(item => item.map(item => item.split("-"))))
-        console.log(oldProducts)
-        products = products.concat(oldProducts)
+        products = products.concat(productsToPost)
     }
 
-    const newBrands = params.get("newBrands")
-    
-    if (newBrands) {
-        const queryAddNewBrands = new URLSearchParams({
-            newBrands: newBrands
-        }).toString()
+    console.log("New Brands")
+    console.log(newBrands)
 
-        const addNewBrandsResponse = await axios.post(`${URL}api/newbrand?${queryAddNewBrands}`)
+    if (newBrands) {
+
+        const addNewBrandsResponse = await axios.post(`${URL}api/newbrand`,
+            newBrands
+        )
         console.log(addNewBrandsResponse.data)
     }
 
-    const newProductsToPost = params.get("newProducts")
-
     if (newProductsToPost) {
-        let newProducts = params.get("newProducts")
-        newProducts = newProducts.split("|")
-        newProducts = newProducts.map(item => item.split(","))
-        newProducts = newProducts.map(item => item.map(item => item.split(":")))
-        newProducts = newProducts.map(item => item.map(item => item.map(item => item.split("-"))))
-        console.log("newProducts")
-        console.log(newProducts)
 
-        const queryAddNewProducts = new URLSearchParams({
-            newProducts: newProductsToPost
-        }).toString();
-        console.log("queryAddNewProducts")
-        console.log(queryAddNewProducts)
-
-        const addNewProductsResponse = await axios.post(`${URL}api/newproduct?${queryAddNewProducts}`);
+        const addNewProductsResponse = await axios.post(`${URL}api/newproduct`,
+            newProductsToPost
+        );
         console.log(addNewProductsResponse.data);
 
         console.log("Bounced back!")
         console.log("Products")
         console.log(products)
         console.log("newProducts")
-        console.log(newProducts)
-        products = products.concat(newProducts)
+        console.log(newProductsToPost)
+        products = products.concat(newProductsToPost)
         console.log("Concatenated")
         console.log(products)
     }
@@ -67,8 +53,7 @@ export async function POST(req) {
 
     let totalCost = 0
     for (let i = 0; i < products.length; i++) {
-        totalCost += products[i][1][1][1] * products[i][1][1][0]
-        console.log(products[i])
+        totalCost += products[i].cost * products[i].quantity
     }
     console.log(totalCost)
 
@@ -108,25 +93,12 @@ export async function POST(req) {
             throw new Error(error.message);
         }
 
-        // Check if any of oldProducts or newProducts exist
-        let allProductsToPost = productsToPost+'|'+newProductsToPost;
-        if(!newProductsToPost) {
-            allProductsToPost = allProductsToPost.slice(0,-5)
-        }
-        else if (!productsToPost) {
-            allProductsToPost = allProductsToPost.slice(5)
-        }
-
-        const queryString = new URLSearchParams({
-            // products: productsToPost+'|'+newProductsToPost,
-            products: allProductsToPost,
-            expense_id: data[0].expense_id
-        }).toString();
-
-        console.log("Query String")
-        console.log(queryString)
-        
-        const expenseResponse = await axios.post(`${URL}api/expense?${queryString}`);
+        const expenseResponse = await axios.post(`${URL}api/expense`,
+            {
+                products: products,
+                expense_id: data[0].expense_id
+            }
+        );
         
         const expenseData = expenseResponse.data;
         console.log(expenseData);

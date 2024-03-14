@@ -5,18 +5,13 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(req) {
     const params = req.nextUrl.searchParams
-    let newBrands = params.get("newBrands")
-
-    newBrands = newBrands.split("|")
+    let newBrands = await req.json()
     console.log(newBrands)
-
-    const jsonData = newBrands.map((item) => ({ brand_name: item }))
-    console.log(jsonData)
 
     try {
         const { data, error } = await supabase
             .from('Brand')
-            .insert(jsonData)
+            .insert(newBrands)
             .select()
 
         if (error) {

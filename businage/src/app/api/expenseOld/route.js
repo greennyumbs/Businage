@@ -1,3 +1,4 @@
+//src/app/api/route.js
 import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -6,19 +7,38 @@ import axios from 'axios';
 
 const URL = 'http://localhost:3000/';
 
-export async function POST(request) {
-
-    const body = await request.json()
-    const products = body.products
-    const expense_id = body.expense_id
-    console.log(products[0], expense_id)
+export async function POST(req) {
+    const product = await req.json();
+    let products = params.get("products")
+    console.log("Products")
+    console.log(products)
+    const expense_id = params.get("expense_id")
+    console.log("Expense ID")
+    console.log(expense_id)
+    // let newProducts = params.get("newProducts")
+    // console.log("New Products")
+    // console.log(newProducts)
+    products = products.split("|")
+    products = products.map(item => item.split(","))
+    products = products.map(item => item.map(item => item.split(":")))
+    products = products.map(item => item.map(item => item.map(item => item.split("-"))))
     
+    // newProducts = newProducts.split("|")
+    // newProducts = newProducts.map(item => item.split(","))
+    // newProducts = newProducts.map(item => item.map(item => item.split(":")))
+    // newProducts = newProducts.map(item => item.map(item => item.map(item => item.split("-"))))
+    console.log("Mapped products")
+    console.log(products)
+    // console.log("Mapped newProducts")
+    // console.log(newProducts)
+    //input = 3K Battery,Product Name 1:1-1000|3K Battery,Product Name 2:1-1500|FB,Product Name 3:2-2000
+
     let res = [];
     for (let i = 0; i < products.length; i++) {
-        const brandName = products[i].brand_name;
-        const productName = products[i].product_name;
-        const quantity = parseInt(products[i].quantity);
-        const cost = parseFloat(products[i].cost);
+        const brandName = products[i][0][0][0];
+        const productName = products[i][1][0][0];
+        const quantity = parseInt(products[i][1][1][0]);
+        const cost = parseFloat(products[i][1][1][1]);
 
         res.push({
             brand_name: brandName,
@@ -34,8 +54,6 @@ export async function POST(request) {
 
     const productResponse = await axios.get(`${URL}api/products`);
     const productData = productResponse.data;
-
-    console.log('productData')
 
     const extractedData = productData.map(({ product_id, product_name, brand_id, avg_cost, quantity }) => ({
         product_id,
