@@ -16,7 +16,7 @@ export async function GET(req) {
     try {
         const query = supabase
             .from('Product_stock')
-            .select('*');
+            .select('*, Brand (brand_name)');
 
         if (brand_id) {
             // Include brand_id filter if it's not null
