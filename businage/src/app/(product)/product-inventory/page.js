@@ -8,7 +8,7 @@ const colData = [
     label: "Expense date",
   },
   {
-    key: "brand_id",
+    key: "Brand",
     label: "Brand name",
   },
   {

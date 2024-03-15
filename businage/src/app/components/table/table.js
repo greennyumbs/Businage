@@ -140,31 +140,35 @@ function ProductTable({ rowData, colData, isLoading }) {
             {(row) => {
               return (
                 <TableRow key={row.product_id}>
-                  {(columnKey) => (
-                    <TableCell className="py-4">
-                      {columnKey === "selling_status" ? (
-                        row.selling_status ? (
-                          <p className="text-green-500">In stock</p>
+                  {(columnKey) => {
+                    return (
+                      <TableCell className="py-4">
+                        {columnKey === "selling_status" ? (
+                          row.selling_status ? (
+                            <p className="text-green-500">In stock</p>
+                          ) : (
+                            <p className="text-red-600">Not available</p>
+                          )
+                        ) : columnKey === "latest_update" ? (
+                          new Date(row.latest_update).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            }
+                          )
+                        ) : columnKey === "Brand" ? (
+                          row.Brand.brand_name
                         ) : (
-                          <p className="text-red-600">Not available</p>
-                        )
-                      ) : columnKey === "latest_update" ? (
-                        new Date(row.latest_update).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          }
-                        )
-                      ) : (
-                        getKeyValue(row, columnKey)
-                      )}
-                    </TableCell>
-                  )}
+                          getKeyValue(row, columnKey)
+                        )}
+                      </TableCell>
+                    );
+                  }}
                 </TableRow>
               );
             }}
