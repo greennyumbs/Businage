@@ -84,6 +84,17 @@ export async function POST(req){
         const salesData = salesResponse.data;
         console.log(salesData);
 
+        if (trade_in) {
+            const tradeInResponse = await axios.post(`${URL}api/trade_in`,
+                {
+                    trade_in: trade_in,
+                    order_id: data[0].order_id
+                }
+            );
+            const tradeInData = tradeInResponse.data;
+            console.log(tradeInData);
+        }
+
         return Response.json({
             data: data,
             message: `New sales log added successfully`,
