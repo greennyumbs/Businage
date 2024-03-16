@@ -27,12 +27,15 @@ export async function GET(req) {
 }
 
 // add new product
-export async function POST() {
-    
+export async function POST(req) {
+    const params = req.nextUrl.searchParams
+    let newBrands = await req.json()
+    console.log(newBrands)
+
     try {
         const { data, error } = await supabase
             .from('Brand')
-            .insert(brand)
+            .insert(newBrands)
             .select()
 
         if (error) {
@@ -40,7 +43,7 @@ export async function POST() {
         }
 
         return Response.json({
-            message: `POST method called`,
+            message: `New brands added successfully`,
         });
     } catch (error) {
         // Handle any errors gracefully

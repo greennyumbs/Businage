@@ -28,7 +28,7 @@ export async function POST(req) {
 
     if (newBrands) {
 
-        const addNewBrandsResponse = await axios.post(`${URL}api/newbrand`,
+        const addNewBrandsResponse = await axios.post(`${URL}api/brand`,
             newBrands
         )
         console.log(addNewBrandsResponse.data)
@@ -36,7 +36,7 @@ export async function POST(req) {
 
     if (newProductsToPost) {
 
-        const addNewProductsResponse = await axios.post(`${URL}api/newproduct`,
+        const addNewProductsResponse = await axios.post(`${URL}api/product`,
             newProductsToPost
         );
         console.log(addNewProductsResponse.data);
