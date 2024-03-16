@@ -14,47 +14,47 @@ export async function POST(req){
 
     let res = [];
     for (let i = 0 ; i < trade_in.length; i++) {
-        const product_id = trade_in[i].product_id;
+        const size_id = trade_in[i].size_id;
         const quantity = parseInt(trade_in[i].quantity);
 
         res.push({
             order_id: order_id,
-            product_id: product_id,
+            size_id: size_id,
             quantity: quantity,
         });
     }
 
     console.log(res)
 
-    const productResponse = await axios.get(`${URL}api/products`);
-    const productData = productResponse.data;
+    const tradeInStockResponse = await axios.get(`${URL}api/trade_in_stock`);
+    const tradeInStockData = tradeInStockResponse.data;
 
-    console.log(productData)
+    console.log(tradeInStockData)
 
-    const extractedData = productData.map(({ product_id, trade_in_quantity }) => ({
-        product_id,
-        trade_in_quantity
+    const extractedData = tradeInStockData.map(({ size_id, quantity }) => ({
+        size_id,
+        quantity
     }));
 
     console.log(extractedData)
 
     const updatedRes = res.map(item => {
-        const product = extractedData.find(product => product.product_id === item.product_id);
+        const tradeIn = extractedData.find(tradeIn => tradeIn.size_id === item.size_id);
         return {
             ...item,
-            trade_in_quantity: product.trade_in_quantity + item.quantity
+            quantity: tradeIn.quantity + item.quantity
         };
     });
 
     console.log(updatedRes)
 
-    for (const { product_id, trade_in_quantity } of updatedRes) {
+    for (const { size_id, quantity } of updatedRes) {
         const { data, error } = await supabase
-            .from('Product_stock')
-            .update({ trade_in_quantity: trade_in_quantity })
-            .eq('product_id', product_id)
+            .from('Trade_in_stock')
+            .update({ quantity: quantity })
+            .eq('size_id', size_id)
         
-        console.log(`Updated product with product_id: ${product_id}`)
+        console.log(`Updated product with product_id: ${size_id}`)
     }
 
 
