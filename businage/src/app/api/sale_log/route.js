@@ -74,6 +74,16 @@ export async function POST(req){
             throw new Error(error.message);
         }
 
+        const salesResponse = await axios.post(`${URL}api/sales`,
+            {
+                products: products,
+                order_id: data[0].order_id
+            }
+        );
+
+        const salesData = salesResponse.data;
+        console.log(salesData);
+
         return Response.json({
             data: data,
             message: `New sales log added successfully`,
