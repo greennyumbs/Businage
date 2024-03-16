@@ -12,7 +12,6 @@ export async function GET(req) {
     const params = req.nextUrl.searchParams
     const brand_id = params.get("brand_id")
 
-
     try {
         const query = supabase
             .from('Product_stock')
