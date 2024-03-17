@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import ProductVisualCard from '@/app/_component/ProductVisualCard'
-import TopProductSold from '@/app/_component/TopProductSold'
+import ProductVisualCard from '@/app/components/ProductVisualCard'
+import TopProductSold from '@/app/components/TopProductSold'
 
 function ProductVisualize() {
    
