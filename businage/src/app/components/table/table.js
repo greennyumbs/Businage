@@ -10,10 +10,25 @@ import {
   getKeyValue,
   Spinner,
   Pagination,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
   Input,
+  Button,
 } from "@nextui-org/react";
+import VerticalDotIcon from "./VerticalDotIcon";
 
-function ProductTable({ rowData, colData, isLoading }) {
+function ProductTable({ rowData, colData, isLoading, isEdited }) {
+  //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
+  //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
+  const modifiedColData = useMemo(() => {
+    if (isEdited) {
+      return [...colData, { key: "action", label: "Action" }];
+    }
+    return colData;
+  }, [colData, isEdited]);
+
   //Start - Search filtering
   const [filteredValue, setFilteredValue] = useState(""); //Input value
   const hasSearchFilter = Boolean(filteredValue); //If the input exist => Perform filter
@@ -98,10 +113,41 @@ function ProductTable({ rowData, colData, isLoading }) {
     );
   }, [filteredValue, onSearchChange, onClear]);
 
+  //Start - Action on Vertical dot
+  const actionMethod = (row) => {
+    return (
+      <>
+        <Dropdown aria-label="action on vertical">
+          <DropdownTrigger>
+            <Button aria-label="button" isIconOnly size="sm" variant="light">
+              <VerticalDotIcon className="text-default-400" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            aria-label="action list"
+            onAction={(key) => {
+              if (key === "edit") {
+                console.log(`Editing on ${row}`);
+              } else if (key === "delete") {
+                console.log(`Deleting on ${row}`);
+              }
+            }}
+          >
+            <DropdownItem key="edit">Edit</DropdownItem>
+            <DropdownItem className="text-danger" color="danger" key="delete">
+              Delete
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </>
+    );
+  };
+
   return (
     <>
       <div className="min-w-max h-screen flex mt-20 justify-center">
         <Table
+          aria-label="product table"
           className="w-4/5"
           isStriped
           sortDescriptor={sortDescriptor}
@@ -118,13 +164,12 @@ function ProductTable({ rowData, colData, isLoading }) {
                 total={pages}
                 onChange={(page) => {
                   setPage(page);
-                  console.log(page);
                 }}
               />
             </div>
           }
         >
-          <TableHeader columns={colData}>
+          <TableHeader columns={modifiedColData}>
             {(column) => (
               <TableColumn key={column.key} allowsSorting>
                 {column.label}
@@ -163,6 +208,8 @@ function ProductTable({ rowData, colData, isLoading }) {
                           )
                         ) : columnKey === "Brand" ? (
                           row.Brand.brand_name
+                        ) : columnKey === "action" ? (
+                          actionMethod(row)
                         ) : (
                           getKeyValue(row, columnKey)
                         )}

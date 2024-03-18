@@ -49,7 +49,12 @@ const ProductStock = async () => {
 
   return (
     <div className="container">
-      <ProductTable rowData={rowData} colData={colData} isLoading={loading} />
+      <ProductTable
+        rowData={rowData}
+        colData={colData}
+        isLoading={loading}
+        isEdited={true}
+      />
     </div>
   );
 };
