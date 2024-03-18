@@ -127,9 +127,9 @@ function ProductTable({ rowData, colData, isLoading, isEdited }) {
             aria-label="action list"
             onAction={(key) => {
               if (key === "edit") {
-                console.log(`Editing on ${row}`);
+                console.log(`Editing on \n ${JSON.stringify(row)}`);
               } else if (key === "delete") {
-                console.log(`Deleting on ${row}`);
+                console.log(`Deleting on \n ${JSON.stringify(row)}`);
               }
             }}
           >
@@ -183,6 +183,7 @@ function ProductTable({ rowData, colData, isLoading, isEdited }) {
             loadingContent={<Spinner label="Loading Product Stock..." />}
           >
             {(row) => {
+              // console.log(row);
               return (
                 <TableRow key={row.product_id}>
                   {(columnKey) => {
