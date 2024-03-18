@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
@@ -30,7 +29,7 @@ const config = {
         display: true,
         text: 'Top 5 Product Sold',
         padding: { top: 10 },
-        font: { size: 16, weight: 'bold' },
+        font: { size: 32, weight: 'bold' },
         align: 'start', 
         position: 'top', 
       },
@@ -59,9 +58,9 @@ function TopProductSold() {
 
 
   return (
-    <div className="mt-5 mx-auto w-10/12">
+    <div className="w-full md:w-10/12">
       <div className="bg-white rounded-none shadow-none p-4">
-        <canvas ref={chartRef} id="myChart" className="mx-4"></canvas>
+        <canvas ref={chartRef} className="mx-4"></canvas>
       </div>
     </div>
   );
