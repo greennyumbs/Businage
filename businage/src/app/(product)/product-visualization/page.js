@@ -6,9 +6,8 @@ import PieChart from "@/app/components/visualization/PieChart";
 
 function ProductVisualize() {
   return (
-    <div className=" w-full">
+    <div className="w-full">
       <ProductVisualizeCard />
-
       <TopProductSold />
       <PieChart />
     </div>
