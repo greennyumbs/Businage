@@ -1,109 +1,62 @@
-"use client";
-import React, { useState } from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  getKeyValue,
-  Spinner,
-  Link,
-} from "@nextui-org/react";
-import { NextUIProvider } from "@nextui-org/react";
-import { useAsyncList } from "@react-stately/data";
-
-/*  Product stock table
-
-1. Item name (Can edit)
-
-2. Sell price (Can edit)
-
-3. Avg. cost (Non-editable, avg. computed from expenses)
-
-4. Brand (Can edit)
-
-5. Quantity
-
-6. Selling status (Can edit)
-
-7. (ขายอยู่ or not?)
-
-8. Latest updated at ...
-*/
-const rowData = [
-  {
-    key: "1",
-    name: "Tony กระด้าก",
-    role: "CEO",
-    status: "ตายห่า",
-  },
-  {
-    key: "2",
-    name: "Wong",
-    role: "Santum lead",
-    status: "Alive",
-  },
-  {
-    key: "3",
-    name: "Professor X",
-    role: "Mai ru",
-    status: "ตาย",
-  },
-  {
-    key: "4",
-    name: "Professor Y",
-    role: "Mai ru",
-    status: "ตาย",
-  },
-];
+import ProductTable from "@/app/components/table/table";
+import axios from "axios";
+import React from "react";
 
 const colData = [
   {
-    key: "name",
-    label: "Name",
+    key: "latest_update",
+    label: "Expense date",
   },
   {
-    key: "role",
-    label: "Role",
+    key: "Brand",
+    label: "Brand name",
   },
   {
-    key: "status",
+    key: "product_name",
+    label: "Product name",
+  },
+  {
+    key: "sell_price",
+    label: "Sell price",
+  },
+  {
+    key: "avg_cost",
+    label: "Average cost",
+  },
+  {
+    key: "quantity",
+    label: "Quantity",
+  },
+  {
+    key: "selling_status",
     label: "Status",
   },
 ];
 
-function Inventory() {
-  const [isLoading, setIsLoading] = useState(false);
+let loading = true;
+
+const getProduct = async () => {
+  try {
+    const res = await axios.get("http://localhost:3000/api/products");
+    loading = false;
+    return res.data; // Return the data instead of the entire response
+  } catch (error) {
+    return { error };
+  }
+};
+const ProductStock = async () => {
+  const rowData = await getProduct();
 
   return (
-    <>
-      <Table isStriped>
-        <TableHeader columns={colData}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={rowData}
-          emptyContent={"No Product data."}
-          isLoading={isLoading}
-          loadingContent={<Spinner label="Loading Product Stock..." />}
-        >
-          {(row) => (
-            <TableRow key={row.key}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(row, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <Link href="/product-visualization">go home</Link>
-      {/* This is for testing client-side routing */}
-    </>
+    <div className="container">
+      <ProductTable
+        rowData={rowData}
+        colData={colData}
+        isLoading={loading}
+        isEdited={true}
+      />
+    </div>
   );
-}
+};
 
-export default Inventory;
+export default ProductStock;

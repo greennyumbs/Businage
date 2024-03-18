@@ -1,8 +1,10 @@
 import React from 'react'
+import ExpenseSaleSwitch from '@/app/components/expense-sale/ExpenseSaleSwitch';
 
 function ExpenseSale() {
+
   return (
-    <div>ExpenseSale</div>
+    <ExpenseSaleSwitch/>
   )
 }
 
