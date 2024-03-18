@@ -6,10 +6,14 @@ import PieChart from "@/app/components/visualization/PieChart";
 
 function ProductVisualize() {
   return (
-    <div className="w-full">
+    <div className="mx-4 mt-4">
       <ProductVisualizeCard />
-      <TopProductSold />
-      <PieChart />
+      <div className="mt-4 w-full">
+        <TopProductSold />
+      </div>
+      <div className="mt-4 w-full">
+        <PieChart />
+      </div>
     </div>
   );
 }

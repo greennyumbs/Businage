@@ -58,8 +58,8 @@ function TopProductSold() {
 
 
   return (
-    <div className="w-full md:w-10/12">
-      <div className="bg-white rounded-none shadow-none p-4">
+    <div className="box mx-auto w-full max-w-[70rem]">
+      <div className="bg-white">
         <canvas ref={chartRef} className="mx-4"></canvas>
       </div>
     </div>
