@@ -2,13 +2,22 @@
 import React from 'react';
 import ProductVisualCard from '@/app/components/ProductVisualCard'
 import TopProductSold from '@/app/components/TopProductSold'
+import PieChart from '@/app/components/visualization/PieChart';
+import ProductVisualCard from '@/app/components/card/ProductVisualCard'
+import TopProductSold from '@/app/components/graph/TopProductSold'
 
 function ProductVisualize() {
    
   return (
-    <div>
+    <div className=' w-full'>
         <ProductVisualCard />
-        <TopProductSold />
+        
+          <TopProductSold />
+          <PieChart/>
+
+        
+
+      
     </div>
   );
 }
