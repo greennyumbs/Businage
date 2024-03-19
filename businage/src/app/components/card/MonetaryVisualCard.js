@@ -18,7 +18,7 @@ const list = [
 
 function MonetaryVisualizeCard() {
   return (
-      <Card className="shadow-none rounded-none">
+      <Card className="box">
         <CardBody className="p-0">
           <div className="grid grid-cols-3 gap-0">
             {list.map((item, index) => (

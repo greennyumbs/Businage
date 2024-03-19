@@ -7,10 +7,10 @@ function MonetaryVisualize() {
   return (
     <div className="mx-4 mt-4">
       <MonetaryVisualizeCard />
-      <div className="mt-4 w-full">
+      <div className="mt-4">
         <LineChartCost />
       </div>
-      <div className="mt-4 w-full">
+      <div className="mt-4">
         <ProfitGainByMonth />
       </div>
     </div>
