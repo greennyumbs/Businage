@@ -10,16 +10,17 @@ import {
   getKeyValue,
   Spinner,
   Pagination,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
   Input,
-  Button,
 } from "@nextui-org/react";
-import VerticalDotIcon from "./VerticalDotIcon";
+import { actionMethod } from "./actionMethod";
 
-function ProductTable({ rowData, colData, isLoading, isEdited }) {
+function ProductTable({
+  rowData,
+  colData,
+  isLoading,
+  isEdited,
+  setHandleDelete,
+}) {
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
   const modifiedColData = useMemo(() => {
@@ -114,34 +115,6 @@ function ProductTable({ rowData, colData, isLoading, isEdited }) {
   }, [filteredValue, onSearchChange, onClear]);
 
   //Start - Action on Vertical dot
-  const actionMethod = (row) => {
-    return (
-      <>
-        <Dropdown aria-label="action on vertical">
-          <DropdownTrigger>
-            <Button aria-label="button" isIconOnly size="sm" variant="light">
-              <VerticalDotIcon className="text-default-400" />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="action list"
-            onAction={(key) => {
-              if (key === "edit") {
-                console.log(`Editing on \n ${JSON.stringify(row)}`);
-              } else if (key === "delete") {
-                console.log(`Deleting on \n ${JSON.stringify(row)}`);
-              }
-            }}
-          >
-            <DropdownItem key="edit">Edit</DropdownItem>
-            <DropdownItem className="text-danger" color="danger" key="delete">
-              Delete
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </>
-    );
-  };
 
   return (
     <>
@@ -210,7 +183,7 @@ function ProductTable({ rowData, colData, isLoading, isEdited }) {
                         ) : columnKey === "Brand" ? (
                           row.Brand.brand_name
                         ) : columnKey === "action" ? (
-                          actionMethod(row)
+                          actionMethod(row, setHandleDelete)
                         ) : (
                           getKeyValue(row, columnKey)
                         )}
