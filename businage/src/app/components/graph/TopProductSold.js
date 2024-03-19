@@ -39,19 +39,35 @@ const config = {
 
 function TopProductSold() {
   const chartRef = useRef(null);
-  
+
   useEffect(() => {
-    let chartInstance = null;
-    if(chartRef.current){
-      const context = chartRef.current.getContext("2d");
-      if (Chart.getChart(context)) {
-        Chart.getChart(context).destroy();
+    let newChart = null;
+
+    const createChart = () => {
+      if (chartRef.current) {
+        if (chartRef.current.chart) {
+          chartRef.current.chart.destroy();
+        }
+        const context = chartRef.current.getContext("2d");
+        newChart = new Chart(context, config);
+        chartRef.current.chart = newChart;
       }
-      chartInstance = new Chart(context, config);
-    }
+    };
+
+    createChart();
+
+    const handleResize = () => {
+      if (newChart) {
+        newChart.resize(); 
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
     return () => {
-      if (chartInstance !== null) {
-        chartInstance.destroy();
+      window.removeEventListener("resize", handleResize);
+      if (newChart) {
+        newChart.destroy();
       }
     };
   }, [config]);
@@ -59,9 +75,7 @@ function TopProductSold() {
 
   return (
     <div className="box mx-auto w-full max-w-[70rem]">
-      <div className="bg-white">
-        <canvas ref={chartRef} className="mx-4"></canvas>
-      </div>
+        <canvas ref={chartRef} ></canvas>
     </div>
   );
 }
