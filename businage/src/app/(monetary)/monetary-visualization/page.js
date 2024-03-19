@@ -1,7 +1,6 @@
-"use client";
 import React from "react";
 import MonetaryVisualizeCard from "@/app/components/card/MonetaryVisualCard";
-import LineChartCost from "@/app/components/visualization/LineChartCost";
+import LineChartCost from "@/app/components/graph/LineChartCost";
 import ProfitGainByMonth from "@/app/components/graph/ProfitGainByMonth";
 
 function MonetaryVisualize() {

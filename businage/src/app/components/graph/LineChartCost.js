@@ -1,5 +1,8 @@
+"use client"
 import { Chart } from "chart.js/auto"
 import { useEffect, useRef, useState } from "react"
+import {Select, SelectSection, SelectItem} from "@nextui-org/react";
+import axios from "axios";
 
 const MONTHS = [
     'January',
@@ -18,23 +21,30 @@ const MONTHS = [
 
 export default function LineChartCost() {
     const chartRef = useRef(null)
+    const existYear = [{label: "All Years", value: "all"}]
     const [chartData, setChartData ]  = useState([])
+    const [selectedYear, setSelectedYear] = useState("all")
 
+
+    // Pull data & Prepare year
     useEffect(()=>{
         const fetchData = async ()=>{
-            const response = await fetch("https://65f846d5df151452460efe3c.mockapi.io/api/costByMonth")
-            if(!response.ok)
+            const response = await axios("https://65f846d5df151452460efe3c.mockapi.io/api/costByMonth")
+            if(response.status !== 200)
             {
                 console.log("LingChartCost bad response")
             }
             else{
-                const data = await response.json()
-                console.log(data)
+                const data = response.data
+                setChartData(data)
             }
         }
         fetchData()
 
+        
     }, [])
+
+    
 
     useEffect(() => {
         if (chartRef.current) {
@@ -43,6 +53,12 @@ export default function LineChartCost() {
             }
         }
         const context = chartRef.current.getContext("2d")
+
+
+        // Prepare data
+        const data = chartData.map((data)=>data.cost).splice(0, 12)
+        console.log(data)
+
         const newChart = new Chart(context, {
             type: "line",
 
@@ -73,11 +89,11 @@ export default function LineChartCost() {
                 
             },
             data: {
-                labels: MONTHS.slice(1, 8),
+                labels: MONTHS,
                 
                 datasets: [{
                     label: "Cost",
-                    data: [65, 59, 80, 81, 56, 55, 40],
+                    data: data,
                     backgroundColor: "rgb(75, 192, 192)",
                     borderColor: "rgb(75, 192, 192)",
                     
@@ -86,10 +102,36 @@ export default function LineChartCost() {
         })
 
         chartRef.current.chart = newChart
-    }, [])
+    }, [chartData])
     return (
-        <div className=" box mx-auto w-full max-w-[70rem]">
-            <h1 className=" font-bold">Product cost by month</h1>
+        <div className=" box mx-auto w-full max-w-[70rem] ">
+            <div className="flex justify-between ">
+
+                <h1 className=" font-bold">Product cost by month</h1>
+                {/* Year dropdown selection */}
+                <div className=" w-60 ">
+                    <Select
+                        defaultSelectedKeys={[selectedYear]}
+                        size="sm"
+                        label="Select Year"
+                        placeholder="All Years"
+                    >
+                        {
+                            existYear.map((year)=>(
+                                <SelectItem 
+                                    key={year.value}
+                                    value={year.value}
+                                >
+                                    {year.label}
+                                </SelectItem>
+
+                            ))
+                        }
+                    </Select>
+
+                </div>
+
+            </div>
             <canvas ref={chartRef} />
         </div>
     )

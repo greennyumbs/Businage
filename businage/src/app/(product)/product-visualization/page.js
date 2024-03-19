@@ -2,7 +2,7 @@
 import React from "react";
 import ProductVisualizeCard from "@/app/components/card/ProductVisualCard";
 import TopProductSold from "@/app/components/graph/TopProductSold";
-import PieChart from "@/app/components/visualization/PieChart";
+import PieChart from "@/app/components/graph/PieChart";
 
 function ProductVisualize() {
   return (
