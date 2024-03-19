@@ -14,7 +14,7 @@ const list = [
 
 function ProductVisualizeCard() {
   return (
-      <Card className="rounded-none shadow-none">
+      <Card className=" box ">
         <CardBody className="p-0">
           <div className="grid grid-cols-2 gap-0">
             {list.map((item, index) => (
