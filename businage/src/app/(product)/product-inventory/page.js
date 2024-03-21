@@ -43,29 +43,29 @@ const getProduct = async () => {
     return { error };
   }
 };
-
 const ProductStock = () => {
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [handleDelete, setHandleDelete] = useState(false);
+  const [handleAction, setHandleAction] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await getProduct();
       setRowData(res);
       setLoading(false);
+      setHandleAction(false);
     };
     fetchData();
-  }, [handleDelete]);
+  }, [handleAction]);
 
   return (
-    <div className="container">
+    <div className="container mt-20">
       <ProductTable
         rowData={rowData}
         colData={colData}
         isLoading={loading}
         isEdited={true}
-        setHandleDelete={setHandleDelete}
+        setHandleAction={setHandleAction}
       />
     </div>
   );

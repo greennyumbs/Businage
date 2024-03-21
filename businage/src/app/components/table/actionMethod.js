@@ -11,7 +11,7 @@ import axios from "axios";
 
 const URL = "http://localhost:3000/";
 
-export const actionMethod = (row, setHandleDelete) => {
+export const actionMethod = (row, setHandleAction) => {
   return (
     <>
       <Dropdown aria-label="action on vertical">
@@ -29,10 +29,9 @@ export const actionMethod = (row, setHandleDelete) => {
                   `Are you sure you want to edit ${JSON.stringify(
                     row.product_id
                   )}`
-                  // `Editing on product_id: ${JSON.stringify(row.product_id)}`
-                  //Input Modal here
                 ) === true
               ) {
+                //Input Modal here
                 alert("Edit");
               }
             } else if (key === "delete") {
@@ -59,7 +58,7 @@ export const actionMethod = (row, setHandleDelete) => {
                     },
                   });
                   // If deletion is successful, you can handle the result or update the UI accordingly
-                  setHandleDelete(true);
+                  setHandleAction(true);
                 } catch (error) {
                   // If an error occurs during the deletion process, you can handle the error here
                   console.error("Error deleting product:", error);

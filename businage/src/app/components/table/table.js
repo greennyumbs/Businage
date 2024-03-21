@@ -19,7 +19,7 @@ function ProductTable({
   colData,
   isLoading,
   isEdited,
-  setHandleDelete,
+  setHandleAction,
 }) {
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
@@ -118,7 +118,7 @@ function ProductTable({
 
   return (
     <>
-      <div className="min-w-max h-screen flex mt-20 justify-center">
+      <div className="min-w-max h-screen flex justify-center">
         <Table
           aria-label="product table"
           className="w-4/5"
@@ -127,19 +127,22 @@ function ProductTable({
           onSortChange={setSortDescriptor}
           topContent={topContent}
           bottomContent={
+            isLoading ? null : (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  page={page}
+                  total={pages}
+                  onChange={(page) => {
+                    setPage(page);
+                  }}
+                />
+              </div>
+            )
+
             //Pagination
-            <div className="flex w-full justify-center">
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                page={page}
-                total={pages}
-                onChange={(page) => {
-                  setPage(page);
-                }}
-              />
-            </div>
           }
         >
           <TableHeader columns={modifiedColData}>
@@ -151,9 +154,15 @@ function ProductTable({
           </TableHeader>
           <TableBody
             items={sortedItems}
-            emptyContent={"No Product data."}
+            emptyContent={isLoading ? "   " : "No Product data."}
             isLoading={isLoading}
-            loadingContent={<Spinner label="Loading Product Stock..." />}
+            loadingContent={
+              <Spinner
+                className="w-full h-full flex item-center pt-28"
+                color="default"
+                label="Loading Product Stock..."
+              />
+            }
           >
             {(row) => {
               // console.log(row);
@@ -183,7 +192,7 @@ function ProductTable({
                         ) : columnKey === "Brand" ? (
                           row.Brand.brand_name
                         ) : columnKey === "action" ? (
-                          actionMethod(row, setHandleDelete)
+                          actionMethod(row, setHandleAction)
                         ) : (
                           getKeyValue(row, columnKey)
                         )}
