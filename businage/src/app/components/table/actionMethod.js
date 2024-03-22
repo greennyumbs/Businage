@@ -8,10 +8,17 @@ import {
 } from "@nextui-org/react";
 import VerticalDotIcon from "./VerticalDotIcon";
 import axios from "axios";
+import EditModal from "./editModal";
 
 const URL = "http://localhost:3000/";
 
-export const actionMethod = (row, setHandleAction) => {
+export const actionMethod = (
+  row,
+  setHandleAction,
+  isOpen,
+  onOpen,
+  onOpenChange
+) => {
   return (
     <>
       <Dropdown aria-label="action on vertical">
@@ -31,8 +38,8 @@ export const actionMethod = (row, setHandleAction) => {
                   )}`
                 ) === true
               ) {
-                //Input Modal here
-                alert("Edit");
+                onOpen;
+                EditModal("Editing form", row, isOpen, onOpen, onOpenChange);
               }
             } else if (key === "delete") {
               if (

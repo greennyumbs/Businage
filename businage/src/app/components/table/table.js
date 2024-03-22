@@ -10,6 +10,7 @@ import {
   getKeyValue,
   Spinner,
   Pagination,
+  useDisclosure,
   Input,
 } from "@nextui-org/react";
 import { actionMethod } from "./actionMethod";
@@ -21,6 +22,8 @@ function ProductTable({
   isEdited,
   setHandleAction,
 }) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
   const modifiedColData = useMemo(() => {
@@ -192,7 +195,13 @@ function ProductTable({
                         ) : columnKey === "Brand" ? (
                           row.Brand.brand_name
                         ) : columnKey === "action" ? (
-                          actionMethod(row, setHandleAction)
+                          actionMethod(
+                            row,
+                            setHandleAction,
+                            isOpen,
+                            onOpen,
+                            onOpenChange
+                          )
                         ) : (
                           getKeyValue(row, columnKey)
                         )}
