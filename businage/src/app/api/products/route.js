@@ -4,6 +4,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from "axios";
+import latestUpdate from '../../utils/latestUpdate';
+import getBrand from "../../utils/getBrand";
 
 const URL = "http://localhost:3000/";
 
@@ -28,9 +30,7 @@ export async function GET(req) {
       throw new Error(error.message);
     }
 
-    const lastUpdateResponse = await axios.get(`${URL}api/latestUpdate`);
-    const lastUpdateData = lastUpdateResponse.data;
-    console.log(lastUpdateData);
+    const lastUpdateData= await latestUpdate();
 
     // map through the data and add the latest_update property
     const updatedData = data.map((item) => ({
@@ -48,34 +48,28 @@ export async function GET(req) {
 // add new product
 export async function POST(req) {
   const newProducts = await req.json();
-  // const newProducts = body.newProducts
 
   console.log("newProducts| newproductAPI");
   console.log(newProducts);
-  // newProducts.forEach((item) => {
-  //     console.log(item)
-  // })
 
   let res = [];
   for (let i = 0; i < newProducts.length; i++) {
     const brandName = newProducts[i].brand_name;
     const productName = newProducts[i].product_name;
     const quantity = parseInt(newProducts[i].quantity);
-    // const cost = parseFloat(newProducts[i].cost);
 
     res.push({
       brand_name: brandName,
       product_name: productName,
-      // product_id: 1,
       quantity: quantity,
-      // cost: cost
     });
   }
   console.log("Res");
   console.log(res);
 
-  const brandResponse = await axios.get(`${URL}api/brand`);
-  const brandData = brandResponse.data;
+  // const brandResponse = await axios.get(`${URL}api/brand`);
+  // const brandData = brandResponse.data;
+  const brandData = await getBrand();
 
   console.log("brandData");
   console.log(brandData);
@@ -94,11 +88,8 @@ export async function POST(req) {
   console.log(mappedRes);
 
   const finalQuery = mappedRes.map(({ product_name, brand_id, quantity }) => ({
-    // expense_id,
     product_name,
-    // cost,
     brand_id,
-    // quantity
   }));
 
   console.log("finalQuery");

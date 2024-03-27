@@ -4,6 +4,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from "axios";
+import postBrand from "../../utils/postBrand";
+import postProducts from "../../utils/postProducts";
 
 const URL = "http://localhost:3000/";
 
@@ -27,16 +29,13 @@ export async function POST(req) {
   console.log(newBrands);
 
   if (newBrands) {
-    const addNewBrandsResponse = await axios.post(`${URL}api/brand`, newBrands);
-    console.log(addNewBrandsResponse.data);
+    const addNewProductsResponse = await postBrand(newBrands);
+    console.log(addNewProductsResponse);
   }
 
   if (newProductsToPost) {
-    const addNewProductsResponse = await axios.post(
-      `${URL}api/product`,
-      newProductsToPost
-    );
-    console.log(addNewProductsResponse.data);
+    const addNewProductsResponse = await postProducts(newProductsToPost);
+    console.log(addNewProductsResponse);
 
     console.log("Bounced back!");
     console.log("Products");

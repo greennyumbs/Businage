@@ -3,14 +3,16 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function GET(req) {
+
+export default async function latestUpdate() {
+    console.log("IN LATEST UPDATE")
     try {
         const query = supabase
             .from('Expense_detail')
             .select('product_id, Expense_log(expense_date)')
 
         const { data, error } = await query;
-        console.log(data)
+        // console.log(data)
         const expenseDates = data.map(item =>
             item.Expense_log.expense_date + '|' + item.product_id);
         // console.log(expenseDates)
@@ -47,11 +49,11 @@ export async function GET(req) {
             throw new Error(error.message);
         }
         // return Response.json(latestTimestamps);
-        // console.log(Response.json(latestTimestampsUTC7));
-        return Response.json(latestTimestampsUTC7);
+        console.log(JSON.stringify(latestTimestampsUTC7));
+        // return JSON.stringify(latestTimestampsUTC7);
+        return latestTimestampsUTC7;
     } catch (error) {
         // Handle any errors gracefully
-        return Response.json({ error: 'Failed to fetch data' });
+        return JSON.stringify({ error: 'Failed to fetch data' });
     }
-
 }

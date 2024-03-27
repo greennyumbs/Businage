@@ -2,18 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import axios from 'axios';
+// import axios from 'axios';
 import getBrand from '../../utils/getBrand';
+import getProducts from './getProducts';
 
-const URL = 'http://localhost:3000/';
-
-export async function POST(request) {
-
-    const body = await request.json()
-    const products = body.products
-    const expense_id = body.expense_id
-    console.log(products[0], expense_id)
-    
+export default async function postExpense(products, expense_id) {
     let res = [];
     for (let i = 0; i < products.length; i++) {
         const brandName = products[i].brand_name;
@@ -24,7 +17,6 @@ export async function POST(request) {
         res.push({
             brand_name: brandName,
             product_name: productName,
-            // product_id: 1,
             quantity: quantity,
             cost: cost,
             expense_id: expense_id
@@ -33,8 +25,7 @@ export async function POST(request) {
     console.log("Res")
     console.log(res);
 
-    const productResponse = await axios.get(`${URL}api/products`);
-    const productData = productResponse.data;
+    const productData = await getProducts();
 
     console.log('productData')
 
@@ -49,8 +40,6 @@ export async function POST(request) {
     console.log('extractedData')
     console.log(extractedData)
 
-    // const brandResponse = await axios.get(`${URL}api/brand`);
-    // const brandData = brandResponse.data;
     const brandData = await getBrand();
 
     console.log('brandData')
