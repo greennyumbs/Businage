@@ -61,11 +61,11 @@ export default async function postProducts(newProducts) {
             throw new Error(error.message);
         }
 
-        return Response.json({
+        return {
             message: `New products added successfully`,
-        });
+        };
     } catch (error) {
         // Handle any errors gracefully
-        return Response.json({ error: "Failed to insert data" });
+        return { error: "Failed to insert data" };
     }
 }

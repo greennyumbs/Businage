@@ -1,9 +1,11 @@
-import { select } from '@nextui-org/react';
 import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
+import addNewCustomer from '../../utils/newCustomer';
+import postTradeIn from '../../utils/postTradeIn';
+import postSales from '../../utils/postSales';
 
 const URL = 'http://localhost:3000/';
 
@@ -29,10 +31,11 @@ export async function POST(req){
         var customer_id = customer.customer_id;
     }
     else if (newCustomer) {
-        const addNewCustomerResponse = await axios.post(`${URL}api/newcustomer`,
-            newCustomer
-        );
-        var customer_id = addNewCustomerResponse.data.data[0].customer_id;
+        // const addNewCustomerResponse = await axios.post(`${URL}api/newcustomer`,
+        //     newCustomer
+        // );
+        const addNewCustomerResponse = await addNewCustomer(newCustomer);
+        var customer_id = addNewCustomerResponse.data[0].customer_id;
     }
 
     // console.log(customer_id)
@@ -74,24 +77,26 @@ export async function POST(req){
             throw new Error(error.message);
         }
 
-        const salesResponse = await axios.post(`${URL}api/sales`,
-            {
-                products: products,
-                order_id: data[0].order_id
-            }
-        );
+        // const salesResponse = await axios.post(`${URL}api/sales`,
+        //     {
+        //         products: products,
+        //         order_id: data[0].order_id
+        //     }
+        // );
 
-        const salesData = salesResponse.data;
+        // const salesData = salesResponse.data;
+        const salesData = await postSales(products, data[0].order_id);
         console.log(salesData);
 
         if (trade_in) {
-            const tradeInResponse = await axios.post(`${URL}api/trade_in`,
-                {
-                    trade_in: trade_in,
-                    order_id: data[0].order_id
-                }
-            );
-            const tradeInData = tradeInResponse.data;
+            // const tradeInResponse = await axios.post(`${URL}api/trade_in`,
+            //     {
+            //         trade_in: trade_in,
+            //         order_id: data[0].order_id
+            //     }
+            // );
+            // const tradeInData = tradeInResponse.data;
+            const tradeInData = await postTradeIn(trade_in, data[0].order_id);
             console.log(tradeInData);
         }
 
