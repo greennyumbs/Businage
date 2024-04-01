@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import VerticalDotIcon from "./VerticalDotIcon";
+import VerticalDotIcon from "./verticalDotIcon";
 import axios from "axios";
 import EditModal from "./editModal";
 
@@ -19,6 +19,7 @@ export const actionMethod = (
   onOpen,
   onOpenChange
 ) => {
+  //Action when click on Vertical dropdown at Action column
   return (
     <>
       <Dropdown aria-label="action on vertical">
@@ -34,12 +35,12 @@ export const actionMethod = (
               if (
                 confirm(
                   `Are you sure you want to edit ${JSON.stringify(
-                    row.product_id
+                    row.product_name
                   )}`
                 ) === true
               ) {
-                onOpen;
-                EditModal("Editing form", row, isOpen, onOpen, onOpenChange);
+                onOpen(); //To trigger isOpen to open modal
+                EditModal("Editing form", row, isOpen, onOpenChange);
               }
             } else if (key === "delete") {
               if (

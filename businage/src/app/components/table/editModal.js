@@ -6,28 +6,27 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
   Input,
 } from "@nextui-org/react";
 
-export default function EditModal(formName, row, isOpen, onOpen, onOpenChange) {
+export default function EditModal({ formName, row, isOpen, onOpenChange }) {
   const handleEdit = (onClose) => {
     if (
-      confirm(
+      window.confirm(
         `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
-      ) === true
+      )
     ) {
-      onClose;
+      onClose();
     }
   };
 
+  console.log(isOpen);
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
       <ModalContent>
-        {(onClose) => {
-          console.log("Editting!");
+        {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
+            <ModalHeader className="flex w-full bg-yellow-300">
               {formName}
             </ModalHeader>
             <ModalBody>
@@ -38,15 +37,15 @@ export default function EditModal(formName, row, isOpen, onOpen, onOpenChange) {
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="flat" onPress={onClose}>
+              <Button color="danger" variant="flat" onClick={onClose}>
                 Close
               </Button>
-              <Button color="primary" onPress={handleEdit(onClose)}>
+              <Button color="primary" onClick={() => handleEdit(onClose)}>
                 Edit
               </Button>
             </ModalFooter>
-          </>;
-        }}
+          </>
+        )}
       </ModalContent>
     </Modal>
   );
