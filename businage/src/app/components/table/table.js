@@ -124,7 +124,7 @@ function ProductTable({
       <div className="min-w-max h-screen flex justify-center">
         <Table
           aria-label="product table"
-          className="w-4/5"
+          className="w-full sm:w-4/5"
           isStriped
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
