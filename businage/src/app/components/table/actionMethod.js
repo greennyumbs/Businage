@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import VerticalDotIcon from "./VerticalDotIcon";
+import VerticalDotIcon from "./verticalDotIcon";
 import axios from "axios";
 import EditModal from "./editModal";
 
