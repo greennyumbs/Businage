@@ -4,23 +4,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
 import axios from 'axios';
 
-function ExpenseForm() {
-    
-    const fetchData = async () => {
-        const res = await axios.get('http://localhost:3000/api/products')
-        setData(res.data);
-        setIsloading(false);
-      };
-
-    useEffect(() => {
-        fetchData();
-      }, []);
-
+function ExpenseForm() {    
     const [isLoading,setIsloading] = useState(true)
     const [data,setData] = useState([])
     const [prodDisabled,setProdDisabled] = useState(true)
     const [filteredProd,setfilteredProd] = useState([''])
     const [disableTimestamp,setDisableTimestamp] = useState(true)
+    const [uniqueBrandList,setUniqueBrandList] = useState([]);
+    
+    const fetchData = async () => {
+        const res = await axios.get('http://localhost:3000/api/products')
+        setData(res.data);
+      };
+
+    useEffect(() => {
+        fetchData();
+      }, []);
+    
+    useEffect(()=>{
+        const brandList = data.map((element)=> {return element.Brand.brand_name})
+        setUniqueBrandList(Array.from(new Set(brandList)));
+        setIsloading(false);
+
+    },[data])
 
     const handleBrand = (value) =>{
         dataRef.current['Brand']=value;
@@ -72,9 +78,9 @@ function ExpenseForm() {
                     isRequired
                     onInputChange={handleBrand}
                 >
-                    {data.map((prod)=>(
-                        <AutocompleteItem key={prod.Brand.brand_name} value={prod.Brand.brand_name}>
-                            {prod.Brand.brand_name}
+                    {uniqueBrandList.map((brand)=>(
+                        <AutocompleteItem key={brand} value={brand}>
+                            {brand}
                         </AutocompleteItem>
                     ))}
                 </Autocomplete>
@@ -88,8 +94,7 @@ function ExpenseForm() {
                     isRequired
                     onInputChange={handleProd}
                 >
-                    {
-                     filteredProd.map((prod)=>(
+                    {filteredProd.map((prod)=>(
                             <AutocompleteItem key={prod.product_name} value={prod.product_name}>
                                 {prod.product_name}
                             </AutocompleteItem>
