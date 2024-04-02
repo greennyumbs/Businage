@@ -59,7 +59,7 @@ const ProductStock = () => {
   }, [handleAction]);
 
   return (
-    <div className="container mt-20">
+    <div className="w-full">
       <ProductTable
         rowData={rowData}
         colData={colData}

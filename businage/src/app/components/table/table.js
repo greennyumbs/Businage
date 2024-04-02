@@ -13,7 +13,7 @@ import {
   useDisclosure,
   Input,
 } from "@nextui-org/react";
-import { actionMethod } from "./actionMethod";
+import ActionMethod from "./actionMethod";
 
 function ProductTable({
   rowData,
@@ -22,7 +22,8 @@ function ProductTable({
   isEdited,
   setHandleAction,
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  // const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
@@ -121,10 +122,10 @@ function ProductTable({
 
   return (
     <>
-      <div className="min-w-max h-screen flex justify-center">
+      <div className=" flex justify-center p-20">
         <Table
           aria-label="product table"
-          className="w-full sm:w-4/5"
+          className="w-full"
           isStriped
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
@@ -195,13 +196,21 @@ function ProductTable({
                         ) : columnKey === "Brand" ? (
                           row.Brand.brand_name
                         ) : columnKey === "action" ? (
-                          actionMethod(
-                            row,
-                            setHandleAction,
-                            isOpen,
-                            onOpen,
-                            onOpenChange
-                          )
+                          // actionMethod(
+                          //   row,
+                          //   setHandleAction,
+                          //   isOpen,
+                          //   setIsOpen
+                          //   // isOpen,
+                          //   // onOpen,
+                          //   // onOpenChange
+                          // )
+                          <ActionMethod
+                            row={row}
+                            setHandleAction={setHandleAction}
+                            isOpen={isOpen}
+                            setIsOpen={setIsOpen}
+                          />
                         ) : (
                           getKeyValue(row, columnKey)
                         )}
