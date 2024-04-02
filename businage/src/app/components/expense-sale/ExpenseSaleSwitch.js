@@ -3,6 +3,7 @@
 import ExpenseForm from '@/app/components/expense-sale/ExpenseForm'
 import React from 'react'
 import {Tabs, Tab} from "@nextui-org/react";
+import SaleAgg from './sale/SaleAgg';
 
 function ExpenseSaleSwitch() {
     return (
@@ -10,7 +11,9 @@ function ExpenseSaleSwitch() {
           <Tab className="px-5" key="expense" title="Expense">
             <ExpenseForm/>
           </Tab>
-          <Tab className="px-5" key="sale" title="Sale">Sale components goes here</Tab>
+          <Tab className="px-5" key="sale" title="Sale">
+            <SaleAgg/>
+          </Tab>
         </Tabs>
       )
 }
