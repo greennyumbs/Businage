@@ -1,9 +1,33 @@
-import React from 'react'
+"use client"
+import React from "react";
+import axios from "axios";
 
-function TradeIn() {
-  return (
-    <div>TradeIn</div>
-  )
+const colData = [
+  {
+    key: "item_name",
+    label: "Item name",
+  },
+  {
+    key: "Brand",
+    label: "Brand name",
+  },
+  {
+    key: "quantity",
+    label: "Quantity",
+  },
+];
+
+const getTradeInData = async () =>{
+  try{
+    const res = 
+  }
+  catch{
+
+  }
 }
 
-export default TradeIn
+function TradeIn() {
+  return <div>TradeIn</div>;
+}
+
+export default TradeIn;
