@@ -15,6 +15,7 @@ import {
 import ActionMethod from "./actionMethod";
 
 function ProductTable({
+  type,
   rowData,
   colData,
   isLoading,
@@ -22,7 +23,6 @@ function ProductTable({
   setHandleAction,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  // const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
@@ -117,7 +117,80 @@ function ProductTable({
     );
   }, [filteredValue, onSearchChange, onClear]);
 
-  //Start - Action on Vertical dot
+  //handle product stock column
+  // function handleProductStock(columnKey, row) {
+  //   // {type == "ProductTable"
+  //   //       ? handleProductStock(columnKey, row)
+  //   //       : type === "TradeIn"
+  //   //       ? null
+  //   //       : null}
+  //   return (
+  //     <TableCell className="py-4">
+  //       {columnKey === "selling_status" ? (
+  //         row.selling_status ? (
+  //           <p className="text-green-500">In stock</p>
+  //         ) : (
+  //           <p className="text-red-600">Not available</p>
+  //         )
+  //       ) : columnKey === "latest_update" ? (
+  //         new Date(row.latest_update).toLocaleDateString("en-GB", {
+  //           day: "2-digit",
+  //           month: "2-digit",
+  //           year: "numeric",
+  //           hour: "2-digit",
+  //           minute: "2-digit",
+  //           second: "2-digit",
+  //         })
+  //       ) : columnKey === "Brand" ? (
+  //         row.Brand.brand_name
+  //       ) : columnKey === "action" ? (
+  //         <ActionMethod
+  //           row={row}
+  //           setHandleAction={setHandleAction}
+  //           isOpen={isOpen}
+  //           setIsOpen={setIsOpen}
+  //         />
+  //       ) : (
+  //         getKeyValue(row, columnKey)
+  //       )}
+  //       ;
+  //     </TableCell>
+  //   );
+  // }
+
+  function handleProductStock(columnKey, row) {
+    return (
+      <TableCell className="py-4">
+        {columnKey === "selling_status" ? (
+          row.selling_status ? (
+            <p className="text-green-500">In stock</p>
+          ) : (
+            <p className="text-red-600">Not available</p>
+          )
+        ) : columnKey === "latest_update" ? (
+          new Date(row.latest_update).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        ) : columnKey === "Brand" ? (
+          row.Brand.brand_name
+        ) : columnKey === "action" ? (
+          <ActionMethod
+            row={row}
+            setHandleAction={setHandleAction}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        ) : (
+          getKeyValue(row, columnKey)
+        )}
+      </TableCell>
+    );
+  }
 
   return (
     <>
@@ -168,53 +241,10 @@ function ProductTable({
             }
           >
             {(row) => {
-              // console.log(row);
               return (
                 <TableRow key={row.product_id}>
                   {(columnKey) => {
-                    return (
-                      <TableCell className="py-4">
-                        {columnKey === "selling_status" ? (
-                          row.selling_status ? (
-                            <p className="text-green-500">In stock</p>
-                          ) : (
-                            <p className="text-red-600">Not available</p>
-                          )
-                        ) : columnKey === "latest_update" ? (
-                          new Date(row.latest_update).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            }
-                          )
-                        ) : columnKey === "Brand" ? (
-                          row.Brand.brand_name
-                        ) : columnKey === "action" ? (
-                          // actionMethod(
-                          //   row,
-                          //   setHandleAction,
-                          //   isOpen,
-                          //   setIsOpen
-                          //   // isOpen,
-                          //   // onOpen,
-                          //   // onOpenChange
-                          // )
-                          <ActionMethod
-                            row={row}
-                            setHandleAction={setHandleAction}
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                          />
-                        ) : (
-                          getKeyValue(row, columnKey)
-                        )}
-                      </TableCell>
-                    );
+                    return handleProductStock(columnKey, row);
                   }}
                 </TableRow>
               );

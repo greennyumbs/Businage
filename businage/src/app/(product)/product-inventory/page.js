@@ -61,6 +61,7 @@ const ProductStock = () => {
   return (
     <div className="w-full">
       <ProductTable
+        type={"ProductTable"}
         rowData={rowData}
         colData={colData}
         isLoading={loading}
