@@ -17,14 +17,14 @@ const colData = [
   },
 ];
 
-const getTradeInData = async () =>{
-  try{
-    const res = 
-  }
-  catch{
+// const getTradeInData = async () =>{
+//   try{
+//     const res = 
+//   }
+//   catch{
 
-  }
-}
+//   }
+// }
 
 function TradeIn() {
   return <div>TradeIn</div>;
