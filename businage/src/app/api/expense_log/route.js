@@ -9,6 +9,22 @@ import postProducts from "../../utils/postProducts";
 
 const URL = "http://localhost:3000/";
 
+export async function GET() {
+  try {
+    const { data, error } = await supabase
+      .from("Expense_log")
+      .select('*')
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return Response.json(data)
+  } catch (error) {
+    return Response.json({ error: "Failed to fetch data" });
+  }
+}
+
 export async function POST(req) {
   const body = await req.json();
   const productsToPost = body.product;
@@ -70,9 +86,9 @@ export async function POST(req) {
     const formattedDateTime = userTimestamp
       ? userTimestamp
       : dateTimeUTC7
-          .toISOString()
-          .replace("T", " ")
-          .replace(/\.\d{3}Z$/, "");
+        .toISOString()
+        .replace("T", " ")
+        .replace(/\.\d{3}Z$/, "");
 
     return formattedDateTime;
   };
