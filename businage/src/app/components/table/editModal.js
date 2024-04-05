@@ -33,6 +33,7 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
       editData.product_name = productName;
       editData.sell_price = sellPrice;
       editData.quantity = quantity;
+      editData.selling_status = sellingStatus;
       editData.latest_update = new Date().toISOString();
       console.log(editData);
       setIsOpen(false);
@@ -63,28 +64,29 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
           />
           <Input
             label="Sell Price"
+            type="number"
             placeholder={String(row.sell_price)}
             value={sellPrice}
             onValueChange={(val) => setSellPrice(val)}
           />
           <Input
             label="Quantity"
+            type="number"
             placeholder={String(row.quantity)}
             value={quantity}
             onValueChange={(val) => setQuantity(val)}
           />
           <Autocomplete
             label="Selling Status"
-            defaultItems={
-              editData.selling_status ? "In stock" : "Not available"
-            }
+            placeholder={editData.selling_status ? "In stock" : "Not available"}
+            defaultSelectedKey={editData.selling_status}
             selectedKey={sellingStatus}
             onSelectionChange={setSellingStatus}
           >
             <AutocompleteItem key={true} className="text-green-500">
-              In Stock
+              In stock
             </AutocompleteItem>
-            <AutocompleteItem kry={false} className="text-red-600">
+            <AutocompleteItem key={false} className="text-red-600">
               Not available
             </AutocompleteItem>
           </Autocomplete>

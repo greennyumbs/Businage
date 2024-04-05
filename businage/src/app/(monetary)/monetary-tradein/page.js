@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ProductTable from "@/app/components/table/table";
 
 const colData = [
   {
@@ -18,9 +19,12 @@ const colData = [
   },
 ];
 
+//http://localhost:3000/api/trade_in_stock
 const getTradeInData = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/trade_in_stock");
+    const res = await axios.get(
+      "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
+    );
     return res.data;
   } catch (error) {
     return { error };
@@ -44,7 +48,18 @@ function TradeIn() {
 
   getTradeInData();
 
-  return <div>TradeIn</div>;
+  return (
+    <div className="w-full">
+      <ProductTable
+        type={"TradeInTable"}
+        rowData={rowData}
+        colData={colData}
+        isLoading={loading}
+        isEdited={false}
+        setHandleAction={setHandleAction}
+      />
+    </div>
+  );
 }
 
 export default TradeIn;
