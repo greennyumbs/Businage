@@ -8,6 +8,9 @@ import {
   ModalFooter,
   Button,
   Input,
+  Autocomplete,
+  AutocompleteSection,
+  AutocompleteItem,
 } from "@nextui-org/react";
 
 export default function EditModal({ formName, row, isOpen, setIsOpen }) {
@@ -70,6 +73,21 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
             value={quantity}
             onValueChange={(val) => setQuantity(val)}
           />
+          <Autocomplete
+            label="Selling Status"
+            defaultItems={
+              editData.selling_status ? "In stock" : "Not available"
+            }
+            selectedKey={sellingStatus}
+            onSelectionChange={setSellingStatus}
+          >
+            <AutocompleteItem key={true} className="text-green-500">
+              In Stock
+            </AutocompleteItem>
+            <AutocompleteItem kry={false} className="text-red-600">
+              Not available
+            </AutocompleteItem>
+          </Autocomplete>
           {/* <Input
             label="Selling Status (กู ขก. ทำ Dropdown)"
             placeholder={row.selling_status ? "In stock" : "Not available"}

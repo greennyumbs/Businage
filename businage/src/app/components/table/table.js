@@ -244,7 +244,11 @@ function ProductTable({
               return (
                 <TableRow key={row.product_id}>
                   {(columnKey) => {
-                    return handleProductStock(columnKey, row);
+                    if (type === "ProductTable") {
+                      return handleProductStock(columnKey, row);
+                    } else if (type === "TradeIn") {
+                      return null;
+                    }
                   }}
                 </TableRow>
               );
