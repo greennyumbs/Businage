@@ -12,30 +12,47 @@ import {
   AutocompleteSection,
   AutocompleteItem,
 } from "@nextui-org/react";
+import axios from "axios";
+import { type } from "os";
 
-export default function EditModal({ formName, row, isOpen, setIsOpen }) {
-  const [brandName, setBrandName] = useState(row.Brand.brand_name);
+export default function EditModal({
+  formName,
+  row,
+  isOpen,
+  setIsOpen,
+  setHandleAction,
+}) {
+  // const [brandName, setBrandName] = useState(row.Brand.brand_name);
   const [productName, setProductName] = useState(row.product_name);
   const [sellPrice, setSellPrice] = useState(row.sell_price);
   const [quantity, setQuantity] = useState(row.quantity);
   const [sellingStatus, setSellingStatus] = useState(row.selling_status);
   // const [editData, setEditData] = useState(row);
   let editData = row;
+  delete editData.Brand;
+  delete editData.latest_update;
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (
       window.confirm(
         `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
       )
     ) {
       //Logic Area => Pass all value to API
-      editData.Brand.brand_name = brandName;
+      // editData.Brand.brand_name = brandName;
+      // console.log(typeof sellPrice);
       editData.product_name = productName;
-      editData.sell_price = sellPrice;
-      editData.quantity = quantity;
+      editData.sell_price = sellPrice * 1;
+      editData.quantity = quantity * 1;
       editData.selling_status = sellingStatus;
-      editData.latest_update = new Date().toISOString();
+      // editData.avg_cost = 100.123;
+      // editData.latest_update = new Date().toISOString();
       console.log(editData);
+
+      await axios.put("http://localhost:3000/api/products", {
+        product: editData,
+      });
+      setHandleAction(true);
       setIsOpen(false);
     }
   };
@@ -49,14 +66,15 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
       <ModalContent>
         <ModalHeader>{formName}</ModalHeader>
         <ModalBody className="grid grid-cols-1 gap-5">
-          <Input
+          {/* <Input
             autoFocus
             label="Brand Name"
             placeholder={row.Brand.brand_name}
             value={brandName}
             onValueChange={(val) => setBrandName(val)}
-          />
+          /> */}
           <Input
+            autoFocus
             label="Product Name"
             placeholder={row.product_name}
             value={productName}
