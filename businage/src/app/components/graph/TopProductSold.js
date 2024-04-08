@@ -1,24 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-
-const data = {
-  labels: ["3K Battery", "GS Battery", "Yuasa Battery", "Amaron", "FB Battery"],
-  datasets: [
-    {
-      label: "Sale", 
-      data: [50, 40, 60, 70, 80], 
-      backgroundColor: "rgba(54, 162, 235, 0.5)", 
-      borderColor: "rgba(54, 162, 235, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
 
 const config = {
   type: "bar",
-  data,
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: "Sale",
+        data: [],
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
+      },
+    ],
+  },
   options: {
-    indexAxis: 'x', 
+    indexAxis: "x",
     scales: {
       y: {
         beginAtZero: true,
@@ -27,11 +25,11 @@ const config = {
     plugins: {
       title: {
         display: true,
-        text: 'Top 5 Product Sold',
+        text: "Top 5 Product Sold",
         padding: { top: 10 },
-        font: { size: 32, weight: 'bold' },
-        align: 'start', 
-        position: 'top', 
+        font: { size: 32, weight: "bold" },
+        align: "start",
+        position: "top",
       },
     },
   },
@@ -39,6 +37,31 @@ const config = {
 
 function TopProductSold() {
   const chartRef = useRef(null);
+  const [data, setData] = useState(config.data);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        
+        const response = await fetch("http://localhost:3000/api/visualization/top_products_sold");
+        const apiData = await response.json();
+
+        
+        const topProducts = apiData.slice(0, 5);
+        const labels = topProducts.map((item) => `${item.product_name} (${item.brand_name})`);
+        const quantities = topProducts.map((item) => item.total_quantity);
+
+        setData({
+          labels: labels,
+          datasets: [{ ...config.data.datasets[0], data: quantities }],
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []); 
 
   useEffect(() => {
     let newChart = null;
@@ -49,33 +72,27 @@ function TopProductSold() {
           chartRef.current.chart.destroy();
         }
         const context = chartRef.current.getContext("2d");
-        newChart = new Chart(context, config);
+        newChart = new Chart(context, {
+          type: config.type,
+          data: data,
+          options: config.options,
+        });
         chartRef.current.chart = newChart;
       }
     };
 
     createChart();
 
-    const handleResize = () => {
-      if (newChart) {
-        newChart.resize(); 
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
     return () => {
-      window.removeEventListener("resize", handleResize);
       if (newChart) {
         newChart.destroy();
       }
     };
-  }, [config]);
-
+  }, [data]);
 
   return (
     <div className="box mx-auto w-full max-w-[70rem]">
-        <canvas ref={chartRef} ></canvas>
+      <canvas ref={chartRef}></canvas>
     </div>
   );
 }
