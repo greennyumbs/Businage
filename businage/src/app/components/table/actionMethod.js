@@ -21,24 +21,8 @@ export default function ActionMethod({ row, setHandleAction }) {
         `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
       )
     ) {
-      // console.log("Triggered!");
       setIsOpen(true);
     }
-    /*
-    if (
-                confirm(
-                  `Are you sure you want to edit ${JSON.stringify(
-                    row.product_name
-                  )}`
-                ) === true
-              ) {
-                // onOpen(); //To trigger isOpen to open modal
-                setIsOpen(true);
-                console.log("Triggered");
-                EditModal("Editing form", row, isOpen, setIsOpen);
-                // return <EditModal formName="Editing form" row={row} />;
-              }
-              */
   };
 
   const handleDelete = async () => {

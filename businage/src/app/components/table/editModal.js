@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -7,17 +8,35 @@ import {
   ModalFooter,
   Button,
   Input,
+  Autocomplete,
+  AutocompleteSection,
+  AutocompleteItem,
 } from "@nextui-org/react";
 
 export default function EditModal({ formName, row, isOpen, setIsOpen }) {
-  const handleEdit = (onClose) => {
+  const [brandName, setBrandName] = useState(row.Brand.brand_name);
+  const [productName, setProductName] = useState(row.product_name);
+  const [sellPrice, setSellPrice] = useState(row.sell_price);
+  const [quantity, setQuantity] = useState(row.quantity);
+  const [sellingStatus, setSellingStatus] = useState(row.selling_status);
+  // const [editData, setEditData] = useState(row);
+  let editData = row;
+
+  const handleEdit = () => {
     if (
       window.confirm(
         `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
       )
     ) {
-      //Logic Area
-      onClose();
+      //Logic Area => Pass all value to API
+      editData.Brand.brand_name = brandName;
+      editData.product_name = productName;
+      editData.sell_price = sellPrice;
+      editData.quantity = quantity;
+      editData.selling_status = sellingStatus;
+      editData.latest_update = new Date().toISOString();
+      console.log(editData);
+      setIsOpen(false);
     }
   };
 
@@ -34,18 +53,49 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
             autoFocus
             label="Brand Name"
             placeholder={row.Brand.brand_name}
+            value={brandName}
+            onValueChange={(val) => setBrandName(val)}
           />
           <Input
-            autoFocus
             label="Product Name"
             placeholder={row.product_name}
+            value={productName}
+            onValueChange={(val) => setProductName(val)}
           />
-          <Input label="Sell Price" placeholder={String(row.sell_price)} />
-          <Input label="Quantity" placeholder={String(row.quantity)} />
           <Input
+            label="Sell Price"
+            type="number"
+            placeholder={String(row.sell_price)}
+            value={sellPrice}
+            onValueChange={(val) => setSellPrice(val)}
+          />
+          <Input
+            label="Quantity"
+            type="number"
+            placeholder={String(row.quantity)}
+            value={quantity}
+            onValueChange={(val) => setQuantity(val)}
+          />
+          <Autocomplete
+            label="Selling Status"
+            placeholder={editData.selling_status ? "In stock" : "Not available"}
+            defaultSelectedKey={editData.selling_status}
+            selectedKey={sellingStatus}
+            onSelectionChange={setSellingStatus}
+          >
+            <AutocompleteItem key={true} className="text-green-500">
+              In stock
+            </AutocompleteItem>
+            <AutocompleteItem key={false} className="text-red-600">
+              Not available
+            </AutocompleteItem>
+          </Autocomplete>
+          {/* <Input
             label="Selling Status (กู ขก. ทำ Dropdown)"
             placeholder={row.selling_status ? "In stock" : "Not available"}
-          />
+            value={brandName}
+            onValueChange={(val) => set(val)}
+          /> */}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -55,10 +105,7 @@ export default function EditModal({ formName, row, isOpen, setIsOpen }) {
           >
             Close
           </Button>
-          <Button
-            color="primary"
-            onClick={() => handleEdit(() => setIsOpen(false))}
-          >
+          <Button color="primary" onClick={() => handleEdit()}>
             Edit
           </Button>
         </ModalFooter>

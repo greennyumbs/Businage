@@ -12,9 +12,7 @@ import {
   Input,
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
-import axios from "axios";
 import { useState, useMemo, useEffect, useCallback } from "react";
-import SearchBox from "./SearchBox";
 
 const columns = [
   {
@@ -192,7 +190,7 @@ export default function SaleLog() {
           className="w-full h-full flex item-center pt-28"
           
           color="default"
-          label="Loading Product Stock..."
+          label="Loading Sales Log..."
         />
 
         }

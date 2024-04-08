@@ -10,12 +10,12 @@ import {
   getKeyValue,
   Spinner,
   Pagination,
-  useDisclosure,
   Input,
 } from "@nextui-org/react";
 import ActionMethod from "./actionMethod";
 
 function ProductTable({
+  type,
   rowData,
   colData,
   isLoading,
@@ -23,7 +23,6 @@ function ProductTable({
   setHandleAction,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  // const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
@@ -44,12 +43,17 @@ function ProductTable({
 
     if (hasSearchFilter) {
       filteredProducts = filteredProducts.filter((product) => {
-        return product.product_name
-          .toLowerCase()
-          .includes(filteredValue.toLowerCase());
+        if (type == "ProductTable") {
+          return product.product_name
+            .toLowerCase()
+            .includes(filteredValue.toLowerCase());
+        } else if (type == "TradeInTable") {
+          return product.item_name
+            .toLowerCase()
+            .includes(filteredValue.toLowerCase());
+        }
       });
     }
-
     return filteredProducts;
   }, [rowData, filteredValue, hasSearchFilter]); //Will render when rowData, filteredValue, hasSearchFilter change
 
@@ -107,7 +111,13 @@ function ProductTable({
         <Input
           isClearable
           className="w-full"
-          placeholder="Search by Product name..."
+          placeholder={
+            type == "ProductTable"
+              ? "Search by Product name..."
+              : type == "TradeInTable"
+              ? "Search by Item name..."
+              : null
+          }
           aria-labelledby="Search"
           // startContent={<SeachIcon />}
           value={filteredValue}
@@ -118,7 +128,45 @@ function ProductTable({
     );
   }, [filteredValue, onSearchChange, onClear]);
 
-  //Start - Action on Vertical dot
+  function handleProductStock(columnKey, row) {
+    return (
+      <TableCell className="py-4">
+        {columnKey === "selling_status" ? (
+          row.selling_status ? (
+            <p className="text-green-500">In stock</p>
+          ) : (
+            <p className="text-red-600">Not available</p>
+          )
+        ) : columnKey === "latest_update" ? (
+          new Date(row.latest_update).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        ) : columnKey === "Brand" ? (
+          row.Brand.brand_name
+        ) : columnKey === "action" ? (
+          <ActionMethod
+            row={row}
+            setHandleAction={setHandleAction}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        ) : (
+          getKeyValue(row, columnKey)
+        )}
+      </TableCell>
+    );
+  }
+
+  function handleTradeIn(columnKey, row) {
+    return (
+      <TableCell className="py-4">{getKeyValue(row, columnKey)}</TableCell>
+    );
+  }
 
   return (
     <>
@@ -164,58 +212,25 @@ function ProductTable({
               <Spinner
                 className="w-full h-full flex item-center pt-28"
                 color="default"
-                label="Loading Product Stock..."
+                label={
+                  type == "ProductTable"
+                    ? "Loading Product Stock..."
+                    : type == "TradeInTable"
+                    ? "Loading Trade-In Income..."
+                    : null
+                }
               />
             }
           >
             {(row) => {
-              // console.log(row);
               return (
                 <TableRow key={row.product_id}>
                   {(columnKey) => {
-                    return (
-                      <TableCell className="py-4">
-                        {columnKey === "selling_status" ? (
-                          row.selling_status ? (
-                            <p className="text-green-500">In stock</p>
-                          ) : (
-                            <p className="text-red-600">Not available</p>
-                          )
-                        ) : columnKey === "latest_update" ? (
-                          new Date(row.latest_update).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            }
-                          )
-                        ) : columnKey === "Brand" ? (
-                          row.Brand.brand_name
-                        ) : columnKey === "action" ? (
-                          // actionMethod(
-                          //   row,
-                          //   setHandleAction,
-                          //   isOpen,
-                          //   setIsOpen
-                          //   // isOpen,
-                          //   // onOpen,
-                          //   // onOpenChange
-                          // )
-                          <ActionMethod
-                            row={row}
-                            setHandleAction={setHandleAction}
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                          />
-                        ) : (
-                          getKeyValue(row, columnKey)
-                        )}
-                      </TableCell>
-                    );
+                    if (type === "ProductTable") {
+                      return handleProductStock(columnKey, row);
+                    } else if (type === "TradeInTable") {
+                      return handleTradeIn(columnKey, row);
+                    }
                   }}
                 </TableRow>
               );
