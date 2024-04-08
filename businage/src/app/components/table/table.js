@@ -198,7 +198,7 @@ function ProductTable({
         >
           <TableHeader columns={modifiedColData}>
             {(column) => (
-              <TableColumn key={column.key} allowsSorting>
+              <TableColumn key={column.key} allowsSorting={column.sortable}>
                 {column.label}
               </TableColumn>
             )}
