@@ -8,14 +8,17 @@ const colData = [
   {
     key: "item_name",
     label: "Item name",
+    sortable: true,
   },
   {
     key: "Brand",
     label: "Brand name",
+    sortable: true,
   },
   {
     key: "quantity",
     label: "Quantity",
+    sortable: true,
   },
 ];
 

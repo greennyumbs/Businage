@@ -8,30 +8,37 @@ const colData = [
   {
     key: "latest_update",
     label: "Expense date",
+    sortable: true,
   },
   {
     key: "Brand",
     label: "Brand name",
+    sortable: true,
   },
   {
     key: "product_name",
     label: "Product name",
+    sortable: true,
   },
   {
     key: "sell_price",
     label: "Sell price",
+    sortable: true,
   },
   {
     key: "avg_cost",
     label: "Average cost",
+    sortable: true,
   },
   {
     key: "quantity",
     label: "Quantity",
+    sortable: true,
   },
   {
     key: "selling_status",
     label: "Status",
+    sortable: false,
   },
 ];
 

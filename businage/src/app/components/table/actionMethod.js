@@ -12,7 +12,7 @@ import EditModal from "./editModal";
 
 const URL = "http://localhost:3000/";
 
-export default function ActionMethod({ row, setHandleAction }) {
+export default function ActionMethod({ row, setHandleAction, setPage }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEdit = () => {
@@ -41,6 +41,7 @@ export default function ActionMethod({ row, setHandleAction }) {
           },
         });
         setHandleAction(true);
+        setPage(1);
       } catch (error) {
         console.error("Error deleting product:", error);
       }
@@ -77,6 +78,7 @@ export default function ActionMethod({ row, setHandleAction }) {
           row={row}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          setHandleAction={setHandleAction}
         />
       )}
     </>

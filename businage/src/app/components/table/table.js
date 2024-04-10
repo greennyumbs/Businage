@@ -75,7 +75,7 @@ function ProductTable({
 
   //Start - Pagination
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 6;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -152,8 +152,7 @@ function ProductTable({
           <ActionMethod
             row={row}
             setHandleAction={setHandleAction}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            setPage={setPage}
           />
         ) : (
           getKeyValue(row, columnKey)
@@ -199,7 +198,7 @@ function ProductTable({
         >
           <TableHeader columns={modifiedColData}>
             {(column) => (
-              <TableColumn key={column.key} allowsSorting>
+              <TableColumn key={column.key} allowsSorting={column.sortable}>
                 {column.label}
               </TableColumn>
             )}
