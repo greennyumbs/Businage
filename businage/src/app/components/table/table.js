@@ -128,6 +128,14 @@ function ProductTable({
     );
   }, [filteredValue, onSearchChange, onClear]);
 
+  function currencyFormat(num) {
+    // return `฿` + num.toFixed(2).replace
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+    }).format(num);
+  }
+
   function handleProductStock(columnKey, row) {
     return (
       <TableCell className="py-4">
@@ -154,6 +162,11 @@ function ProductTable({
             setHandleAction={setHandleAction}
             setPage={setPage}
           />
+        ) : columnKey === "sell_price" ? (
+          // `฿${row.sell_price}`
+          currencyFormat(row.sell_price)
+        ) : columnKey === "avg_cost" ? (
+          currencyFormat(row.avg_cost)
         ) : (
           getKeyValue(row, columnKey)
         )}
