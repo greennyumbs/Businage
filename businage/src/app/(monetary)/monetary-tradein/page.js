@@ -6,13 +6,8 @@ import ProductTable from "@/app/components/table/table";
 
 const colData = [
   {
-    key: "item_name",
-    label: "Item name",
-    sortable: true,
-  },
-  {
-    key: "Brand",
-    label: "Brand name",
+    key: "size_name",
+    label: "Size name",
     sortable: true,
   },
   {
@@ -26,7 +21,8 @@ const colData = [
 const getTradeInData = async () => {
   try {
     const res = await axios.get(
-      "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
+      // "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
+      "http://localhost:3000/api/trade_in_stock"
     );
     return res.data;
   } catch (error) {

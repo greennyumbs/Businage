@@ -22,8 +22,6 @@ function ProductTable({
   isEdited,
   setHandleAction,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
   const modifiedColData = useMemo(() => {
@@ -48,7 +46,7 @@ function ProductTable({
             .toLowerCase()
             .includes(filteredValue.toLowerCase());
         } else if (type == "TradeInTable") {
-          return product.item_name
+          return product.size_name
             .toLowerCase()
             .includes(filteredValue.toLowerCase());
         }
@@ -115,7 +113,7 @@ function ProductTable({
             type == "ProductTable"
               ? "Search by Product name..."
               : type == "TradeInTable"
-              ? "Search by Item name..."
+              ? "Search by Size name..."
               : null
           }
           aria-labelledby="Search"
@@ -223,7 +221,15 @@ function ProductTable({
           >
             {(row) => {
               return (
-                <TableRow key={row.product_id}>
+                <TableRow
+                  key={
+                    type === "ProductTable"
+                      ? row.product_id
+                      : type === "TradeInTable"
+                      ? row.size_id
+                      : null
+                  }
+                >
                   {(columnKey) => {
                     if (type === "ProductTable") {
                       return handleProductStock(columnKey, row);
