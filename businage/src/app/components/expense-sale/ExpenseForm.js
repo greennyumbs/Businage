@@ -4,23 +4,37 @@ import React, { useEffect, useRef, useState } from 'react';
 import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
 import axios from 'axios';
 
-function ExpenseForm() {
+function ExpenseForm() {    
+    const [isLoading,setIsloading] = useState(true)
+    const [data,setData] = useState([])
+    const [prodDisabled,setProdDisabled] = useState(true)
+    const [filteredProd,setfilteredProd] = useState([])
+    const [disableTimestamp,setDisableTimestamp] = useState(true)
+    const [uniqueBrandList,setUniqueBrandList] = useState([]);
+    const offsetMilliseconds = 7 * 60 * 60 * 1000;
     
+
+    const URL = 'http://localhost:3000'
+
     const fetchData = async () => {
-        const res = await axios.get('http://localhost:3000/api/products')
+        const res = await axios.get(URL+'/api/products')
         setData(res.data);
-        setIsloading(false);
       };
+
+    const postData = async (body) =>{
+        await axios.post(URL+'/api/expense_log',body)
+    }
 
     useEffect(() => {
         fetchData();
       }, []);
+    
+    useEffect(()=>{
+        const brandList = data.map((element)=> {return element.Brand.brand_name})
+        setUniqueBrandList(Array.from(new Set(brandList)));
+        setIsloading(false);
 
-    const [isLoading,setIsloading] = useState(true)
-    const [data,setData] = useState([])
-    const [prodDisabled,setProdDisabled] = useState(true)
-    const [filteredProd,setfilteredProd] = useState([''])
-    const [disableTimestamp,setDisableTimestamp] = useState(true)
+    },[data])
 
     const handleBrand = (value) =>{
         dataRef.current['Brand']=value;
@@ -31,6 +45,10 @@ function ExpenseForm() {
 
     const handleProd = (value) =>{
         dataRef.current['Product Name']=value;
+    }
+
+    const adjustDateToISO = (date, offsetMilliseconds) =>{
+        return new Date(date.getTime()+offsetMilliseconds).toISOString();
     }
 
     const dataRef = useRef({
@@ -45,6 +63,58 @@ function ExpenseForm() {
         'Time':''
     })
 
+    let req = {
+        "product": [
+            {
+                "brand_name": null,
+                "product_name": null,
+                "cost": null,
+                "quantity": null
+            }
+            ],
+        "newBrands": [
+            {
+                "brand_name": null
+            }
+        ],
+        "newProducts": [
+            {
+                "brand_name": null,
+                "product_name": null,
+                "cost": null,
+                "quantity": null
+            }
+        ],
+        "timestamp": null
+    }
+
+    const resetReq = ()=>{
+        return {
+            "product": [
+                {
+                    "brand_name": null,
+                    "product_name": null,
+                    "cost": null,
+                    "quantity": null
+                }
+                ],
+            "newBrands": [
+                {
+                    "brand_name": null
+                }
+            ],
+            "newProducts": [
+                {
+                    "brand_name": null,
+                    "product_name": null,
+                    "cost": null,
+                    "quantity": null
+                }
+            ],
+            "timestamp": null
+        }
+    }
+
   return (
     <div className='box w-5/6 mx-auto'>
         {isLoading? 
@@ -57,11 +127,41 @@ function ExpenseForm() {
         <form
             onSubmit={(e)=>{
             e.preventDefault()
-            console.table(dataRef.current)
-            if(disableTimestamp === false){
-                console.table(timestampRef.current)
+            //Old brand  
+            if(uniqueBrandList.includes(dataRef.current.Brand)){
+                //Case 1: Old brand old product
+                if(filteredProd.some(e=> e.product_name===dataRef.current['Product Name'])){
+                    req.product[0].brand_name = dataRef.current.Brand
+                    req.product[0].product_name = dataRef.current['Product Name']
+                    req.product[0].cost = dataRef.current.Cost
+                    req.product[0].quantity = dataRef.current.Quantity
+                }
+                //Case 2: Old brand new product
+                else{
+                    req.newProducts[0].brand_name = dataRef.current.Brand
+                    req.newProducts[0].product_name = dataRef.current['Product Name']
+                    req.newProducts[0].cost = dataRef.current.Cost
+                    req.newProducts[0].quantity = dataRef.current.Quantity
+                }
             }
-            alert('see console for data')
+            //New brand
+            else{
+                //Case 3: New brand new product
+                req.newBrands[0].brand_name = dataRef.current.Brand
+                req.newProducts[0].brand_name = dataRef.current.Brand
+                req.newProducts[0].product_name = dataRef.current['Product Name']
+                req.newProducts[0].cost = dataRef.current.Cost
+                req.newProducts[0].quantity = dataRef.current.Quantity
+            }
+
+            if(disableTimestamp === false){
+                const date = new Date(timestampRef.current.Date+'T'+timestampRef.current.Time);
+                req.timestamp = adjustDateToISO(date,offsetMilliseconds);
+            }
+            postData(req)
+            alert('See console for data')
+            console.log(req)
+            req = resetReq()
         }}>
             <div className='grid grid-cols-2 gap-x-5 gap-y-10'>
                 <Autocomplete
@@ -72,9 +172,9 @@ function ExpenseForm() {
                     isRequired
                     onInputChange={handleBrand}
                 >
-                    {data.map((prod)=>(
-                        <AutocompleteItem key={prod.Brand.brand_name} value={prod.Brand.brand_name}>
-                            {prod.Brand.brand_name}
+                    {uniqueBrandList.map((brand)=>(
+                        <AutocompleteItem key={brand} value={brand}>
+                            {brand}
                         </AutocompleteItem>
                     ))}
                 </Autocomplete>
@@ -88,8 +188,7 @@ function ExpenseForm() {
                     isRequired
                     onInputChange={handleProd}
                 >
-                    {
-                     filteredProd.map((prod)=>(
+                    {filteredProd.map((prod)=>(
                             <AutocompleteItem key={prod.product_name} value={prod.product_name}>
                                 {prod.product_name}
                             </AutocompleteItem>

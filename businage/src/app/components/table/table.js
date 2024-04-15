@@ -10,20 +10,18 @@ import {
   getKeyValue,
   Spinner,
   Pagination,
-  useDisclosure,
   Input,
 } from "@nextui-org/react";
-import { actionMethod } from "./actionMethod";
+import ActionMethod from "./actionMethod";
 
 function ProductTable({
+  type,
   rowData,
   colData,
   isLoading,
   isEdited,
   setHandleAction,
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
   const modifiedColData = useMemo(() => {
@@ -43,12 +41,17 @@ function ProductTable({
 
     if (hasSearchFilter) {
       filteredProducts = filteredProducts.filter((product) => {
-        return product.product_name
-          .toLowerCase()
-          .includes(filteredValue.toLowerCase());
+        if (type == "ProductTable") {
+          return product.product_name
+            .toLowerCase()
+            .includes(filteredValue.toLowerCase());
+        } else if (type == "TradeInTable") {
+          return product.size_name
+            .toLowerCase()
+            .includes(filteredValue.toLowerCase());
+        }
       });
     }
-
     return filteredProducts;
   }, [rowData, filteredValue, hasSearchFilter]); //Will render when rowData, filteredValue, hasSearchFilter change
 
@@ -70,7 +73,7 @@ function ProductTable({
 
   //Start - Pagination
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 6;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -106,7 +109,13 @@ function ProductTable({
         <Input
           isClearable
           className="w-full"
-          placeholder="Search by Product name..."
+          placeholder={
+            type == "ProductTable"
+              ? "Search by Product name..."
+              : type == "TradeInTable"
+              ? "Search by Size name..."
+              : null
+          }
           aria-labelledby="Search"
           // startContent={<SeachIcon />}
           value={filteredValue}
@@ -117,14 +126,51 @@ function ProductTable({
     );
   }, [filteredValue, onSearchChange, onClear]);
 
-  //Start - Action on Vertical dot
+  function handleProductStock(columnKey, row) {
+    return (
+      <TableCell className="py-4">
+        {columnKey === "selling_status" ? (
+          row.selling_status ? (
+            <p className="text-green-500">In stock</p>
+          ) : (
+            <p className="text-red-600">Not available</p>
+          )
+        ) : columnKey === "latest_update" ? (
+          new Date(row.latest_update).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        ) : columnKey === "Brand" ? (
+          row.Brand.brand_name
+        ) : columnKey === "action" ? (
+          <ActionMethod
+            row={row}
+            setHandleAction={setHandleAction}
+            setPage={setPage}
+          />
+        ) : (
+          getKeyValue(row, columnKey)
+        )}
+      </TableCell>
+    );
+  }
+
+  function handleTradeIn(columnKey, row) {
+    return (
+      <TableCell className="py-4">{getKeyValue(row, columnKey)}</TableCell>
+    );
+  }
 
   return (
     <>
-      <div className="min-w-max h-screen flex justify-center">
+      <div className=" flex justify-center p-20">
         <Table
           aria-label="product table"
-          className="w-4/5"
+          className="w-full"
           isStriped
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
@@ -150,7 +196,7 @@ function ProductTable({
         >
           <TableHeader columns={modifiedColData}>
             {(column) => (
-              <TableColumn key={column.key} allowsSorting>
+              <TableColumn key={column.key} allowsSorting={column.sortable}>
                 {column.label}
               </TableColumn>
             )}
@@ -163,50 +209,33 @@ function ProductTable({
               <Spinner
                 className="w-full h-full flex item-center pt-28"
                 color="default"
-                label="Loading Product Stock..."
+                label={
+                  type == "ProductTable"
+                    ? "Loading Product Stock..."
+                    : type == "TradeInTable"
+                    ? "Loading Trade-In Income..."
+                    : null
+                }
               />
             }
           >
             {(row) => {
-              // console.log(row);
               return (
-                <TableRow key={row.product_id}>
+                <TableRow
+                  key={
+                    type === "ProductTable"
+                      ? row.product_id
+                      : type === "TradeInTable"
+                      ? row.size_id
+                      : null
+                  }
+                >
                   {(columnKey) => {
-                    return (
-                      <TableCell className="py-4">
-                        {columnKey === "selling_status" ? (
-                          row.selling_status ? (
-                            <p className="text-green-500">In stock</p>
-                          ) : (
-                            <p className="text-red-600">Not available</p>
-                          )
-                        ) : columnKey === "latest_update" ? (
-                          new Date(row.latest_update).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            }
-                          )
-                        ) : columnKey === "Brand" ? (
-                          row.Brand.brand_name
-                        ) : columnKey === "action" ? (
-                          actionMethod(
-                            row,
-                            setHandleAction,
-                            isOpen,
-                            onOpen,
-                            onOpenChange
-                          )
-                        ) : (
-                          getKeyValue(row, columnKey)
-                        )}
-                      </TableCell>
-                    );
+                    if (type === "ProductTable") {
+                      return handleProductStock(columnKey, row);
+                    } else if (type === "TradeInTable") {
+                      return handleTradeIn(columnKey, row);
+                    }
                   }}
                 </TableRow>
               );

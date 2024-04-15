@@ -6,6 +6,26 @@ import axios from 'axios'
 
 const URL = 'http://localhost:3000/';
 
+export async function GET() {
+    try {
+        const query = supabase
+            .from('Trade_out_log')
+            .select('*')
+
+        const { data, error } = await query;
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return Response.json(data);
+    } catch (error) {
+        return Response.json({ error: 'Failed to fetch data' });
+
+    }
+
+}
+
 export async function POST(req) {
     const body = await req.json()
     const userTimestamp = body.timestamp
