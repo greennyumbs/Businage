@@ -113,7 +113,8 @@ export async function GET(req){
     try {
         const { data, error } = await supabase
             .from('Sales_log')
-            .select()
+            .select(`Sales_detail(quantity, Product_stock(product_name, Brand(brand_name))),
+                    Customer(fname, lname), order_date, discount, total_price, trade_in_status`)
         if (error) {
             throw new Error(error.message);
         }

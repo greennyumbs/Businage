@@ -1,10 +1,10 @@
 import getSales from '../../../utils/getSales';
 import getCost from '../../../utils/getCost';
-    
+
 export async function GET() {
     try {
         const salesObject = await getSales();
-        const costObject  = await getCost();
+        const costObject = await getCost();
 
         const sales = Object.values(salesObject);
         const cost = Object.values(costObject);
@@ -17,7 +17,7 @@ export async function GET() {
             const [year, monthName] = month.split('-');
             const matchingSaleItem = sales.find(item => item.year === parseInt(year) && item.month === monthName);
             const matchingCostItem = cost.find(item => item.year === parseInt(year) && item.month === monthName);
-            
+
             if (matchingSaleItem && matchingCostItem) {
                 return {
                     month: monthName,

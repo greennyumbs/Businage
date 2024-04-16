@@ -24,18 +24,28 @@ export default async function postSales(products, order_id) {
 
     console.log("productData:", productData)
 
-    const extractedData = productData.map(({ product_id, quantity }) => ({
+    const extractedData = productData.map(({ product_id, quantity, sell_price }) => ({
         product_id,
-        quantity
+        quantity,
+        sell_price
     }));
 
     const updatedRes = res.map(item => {
         const product = extractedData.find(product => product.product_id === item.product_id);
         return {
             ...item,
-            quantity: product.quantity - item.quantity
+            quantity: product.quantity - item.quantity,
+            sell_price: product.sell_price
         };
     });
+
+    res = res.map(item => {
+        const product = extractedData.find(product => product.product_id === item.product_id);
+        return {
+            ...item,
+            sell_price: product.sell_price
+        };
+    })
 
     for (const { product_id, quantity } of updatedRes) {
         const { data, error } = await supabase
