@@ -87,8 +87,10 @@ export default function SaleLog() {
       });
       if(filterText)
       {
-        
-        data = data.filter((item)=>item.name === filterText)
+        data = data.filter((item)=>
+          item.name.toLowerCase().includes(filterText.toLowerCase())
+  
+        )
       } 
 
       setPages(Math.ceil(data.length / rowsPerPage));
