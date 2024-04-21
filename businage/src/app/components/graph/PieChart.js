@@ -24,33 +24,47 @@ export default function PieChart() {
   }, []);
 
   useEffect(() => {
+    // Setup label & data
+    const labels = data.mainGroup?.map((prod) => prod.product_name);
+    const percentageValues = data.mainGroup
+      ?.map((prod) => prod.percentage)
+    const profitValues = data.mainGroup?.map(
+      (prod)=>prod.profit
+    )
+    if(labels?.length !== 0)
+    {
+      // Fill the others part piechart
+      labels?.push("Others");
+
+      percentageValues?.push(
+        data.othersGroup?.reduce(
+          (acc, curr) => acc + curr.percentage,
+          0
+        )
+      );
+
+      profitValues?.push(
+        data.othersGroup?.reduce(
+          (acc, curr) => acc + curr.profit,
+          0
+        )
+      );
+    }
+    else
+    {
+      labels.push("No data")
+      percentageValues.push(100)
+      profitValues.push(0.00000001)
+
+    }
+
     // Pie Chart prep
     if (chartRef.current) {
       if (chartRef.current.chart) {
         chartRef.current.chart.destroy();
       }
     }
-    const context = chartRef.current.getContext("2d");
-
-    // Setup label & data
-    const labels = data.mainGroup?.map((prod) => prod.product_name);
-    const values = data.mainGroup
-      ?.map((prod) => prod.percentage)
-    
-    if(labels?.length !== 0 && values?.length !== 0)
-    {
-      // Fill the others part piechart
-      labels?.push("Others");
-
-      values?.push(
-        data.othersGroup?.reduce(
-          (acc, curr) => acc + curr.percentage,
-          0
-        )
-      );
-    }
-
-    
+    const context = chartRef.current.getContext("2d");    
 
     const newChart = new Chart(context, {
       type: "pie",
@@ -65,14 +79,20 @@ export default function PieChart() {
       },
       data: {
         labels: labels, // change
-
         datasets: [
           {
             label: "Percentage (%)",
-            data: values,
+            hoverOffset: 10,
+            data: percentageValues,
+          },
+          {
+
+            label: "Profit (baht)",
+            data: profitValues,
             
           },
         ],
+        
       },
     });
 
