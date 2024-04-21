@@ -13,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const columns = [
   {
@@ -20,12 +21,8 @@ const columns = [
     label: "Order date",
   },
   {
-    key: "order_id",
-    label: "Order id",
-  },
-  {
-    key: "customer_id",
-    label: "Customer",
+    key: "name",
+    label: "Customer Name",
   },
   {
     key: "trade_in_status_display",
@@ -68,6 +65,8 @@ export default function SaleLog() {
       let data = json.data.map((item) => {
         return {
           ...item,
+          id: uuidv4(),
+          name: item.Customer.fname + " " + item.Customer.lname,
           total_price_display: THbaht.format(item.total_price),
           trade_in_status_display:
             item.trade_in_status == true ? (
@@ -89,7 +88,7 @@ export default function SaleLog() {
       if(filterText)
       {
         
-        data = data.filter((item)=>item.customer_id === parseInt(filterText))
+        data = data.filter((item)=>item.name === filterText)
       } 
 
       setPages(Math.ceil(data.length / rowsPerPage));
@@ -145,7 +144,7 @@ export default function SaleLog() {
   }, [page, list.items]);
 
   
-
+  
   return (
     <Table
       isHeaderSticky={true}
@@ -196,7 +195,7 @@ export default function SaleLog() {
         }
       >
         {(item) => (
-          <TableRow key={item.order_id}>
+          <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>{getKeyValue(item, columnKey)}</TableCell>
             )}
