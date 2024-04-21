@@ -30,17 +30,16 @@ export async function GET() {
             const month = new Date(expense_date).toLocaleString('default', { month: 'long' });
             const year = new Date(expense_date).getFullYear();
             const key = `${year}-${month}-${product_name}-${brand_name}`;
-            acc[key] = {
-                year,
-                month,
-                product_name,
-                brand_name,
-                total_cost: (acc[key]?.total_cost || 0) + cost,
-            };
+            if (!acc[key]) {
+                acc[key] = { year, month, product_name, brand_name, total_cost: 0 };
+            }
+            acc[key].total_cost += cost;
             return acc;
         }, {});
 
-        return Response.json(productCostByMonth);
+        const result = Object.values(productCostByMonth);
+
+        return Response.json(result);
     } catch (error) {
         return Response.json({ error: 'Failed to fetch data' });
     }

@@ -11,8 +11,6 @@ export async function GET() {
 
         const allMonths = new Set([...sales.map(item => `${item.year}-${item.month}`), ...cost.map(item => `${item.year}-${item.month}`)]);
 
-        console.log(allMonths);
-
         const profit = Array.from(allMonths).map(month => {
             const [year, monthName] = month.split('-');
             const matchingSaleItem = sales.find(item => item.year === parseInt(year) && item.month === monthName);
