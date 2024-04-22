@@ -39,7 +39,7 @@ export async function GET() {
             acc[key].total_cost += cost;
             return acc;
         }, {});
-
+        
         const result = Object.values(productCostByMonth);
 
         return Response.json(result);
