@@ -31,7 +31,7 @@ function calCostMonth(data) {
 
   for (let month in MONTHS) {
     // filtering each month first
-    let costEachMonth = data.filter((item) => item.month == month);
+    let costEachMonth = data.filter((item) => item.month == MONTHS[month]);
     if (costEachMonth.length === 0) {
       values.push(null);
     } else {
@@ -40,6 +40,7 @@ function calCostMonth(data) {
       );
     }
   }
+  
   return values;
 }
 
@@ -48,6 +49,7 @@ export default function LineChartCost() {
   const [existYear, setExistYear] = useState([]);
   const [selectedYear, setSelectedYear] = useState();
   const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true)
 
   // Pull data
   useEffect(() => {
@@ -58,6 +60,7 @@ export default function LineChartCost() {
       } else {
         const data = response.data;
         setChartData(data);
+        setLoading(false)
       }
     };
     fetchData();
@@ -108,7 +111,6 @@ export default function LineChartCost() {
         : chartData.filter((data) => String(data.year) == selectedYear);
     // Find cost each month
     const displayData = calCostMonth(filteredData)
-
 
     const newChart = new Chart(context, {
       type: "line",
@@ -170,7 +172,11 @@ export default function LineChartCost() {
             // defaultSelectedKeys={[selectedYear]}
             size="sm"
             label="Select Year"
-            placeholder={existYear.length === 0 ? "No data" : "Show years"}
+            placeholder={
+                loading === true? "Loading...":
+                existYear.length === 0 ? "No data" : "Show years"
+            
+            }
           >
             {existYear.map((year) => {
               return (

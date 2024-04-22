@@ -27,7 +27,7 @@ export async function GET() {
 
         const productCostByMonth = extractedData.reduce((acc, row) => {
             const { cost, expense_date, product_name, brand_name } = row;
-            const month = new Date(expense_date).toLocaleString('default', {
+            const month = new Date(expense_date).toLocaleString('en-US', {
                 month: 'long',
                 locale: 'en-US' // This sets the language to French (France)
               });
