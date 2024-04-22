@@ -13,31 +13,44 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
+import PopoverDetails from "./PopoverDetail";
 
 const columns = [
   {
     key: "order_date",
     label: "Order date",
+    sort: true
   },
   {
-    key: "order_id",
-    label: "Order id",
-  },
-  {
-    key: "customer_id",
-    label: "Customer",
+    key: "name",
+    label: "Customer Name",
+    sort: true
+
   },
   {
     key: "trade_in_status_display",
     label: "Trade-In",
+    sort: true
+
   },
   {
     key: "discount_display",
     label: "Discount",
+    sort: true
+
   },
   {
     key: "total_price_display",
     label: "Total price",
+    sort: true
+
+  },
+  {
+    key: "details",
+    label: "Details",
+    sort: false
+
   },
 ];
 
@@ -54,10 +67,6 @@ export default function SaleLog() {
   const [pages, setPages] = useState();
   const rowsPerPage = 5;
 
-  
-  
-  
-  
   // For fetching & sorting
   let list = useAsyncList({
     async load({ signal, filterText }) {
@@ -67,7 +76,10 @@ export default function SaleLog() {
       let json = await res.json();
       let data = json.data.map((item) => {
         return {
-          ...item,
+          ...item, // used for numeric calculation
+          id: uuidv4(),
+          details: <PopoverDetails saleDetails={item.Sales_detail}/>,
+          name: item.Customer.fname + " " + item.Customer.lname,
           total_price_display: THbaht.format(item.total_price),
           trade_in_status_display:
             item.trade_in_status == true ? (
@@ -86,11 +98,11 @@ export default function SaleLog() {
           }),
         };
       });
-      if(filterText)
-      {
-        
-        data = data.filter((item)=>item.customer_id === parseInt(filterText))
-      } 
+      if (filterText) {
+        data = data.filter((item) =>
+          item.name.toLowerCase().includes(filterText.toLowerCase())
+        );
+      }
 
       setPages(Math.ceil(data.length / rowsPerPage));
       setIsLoading(false);
@@ -134,8 +146,6 @@ export default function SaleLog() {
       };
     },
   });
-  
-
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -144,65 +154,65 @@ export default function SaleLog() {
     return list.items.slice(start, end); // slice to show specific range
   }, [page, list.items]);
 
-  
-
   return (
-    <Table
-      isHeaderSticky={true}
-      aria-label="Sale log table"
-      sortDescriptor={list.sortDescriptor}
-      onSortChange={list.sort}
-      topContent={<Input
-        placeholder="Search by customer name..."
-        value={list.filterText}
-        onValueChange={(value)=>{
-          list.setFilterText(value)
-          setPage(1)
-        }}
-      />}
-      
-      bottomContent={
-        isLoading? null:
-        (<div className="flex justify-center">
-          <Pagination
-            showControls
-            showShadow
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
+    <>
+      <Table
+        isHeaderSticky={true}
+        aria-label="Sale log table"
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort}
+        topContent={
+          <Input
+            placeholder="Search by customer name..."
+            value={list.filterText}
+            onValueChange={(value) => {
+              list.setFilterText(value);
+              setPage(1);
+            }}
           />
-        </div>)
-      }
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn key={column.key} allowsSorting>
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        emptyContent={isLoading == true ? " ": "No sales log to display."}
-        items={items}
-        isLoading={isLoading}
-        loadingContent={
-          <Spinner
-          className="w-full h-full flex item-center pt-28"
-          
-          color="default"
-          label="Loading Sales Log..."
-        />
-
+        }
+        bottomContent={
+          isLoading ? null : (
+            <div className="flex justify-center">
+              <Pagination
+                showControls
+                showShadow
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          )
         }
       >
-        {(item) => (
-          <TableRow key={item.order_id}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key} allowsSorting={column.sort}>
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          emptyContent={isLoading == true ? " " : "No sales log to display."}
+          items={items}
+          isLoading={isLoading}
+          loadingContent={
+            <Spinner
+              className="w-full h-full flex item-center pt-28"
+              color="default"
+              label="Loading Sales Log..."
+            />
+          }
+        >
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }
