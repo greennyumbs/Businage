@@ -31,9 +31,6 @@ export async function POST(req){
         var customer_id = customer.customer_id;
     }
     else if (newCustomer) {
-        // const addNewCustomerResponse = await axios.post(`${URL}api/newcustomer`,
-        //     newCustomer
-        // );
         const addNewCustomerResponse = await addNewCustomer(newCustomer);
         var customer_id = addNewCustomerResponse.data[0].customer_id;
     }
