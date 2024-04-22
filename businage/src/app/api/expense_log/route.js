@@ -6,6 +6,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from "axios";
 import postBrand from "../../utils/postBrand";
 import postProducts from "../../utils/postProducts";
+import postExpense from "../../utils/postExpense";
 
 const URL = "http://localhost:3000/";
 
@@ -13,7 +14,7 @@ export async function GET() {
   try {
     const { data, error } = await supabase
       .from("Expense_log")
-      .select('*')
+      .select('*, Expense_detail(quantity, Product_stock(product_name, Brand(brand_name)))')
 
     if (error) {
       throw new Error(error.message)
@@ -110,13 +111,14 @@ export async function POST(req) {
       throw new Error(error.message);
     }
 
-    const expenseResponse = await axios.post(`${URL}api/expense`, {
-      products: products,
-      expense_id: data[0].expense_id,
-    });
+    // const expenseResponse = await axios.post(`${URL}api/expense`, {
+    //   products: products,
+    //   expense_id: data[0].expense_id,
+    // });
+    const expenseData = await postExpense(products, data[0].expense_id);
 
-    const expenseData = expenseResponse.data;
-    console.log(expenseData);
+    // const expenseData = expenseResponse.data;
+    // console.log(expenseData);
 
     return Response.json({
       data: data,

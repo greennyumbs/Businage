@@ -2,10 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import getBrand from '../../utils/getBrand';
+import getBrand from './getBrand';
 import getProducts from './getProducts';
 
 export default async function postExpense(products, expense_id) {
+    console.log("PRODUCTS:", products, "EXPENSE ID:", expense_id)
     let res = [];
     for (let i = 0; i < products.length; i++) {
         const brandName = products[i].brand_name;
@@ -26,7 +27,7 @@ export default async function postExpense(products, expense_id) {
 
     const productData = await getProducts();
 
-    console.log('productData')
+    console.log('productData', productData)
 
     const extractedData = productData.map(({ product_id, product_name, brand_id, avg_cost, quantity }) => ({
         product_id,
