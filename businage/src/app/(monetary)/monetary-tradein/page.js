@@ -17,13 +17,11 @@ const colData = [
   },
 ];
 
+// "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
 //http://localhost:3000/api/trade_in_stock
 const getTradeInData = async () => {
   try {
-    const res = await axios.get(
-      // "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
-      "http://localhost:3000/api/trade_in_stock"
-    );
+    const res = await axios.get("http://localhost:3000/api/trade_in_stock");
     return res.data;
   } catch (error) {
     return { error };
