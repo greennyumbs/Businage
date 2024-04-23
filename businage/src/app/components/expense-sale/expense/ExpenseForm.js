@@ -22,6 +22,7 @@ function ExpenseForm() {
       };
 
     const postData = async (body) =>{
+        console.log('sending!',body)
         await axios.post(URL+'/api/expense_log',body)
     }
 
@@ -63,56 +64,69 @@ function ExpenseForm() {
         'Time':''
     })
 
-    let req = {
-        "product": [
+    let product = [
             {
                 "brand_name": null,
                 "product_name": null,
                 "cost": null,
                 "quantity": null
             }
-            ],
-        "newBrands": [
+        ]
+
+    let newBrands = [
+        {
+            "brand_name": null
+        }
+    ]
+
+    let newProducts = [
+        {
+            "brand_name": null,
+            "product_name": null,
+            "cost": null,
+            "quantity": null
+        }
+    ]
+
+    let timestamp =  null
+
+    let req = {}
+
+    const resetReq = ()=>{
+        product = [
+            {
+                "brand_name": null,
+                "product_name": null,
+                "cost": null,
+                "quantity": null
+            }
+        ]
+        
+        newBrands = [
             {
                 "brand_name": null
             }
-        ],
-        "newProducts": [
+        ]
+
+        newProducts = [
             {
                 "brand_name": null,
                 "product_name": null,
                 "cost": null,
                 "quantity": null
             }
-        ],
-        "timestamp": null
-    }
+        ]
 
-    const resetReq = ()=>{
-        return {
-            "product": [
-                {
-                    "brand_name": null,
-                    "product_name": null,
-                    "cost": null,
-                    "quantity": null
-                }
-                ],
-            "newBrands": [
-                {
-                    "brand_name": null
-                }
-            ],
-            "newProducts": [
-                {
-                    "brand_name": null,
-                    "product_name": null,
-                    "cost": null,
-                    "quantity": null
-                }
-            ],
-            "timestamp": null
+        timestamp =  null
+
+        dataMap = {
+            "product":false,
+            "newBrands":false,
+            "newProducts":false,
+            "timestamp":false
         }
+
+        req = {}
     }
 
   return (
@@ -131,37 +145,40 @@ function ExpenseForm() {
             if(uniqueBrandList.includes(dataRef.current.Brand)){
                 //Case 1: Old brand old product
                 if(filteredProd.some(e=> e.product_name===dataRef.current['Product Name'])){
-                    req.product[0].brand_name = dataRef.current.Brand
-                    req.product[0].product_name = dataRef.current['Product Name']
-                    req.product[0].cost = dataRef.current.Cost
-                    req.product[0].quantity = dataRef.current.Quantity
+                    product[0].brand_name = dataRef.current.Brand
+                    product[0].product_name = dataRef.current['Product Name']
+                    product[0].cost = dataRef.current.Cost
+                    product[0].quantity = dataRef.current.Quantity
+                    req = {product}
                 }
                 //Case 2: Old brand new product
                 else{
-                    req.newProducts[0].brand_name = dataRef.current.Brand
-                    req.newProducts[0].product_name = dataRef.current['Product Name']
-                    req.newProducts[0].cost = dataRef.current.Cost
-                    req.newProducts[0].quantity = dataRef.current.Quantity
+                    newProducts[0].brand_name = dataRef.current.Brand
+                    newProducts[0].product_name = dataRef.current['Product Name']
+                    newProducts[0].cost = dataRef.current.Cost
+                    newProducts[0].quantity = dataRef.current.Quantity
+                    req = {newProducts}
                 }
             }
             //New brand
             else{
                 //Case 3: New brand new product
-                req.newBrands[0].brand_name = dataRef.current.Brand
-                req.newProducts[0].brand_name = dataRef.current.Brand
-                req.newProducts[0].product_name = dataRef.current['Product Name']
-                req.newProducts[0].cost = dataRef.current.Cost
-                req.newProducts[0].quantity = dataRef.current.Quantity
+                newBrands[0].brand_name = dataRef.current.Brand
+                newProducts[0].brand_name = dataRef.current.Brand
+                newProducts[0].product_name = dataRef.current['Product Name']
+                newProducts[0].cost = dataRef.current.Cost
+                newProducts[0].quantity = dataRef.current.Quantity
+                req = {newBrands,newProducts}
             }
 
             if(disableTimestamp === false){
                 const date = new Date(timestampRef.current.Date+'T'+timestampRef.current.Time);
-                req.timestamp = adjustDateToISO(date,offsetMilliseconds);
+                timestamp = adjustDateToISO(date,offsetMilliseconds);
+                req = {...req,"timestamp":timestamp}
             }
             postData(req)
             alert('See console for data')
-            console.log(req)
-            req = resetReq()
+            resetReq()
         }}>
             <div className='grid grid-cols-2 gap-x-5 gap-y-10'>
                 <Autocomplete
@@ -208,7 +225,7 @@ function ExpenseForm() {
                 <Input isRequired isDisabled={disableTimestamp} type='time' label='Time' onChange={(e)=>{
                     timestampRef.current['Time'] = e.target.value
                 }}/>
-                <Button className='col-start-1 col-span-2' type='submit'>Submit</Button>
+                <Button className='col-start-1 col-span-2' color='primary' type='submit'>Submit</Button>
             </div>
         </form>)}
     </div>

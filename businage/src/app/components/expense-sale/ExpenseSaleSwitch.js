@@ -1,10 +1,11 @@
 'use client'
 
-import ExpenseForm from '@/app/components/expense-sale/ExpenseForm'
+import ExpenseForm from '@/app/components/expense-sale/expense/ExpenseForm'
 import React from 'react'
 import {Tabs, Tab} from "@nextui-org/react";
 import SaleAgg from './sale/SaleAgg';
 import ExpenseLog from './expense/ExpenseLog';
+import SaleForm from './sale/SaleForm';
 
 function ExpenseSaleSwitch() {
     return (
@@ -16,7 +17,10 @@ function ExpenseSaleSwitch() {
             </div>
           </Tab>
           <Tab className="px-5" key="sale" title="Sale">
-            <SaleAgg/>
+            <div className='flex-row space-y-5'>
+              <SaleAgg/>
+              <SaleForm/>
+            </div>
           </Tab>
         </Tabs>
       )
