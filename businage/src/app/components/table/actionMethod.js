@@ -16,13 +16,14 @@ export default function ActionMethod({ row, setHandleAction, setPage }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEdit = () => {
-    if (
-      confirm(
-        `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
-      )
-    ) {
-      setIsOpen(true);
-    }
+    // if (
+    //   confirm(
+    //     `Are you sure you want to edit ${JSON.stringify(row.product_name)}`
+    //   )
+    // ) {
+    //   setIsOpen(true);
+    // }
+    setIsOpen(true);
   };
 
   const handleDelete = async () => {
