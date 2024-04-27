@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductTable from "@/app/components/table/table";
+import TradeInForm from "@/app/components/table/TradeInForm";
 
 const colData = [
   {
@@ -46,7 +47,7 @@ function TradeIn() {
   getTradeInData();
 
   return (
-    <div className="w-full">
+    <div className="py-4">
       <ProductTable
         type={"TradeInTable"}
         rowData={rowData}
@@ -55,6 +56,7 @@ function TradeIn() {
         isEdited={false}
         setHandleAction={setHandleAction}
       />
+      <TradeInForm />
     </div>
   );
 }

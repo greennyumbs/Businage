@@ -180,7 +180,7 @@ function ProductTable({
 
   return (
     <>
-      <div className=" flex justify-center p-20">
+      <div className="flex justify-center p-20 pb-5">
         <Table
           aria-label="product table"
           className="w-full"
