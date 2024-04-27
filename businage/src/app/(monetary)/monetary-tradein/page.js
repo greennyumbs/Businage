@@ -21,13 +21,35 @@ const colData = [
 // "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
 //http://localhost:3000/api/trade_in_stock
 const getTradeInData = async () => {
-  try {
-    const res = await axios.get("http://localhost:3000/api/trade_in_stock");
-    return res.data;
-  } catch (error) {
-    return { error };
-  }
+  // try {
+  //   const res = await axios.get("http://localhost:3000/api/trade_in_stock");
+  //   return res.data;
+  // } catch (error) {
+  //   return { error };
+  // }
+  return "Hi";
 };
+
+//
+
+async function makeAPICalls(endpoint) {
+  const res = await axios.get(endpoint);
+  return res.data;
+}
+
+async function makeMultipleAPICalls(endpoints) {
+  const promise = endpoints.map(makeAPICalls);
+  const res = await Promise.all(promise);
+  return res;
+}
+
+//Call function to make it call multiple APIs
+const response = await makeMultipleAPICalls([
+  // "http://localhost:3000/api/trade_in_stock",
+  "http://localhost:3000/api/size",
+]);
+
+console.log(response);
 
 function TradeIn() {
   const [rowData, setRowData] = useState([]);
@@ -44,7 +66,7 @@ function TradeIn() {
     fetchData();
   }, [handleAction]);
 
-  getTradeInData();
+  // getTradeInData();
 
   return (
     <div className="py-4">
