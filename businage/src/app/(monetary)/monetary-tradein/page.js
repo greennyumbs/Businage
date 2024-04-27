@@ -18,38 +18,18 @@ const colData = [
   },
 ];
 
-// "https://65f066cfda8c6584131ba062.mockapi.io/api/product/tradein"
-//http://localhost:3000/api/trade_in_stock
 const getTradeInData = async () => {
-  // try {
-  //   const res = await axios.get("http://localhost:3000/api/trade_in_stock");
-  //   return res.data;
-  // } catch (error) {
-  //   return { error };
-  // }
-  return "Hi";
+  const url1 = "http://localhost:3000/api/size";
+  const url2 = "http://localhost:3000/api/trade_in_stock";
+
+  try {
+    // const res = await axios.get("http://localhost:3000/api/trade_in_stock");
+    const res = await Promise.all([fetch(url1), fetch(url2)]);
+    return res;
+  } catch (error) {
+    return { error };
+  }
 };
-
-//
-
-async function makeAPICalls(endpoint) {
-  const res = await axios.get(endpoint);
-  return res.data;
-}
-
-async function makeMultipleAPICalls(endpoints) {
-  const promise = endpoints.map(makeAPICalls);
-  const res = await Promise.all(promise);
-  return res;
-}
-
-//Call function to make it call multiple APIs
-const response = await makeMultipleAPICalls([
-  // "http://localhost:3000/api/trade_in_stock",
-  "http://localhost:3000/api/size",
-]);
-
-console.log(response);
 
 function TradeIn() {
   const [rowData, setRowData] = useState([]);
@@ -59,7 +39,11 @@ function TradeIn() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getTradeInData();
-      setRowData(res);
+      const data1 = await res[0].json();
+      const data2 = await res[1].json();
+      // console.table(data1);
+      // console.table(data2);
+      setRowData(data2);
       setLoading(false);
       setHandleAction(false);
     };
@@ -69,7 +53,7 @@ function TradeIn() {
   // getTradeInData();
 
   return (
-    <div className="py-4">
+    <div>
       <ProductTable
         type={"TradeInTable"}
         rowData={rowData}
@@ -78,7 +62,11 @@ function TradeIn() {
         isEdited={false}
         setHandleAction={setHandleAction}
       />
-      <TradeInForm />
+      {!loading && (
+        <>
+          <TradeInForm saleData={rowData} />
+        </>
+      )}
     </div>
   );
 }
