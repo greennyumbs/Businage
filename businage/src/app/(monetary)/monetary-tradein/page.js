@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductTable from "@/app/components/table/table";
-import TradeInForm from "@/app/components/table/TradeInForm";
+import TradeInForm from "@/app/components/form/TradeInForm";
 
 const colData = [
   {
