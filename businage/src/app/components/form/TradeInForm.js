@@ -105,7 +105,7 @@ const TradeInForm = ({ saleData }) => {
         {sizeData.map((data, index) => (
           <div
             key={index}
-            className="grid grid-flow-row grid-cols-2 gap-5 mt-10"
+            className="grid grid-flow-row grid-cols-2 gap-5 mt-5  p-5 "
           >
             <Autocomplete
               isRequired
@@ -166,6 +166,9 @@ const TradeInForm = ({ saleData }) => {
             )}
           </div>
         ))}
+        {/* <div className=" text-gray-200 font-bold">
+          _________________________________________________________________________________________________________________________________________________________________________________________________
+        </div> */}
         <Button type="add" className="mt-5" onClick={handleAdd}>
           +
         </Button>
