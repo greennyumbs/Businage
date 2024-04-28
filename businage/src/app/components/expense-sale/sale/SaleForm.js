@@ -78,8 +78,8 @@ function SaleForm() {
 
                                 <Autocomplete
                                 className={`col-start-1 col-span-2 ${page === i + 1 ? '' : 'hidden'}`}
-                                label='Brand'
-                                placeholder='YUASA'
+                                label='Product Name'
+                                placeholder='Battery 100 Amp (DIN100L-SMF)'
                                 isRequired
                                 >
                                     {productList
