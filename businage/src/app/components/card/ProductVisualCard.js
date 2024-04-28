@@ -29,11 +29,11 @@ function ProductVisualizeCard() {
   const list = [
     {
       result: products.length > 0 ? products[0].result : "Loading...",
-      title: products.length > 0 ? products[0].title : "Most product sold",
+      title: products.length > 0 ? products[0].title : "Least product sold",
     },
     {
       result: products.length > 1 ? products[1].result : "Loading...",
-      title: products.length > 1 ? products[1].title : "Least product sold",
+      title: products.length > 1 ? products[1].title : "Most product sold",
     },
   ];
 
