@@ -14,7 +14,7 @@ import {
 import { useAsyncList } from "@react-stately/data";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
-import PopoverDetails from "./PopoverDetail";
+import PopoverDetails from "../PopoverDetail";
 
 const columns = [
   {

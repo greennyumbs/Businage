@@ -35,9 +35,9 @@ function adapter(saleDetails) {
     const normalizedSaleDetails = saleDetails.map((sale) => {
       return {
         id: uuidv4(),
-        quantity: sale.quantity,
-        product_name: sale.Product_stock.product_name,
-        brand_name: sale.Product_stock.Brand.brand_name,
+        quantity: sale?.quantity,
+        product_name: sale.Product_stock?.product_name,
+        brand_name: sale.Product_stock?.Brand.brand_name,
       };
     });
     return normalizedSaleDetails;

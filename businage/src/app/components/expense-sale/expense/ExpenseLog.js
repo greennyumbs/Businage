@@ -13,19 +13,36 @@ import {
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { useState, useMemo, useEffect, useCallback } from "react";
-
+import PopoverDetails from "../PopoverDetail";
 const columns = [
   {
     key: "expense_date",
     label: "Expense date",
+    sort: true
   },
   {
     key: "expense_id",
     label: "Expense id",
+    sort: true
+
   },
   {
-    key: "total_cost",
+    key: "brands",
+    label: "Brand(s)",
+    sort: false
+
+  },
+  {
+    key: "total_cost_display",
     label: "Total cost",
+    sort: true
+
+  },
+  {
+    key: "details",
+    label: "Details",
+    sort: false
+
   },
 ];
 
@@ -50,9 +67,31 @@ export default function ExpenseLog() {
       });
       let json = await res.json();
       let data = json.map((item) => {
+        let brands = "None"
+        if(item.Expense_detail !== 0)
+        { 
+          brands = (Array.from(new Set(item.Expense_detail.map(
+            (detail)=>{
+              if(detail.Product_stock === null)
+              {
+                return null
+              }
+              else{
+                return detail.Product_stock.Brand.brand_name
+              }
+            }
+          )))).filter(ele=>ele).join(", ")
+          
+        }
+        if(!brands)
+        {
+          brands = "None"
+        }
         return {
           ...item,
+          brands: brands,
           total_cost_display: THbaht.format(item.total_cost),
+          details: <PopoverDetails saleDetails={item.Expense_detail}/>,
           expense_date: new Date(item.expense_date).toLocaleDateString(
             "en-GB",
             {
@@ -145,7 +184,7 @@ export default function ExpenseLog() {
     >
       <TableHeader columns={columns}>
         {(column) => (
-          <TableColumn key={column.key} allowsSorting>
+          <TableColumn key={column.key} allowsSorting={column.sort}>
             {column.label}
           </TableColumn>
         )}
