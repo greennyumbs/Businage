@@ -1,107 +1,174 @@
 "use client"
-import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto"; 
+import { useEffect, useRef, useState } from "react";
+import { Select, SelectSection, SelectItem } from "@nextui-org/react";
+import axios, { all } from "axios";
 
-const data = {
-  labels: [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ],
-  datasets: [
-    {
-      label: "Profit",
-      data: [50, 40, 60, 70, 80, 100, 20, 45, 30, 110, 65, 25],
-      backgroundColor: "rgba(54, 162, 235, 0.5)",
-      borderColor: "rgba(54, 162, 235, 1)"
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function labelValueAdapter(allYear) {
+  const converted = allYear.map((year) => {
+    return { label: String(year), value: year };
+  });
+  return converted;
+}
+
+function calProfitMonth(data) {
+  const values = [];
+
+  for (let month in MONTHS) {
+    // filtering each month first
+    let profitEachMonth = data.filter((item) => item.month == MONTHS[month]);
+    if (profitEachMonth.length === 0) {
+      values.push(null);
+    } else {
+      values.push(
+        profitEachMonth.reduce((acc, curr) => acc + curr.profit, 0)
+      );
     }
-  ]
-};
+  }
+  
+  return values;
+}
 
-const config = {
-  type: "line",
-  data,
-  options: {
-    indexAxis: 'x',
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: "Month"
-        }
-      },
-      y: {
-        display: true,
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: "Profit"
-        }
-      },
-    },
-    plugins: {
-      title: {
-        display: true,
-        text: 'Profit Gain By Month',
-        padding: { top: 10 },
-        font: { size: 32, weight: 'bold' },
-        align: 'start',
-        position: 'top'
-      }
-    },
-  },
-};
-
-function ProfitGainByMonth() {
+export default function ProfitGainByMonth() {
   const chartRef = useRef(null);
+  const [existYear, setExistYear] = useState([]);
+  const [selectedYear, setSelectedYear] = useState();
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true)
+
+  // Pull data
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios("/api/visualization/profit_gain_by_month");
+      if (response.status !== 200) {
+        console.log("LingChartCost bad response");
+      } else {
+        const data = response.data;
+        setChartData(data);
+        setLoading(false)
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    let newChart = null;
-
-    const createChart = () => {
-      if (chartRef.current) {
-        if (chartRef.current.chart) {
-          chartRef.current.chart.destroy();
-        }
-        const context = chartRef.current.getContext("2d");
-        newChart = new Chart(context, config);
-        chartRef.current.chart = newChart;
+    if (chartRef.current) {
+      if (chartRef.current.chart) {
+        chartRef.current.chart.destroy();
       }
-    };
+    }
+    const context = chartRef.current.getContext("2d");
 
-    createChart();
+    const allYear = [...new Set(chartData.map((cost) => cost.year))].sort(
+      (a, b) => a - b
+    );
 
-    const handleResize = () => {
-      if (newChart) {
-        newChart.resize(); 
-      }
-    };
+    if (allYear.length !== 0) {
+      // have data then make a list of exist year for dropdown
+      setExistYear(labelValueAdapter(allYear));
+    }
 
-    window.addEventListener("resize", handleResize);
+    // Prepare data
+    // Filtering year
+    const filteredData =
+      chartData.length === 0
+        ? []
+        : chartData.filter((data) => String(data.year) == selectedYear);
+    // Find cost each month
+    const displayData = calProfitMonth(filteredData)
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (newChart) {
-        newChart.destroy();
-      }
-    };
-  }, [config]);
+    const newChart = new Chart(context, {
+      type: "line",
+
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: "Profit gain by month",
+          },
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: "Month",
+            },
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: "Profit",
+            },
+          },
+        },
+      },
+      data: {
+        labels: MONTHS,
+
+        datasets: [
+          {
+            label: "Profit",
+            data: displayData,
+            backgroundColor: "rgb(75, 192, 192)",
+            borderColor: "rgb(75, 192, 192)",
+          },
+        ],
+      },
+    });
+
+    chartRef.current.chart = newChart;
+  }, [chartData, selectedYear]); // change data everytime that selectedYear change
 
   return (
-    <div className="box mx-auto w-full max-w-[70rem]">
+    <div className=" box mx-auto w-full max-w-[70rem] ">
+      <div className="flex justify-between ">
+        <h1 className=" font-bold">Profit gain by month</h1>
+        {/* Year dropdown selection */}
+        <div className=" w-60 ">
+          <Select
+            scrollShadowProps={{
+              isEnabled: false,
+            }}
+            onChange={(e) => {
+              setSelectedYear(e.target.value);
+            }}
+            // defaultSelectedKeys={[selectedYear]}
+            size="sm"
+            label="Select Year"
+            placeholder={
+                loading === true? "Loading...":
+                existYear.length === 0 ? "No data" : "Show years"
+            
+            }
+          >
+            {existYear.map((year) => {
+              return (
+                <SelectItem key={year.value} value={year.value}>
+                  {String(year.label)}
+                </SelectItem>
+              );
+            })}
+          </Select>
+        </div>
+      </div>
       <canvas ref={chartRef} />
     </div>
   );
 }
-
-export default ProfitGainByMonth;
