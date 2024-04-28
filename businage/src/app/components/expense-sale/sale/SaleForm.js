@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
-import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
+import React, { useState, useEffect, useRef, createRef } from 'react'
+import {Button, Input, Autocomplete, AutocompleteItem, Spinner, Pagination, user} from "@nextui-org/react";
+import { v4 as uuidv4 } from "uuid";
 import axios from 'axios';
 
 function SaleForm() {
 
     const [isLoading,setIsloading] = useState(true);
+    const [fields,setFields] = useState([uuidv4()]);
     const [data,setData] = useState([]);
     const [uniqueBrandList,setUniqueBrandList] = useState([]);
-    const [fields,setFields] = useState([]);
-    const id = useRef(0);
+    const [productList,setProductList] = useState([])
+    const ref = useRef({})
+
+    const [page, setPage] = useState(1);
 
     const URL = 'http://localhost:3000'
 
@@ -27,7 +31,13 @@ function SaleForm() {
         setIsloading(false);
     },[data])
 
-    {console.log('rerendered')}
+    const handleBrand = (value, id) => {
+        if(value){
+            const filteredProd = data.filter((prod)=>prod.Brand.brand_name === value)
+            setProductList([...productList.filter((element)=>(element.id !== id)),{id:id,prods:filteredProd,val:value}])
+        }
+    }
+
 
     return (
         <div className='box w-5/6 mx-auto'>
@@ -42,19 +52,24 @@ function SaleForm() {
                 onSubmit={(e)=>{
                 e.preventDefault()
             }}>
-                <Button size='sm' radius='none' color='success' onClick={()=>{
-                    id.current++
-                    setFields([...fields,id.current])}}>+</Button>
+                <Button onClick={()=>{setFields([...fields,uuidv4()]); setPage(page+1);}}>Add</Button>
+                <Button onClick={()=>{if(fields.length > 1){
+                    if(page == fields.length) setPage(page-1)
+                    setFields(fields.slice(0,fields.length-1))
+                    }}}>Remove</Button>
                 <div className='grid grid-cols-2 gap-x-5 gap-y-10'>
-                    {fields.map((id)=>{
+                    {
+                        fields.map((e,i) => {
                         return(
                             <>
                                 <Autocomplete
-                                    className='col-start-1 col-span-2'
-                                    label='Brand'
-                                    placeholder='YUASA'
-                                    isRequired
-                                    id={id}
+                                className={`col-start-1 col-span-2 ${page === i + 1 ? '' : 'hidden'}`}
+                                label='Brand'
+                                placeholder='YUASA'
+                                isRequired
+                                onInputChange={(value)=>handleBrand(value,fields[i])}
+                                key={fields[i]}
+                                ref={ref.current[fields[i]] ??= { current: null }}
                                 >
                                     {uniqueBrandList.map((brand)=>(
                                         <AutocompleteItem key={brand} value={brand}>
@@ -62,14 +77,38 @@ function SaleForm() {
                                         </AutocompleteItem>
                                     ))}
                                 </Autocomplete>
-                                <Button onClick={()=>setFields(fields.filter((e)=>{
-                                    return e!=id;
-                                }))}>{id}</Button>
+
+                                <Autocomplete
+                                className={`col-start-1 col-span-2 ${page === i + 1 ? '' : 'hidden'}`}
+                                label='Brand'
+                                placeholder='YUASA'
+                                isRequired
+                                >
+                                    {productList
+                                    .map((element)=>{
+                                        if(element.id === fields[i]){
+                                            return element.prods.map(prod => (
+                                                <AutocompleteItem key={prod.product_name} value={prod.product_name}>
+                                                    {prod.product_name}
+                                                </AutocompleteItem>
+                                            ))
+                                        }
+                                    })}
+                                </Autocomplete>
                             </>
                         )
                     })}
                 </div>
-            </form>)}
+                <Pagination
+                showControls
+                showShadow
+                page={page}
+                total={fields.length}
+                onChange={(page)=>setPage(page)}
+                />
+                <Button onClick={()=>console.log(productList)}>See productList</Button>
+            </form>
+        )}
         </div>
     )
 }

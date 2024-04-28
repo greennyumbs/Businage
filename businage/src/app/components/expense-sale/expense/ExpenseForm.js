@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
 import axios from 'axios';
 
@@ -12,6 +13,8 @@ function ExpenseForm() {
     const [disableTimestamp,setDisableTimestamp] = useState(true)
     const [uniqueBrandList,setUniqueBrandList] = useState([]);
     const offsetMilliseconds = 7 * 60 * 60 * 1000;
+    const pathname = usePathname()
+    const router = useRouter()
     
 
     const URL = 'http://localhost:3000'
@@ -24,6 +27,7 @@ function ExpenseForm() {
     const postData = async (body) =>{
         console.log('sending!',body)
         await axios.post(URL+'/api/expense_log',body)
+        window.location.reload()
     }
 
     useEffect(() => {
@@ -118,14 +122,6 @@ function ExpenseForm() {
         ]
 
         timestamp =  null
-
-        dataMap = {
-            "product":false,
-            "newBrands":false,
-            "newProducts":false,
-            "timestamp":false
-        }
-
         req = {}
     }
 
@@ -177,7 +173,6 @@ function ExpenseForm() {
                 req = {...req,"timestamp":timestamp}
             }
             postData(req)
-            alert('See console for data')
             resetReq()
         }}>
             <div className='grid grid-cols-2 gap-x-5 gap-y-10'>
