@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react'
+import React, { useState, useEffect} from 'react'
 import {Button, Input, Autocomplete, AutocompleteItem, Spinner, Pagination, user} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios';
@@ -10,7 +10,6 @@ function SaleForm() {
     const [data,setData] = useState([]);
     const [uniqueBrandList,setUniqueBrandList] = useState([]);
     const [productList,setProductList] = useState([])
-    const ref = useRef({})
 
     const [page, setPage] = useState(1);
 
@@ -69,7 +68,6 @@ function SaleForm() {
                                 isRequired
                                 onInputChange={(value)=>handleBrand(value,fields[i])}
                                 key={fields[i]}
-                                ref={ref.current[fields[i]] ??= { current: null }}
                                 >
                                     {uniqueBrandList.map((brand)=>(
                                         <AutocompleteItem key={brand} value={brand}>
