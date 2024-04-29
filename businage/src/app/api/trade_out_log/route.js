@@ -4,7 +4,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 import axios from 'axios'
 
-
+import postTradeOut from '../../utils/postTradeOutDetail'
+import updateTradeIn from '../../utils/updateTradeInStock'
 
 
 
@@ -69,15 +70,8 @@ export async function POST(req) {
             throw new Error(error.message);
         }
 
-        const tradeOutDetailRepsonse = await axios.post(`/api/trade_out_detail`,
-            {
-                size: size,
-                trade_out_id: data[0].trade_out_id,
-            }
-        )
-
-        const tradeOutDetailData = tradeOutDetailRepsonse.data;
-        console.log(tradeOutDetailData);
+        await postTradeOut(size, data[0].trade_out_id)
+        await updateTradeIn(size)
 
         return Response.json({
             message: `New trade out log id ${data[0].trade_out_id} added successfully`,

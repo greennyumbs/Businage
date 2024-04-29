@@ -3,13 +3,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function POST(req) {
-    const body = await req.json()
-    const size = body.size
-    const trade_out_id = body.trade_out_id
-
-    console.log(size, trade_out_id)
-
+export default async function postTradeOut(size, trade_out_id) {
     let res = [];
     for (let i = 0; i < size.length; i++) {
         const size_id = size[i].size_id;
