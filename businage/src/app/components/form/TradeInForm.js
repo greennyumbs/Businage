@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 
 const TradeInForm = ({ saleData }) => {
@@ -89,7 +89,7 @@ const TradeInForm = ({ saleData }) => {
     if (window.confirm("Are you sure that you want to insert?")) {
       // console.log(data);
       await axios
-        .post(`${NEXT_PUBLIC_BASE_API_URL}/api/trade_out_log`, data)
+        .post(`/api/trade_out_log`, data)
         .then((response) => console.log(response))
         .catch((error) => console.log(error));
     }

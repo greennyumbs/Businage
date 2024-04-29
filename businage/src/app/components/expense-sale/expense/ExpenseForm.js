@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
 import axios from 'axios';
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 function ExpenseForm() {    
     const [isLoading,setIsloading] = useState(true)
@@ -21,13 +21,13 @@ function ExpenseForm() {
     const URL = `${NEXT_PUBLIC_BASE_API_URL}`
 
     const fetchData = async () => {
-        const res = await axios.get(URL+'/api/products')
+        const res = await axios.get('/api/products')
         setData(res.data);
       };
 
     const postData = async (body) =>{
         console.log('sending!',body)
-        await axios.post(URL+'/api/expense_log',body)
+        await axios.post('/api/expense_log',body)
         window.location.reload()
     }
 

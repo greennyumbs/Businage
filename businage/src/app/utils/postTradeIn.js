@@ -19,7 +19,7 @@ export default async function postTradeIn(trade_in, order_id) {
 
     console.log(res)
 
-    // const tradeInStockResponse = await axios.get(`${URL}api/trade_in_stock`);
+    // const tradeInStockResponse = await axios.get(`/api/trade_in_stock`);
     // const tradeInStockData = tradeInStockResponse.data;
     const tradeInStockData = await getTradeInStock();
 

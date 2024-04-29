@@ -9,10 +9,10 @@ import {
 import VerticalDotIcon from "./VerticalDotIcon";
 import axios from "axios";
 import EditModal from "./editModal";
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
 
-const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
+
+
 
 export default function ActionMethod({ row, setHandleAction, setPage }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function ActionMethod({ row, setHandleAction, setPage }) {
     ) {
       alert(`Deleting on product name: ${JSON.stringify(row.product_name)}`);
       try {
-        await axios.delete(`${URL}/api/products`, {
+        await axios.delete(`/api/products`, {
           data: {
             product_id: row.product_id,
           },

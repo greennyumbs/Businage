@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react'
 import {Button, Input, Autocomplete, AutocompleteItem, Spinner, Pagination, user} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios';
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 function SaleForm() {
 
@@ -17,7 +17,7 @@ function SaleForm() {
     const URL = `${NEXT_PUBLIC_BASE_API_URL}`
 
     const fetchData = async () => {
-        const res = await axios.get(URL+'/api/products')
+        const res = await axios.get('/api/products')
         setData(res.data);
       };
 

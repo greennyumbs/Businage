@@ -109,7 +109,7 @@ export async function POST(req) {
       throw new Error(error.message);
     }
 
-    // const expenseResponse = await axios.post(`${URL}api/expense`, {
+    // const expenseResponse = await axios.post(`/api/expense`, {
     //   products: products,
     //   expense_id: data[0].expense_id,
     // });

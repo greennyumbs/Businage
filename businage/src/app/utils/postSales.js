@@ -18,7 +18,7 @@ export default async function postSales(products, order_id) {
         });
     }
 
-    // const productResponse = await axios.get(`${URL}api/products`);
+    // const productResponse = await axios.get(`/api/products`);
     // const productData = productResponse.data;
     const productData = await getProducts();
 

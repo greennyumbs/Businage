@@ -5,9 +5,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
 import getBrand from '../../utils/getBrand';
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
+
+
 
 export async function POST(request) {
 
@@ -35,7 +35,7 @@ export async function POST(request) {
     console.log("Res")
     console.log(res);
 
-    const productResponse = await axios.get(`${URL}api/products`);
+    const productResponse = await axios.get(`/api/products`);
     const productData = productResponse.data;
 
     console.log('productData')
@@ -51,7 +51,7 @@ export async function POST(request) {
     console.log('extractedData')
     console.log(extractedData)
 
-    // const brandResponse = await axios.get(`${URL}api/brand`);
+    // const brandResponse = await axios.get(`/api/brand`);
     // const brandData = brandResponse.data;
     const brandData = await getBrand();
 

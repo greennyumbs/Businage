@@ -6,7 +6,7 @@ import ProductTable from "@/app/components/table/table";
 import TradeInForm from "@/app/components/form/TradeInForm";
 import TradeOutLog from "@/app/components/table/TradeOutLog";
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 const colData = [
   {
@@ -22,8 +22,8 @@ const colData = [
 ];
 
 const getTradeInData = async () => {
-  const url1 = `${NEXT_PUBLIC_BASE_API_URL}/api/size`;
-  const url2 = `${NEXT_PUBLIC_BASE_API_URL}/api/trade_in_stock`;
+  const url1 = `/api/size`;
+  const url2 = `/api/trade_in_stock`;
 
   try {
     // const res = await axios.get("${NEXT_PUBLIC_BASE_API_URL}/api/trade_in_stock");

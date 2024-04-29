@@ -4,9 +4,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 import axios from 'axios'
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
+
+
 
 export async function GET() {
     try {
@@ -69,7 +69,7 @@ export async function POST(req) {
             throw new Error(error.message);
         }
 
-        const tradeOutDetailRepsonse = await axios.post(`${URL}api/trade_out_detail`,
+        const tradeOutDetailRepsonse = await axios.post(`/api/trade_out_detail`,
             {
                 size: size,
                 trade_out_id: data[0].trade_out_id,

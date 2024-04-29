@@ -3,7 +3,7 @@
 import ProductTable from "@/app/components/table/table";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 
 const colData = [

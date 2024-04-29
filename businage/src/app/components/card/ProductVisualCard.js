@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, Spinner } from "@nextui-org/react";
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 function ProductVisualizeCard() {
   const Url = `${NEXT_PUBLIC_BASE_API_URL}/api/visualization/`;
@@ -31,8 +31,8 @@ function ProductVisualizeCard() {
     };
 
     Promise.all([
-      fetchProduct(`${Url}top_products_sold`, "Most product sold"),
-      fetchProduct(`${Url}least_products_sold`, "Least product sold"),
+      fetchProduct(`/top_products_sold`, "Most product sold"),
+      fetchProduct(`/least_products_sold`, "Least product sold"),
     ]).then(results => {
       setProducts(results);
     });

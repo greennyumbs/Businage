@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Spinner,} from "@nextui-org/react";
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 function MonetaryVisualizeCard() {
   const Url = `${NEXT_PUBLIC_BASE_API_URL}/api/visualization/`;
@@ -38,9 +38,9 @@ function MonetaryVisualizeCard() {
     };
 
     Promise.all([
-      fetchMonetaryData(`${Url}total_sale`, "Total Sale"),
-      fetchMonetaryData(`${Url}total_cost`, "Total Cost"),
-      fetchMonetaryData(`${Url}total_profit`, "Total Profit")
+      fetchMonetaryData(`/total_sale`, "Total Sale"),
+      fetchMonetaryData(`/total_cost`, "Total Cost"),
+      fetchMonetaryData(`/total_profit`, "Total Profit")
     ]).then(results => {
       setMonetaryData(results);
     });

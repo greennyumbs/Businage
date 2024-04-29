@@ -4,9 +4,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
+
+
 
 export async function POST(req){
     const body = await req.json()
@@ -25,7 +25,7 @@ export async function POST(req){
         });
     }
 
-    const productResponse = await axios.get(`${URL}api/products`);
+    const productResponse = await axios.get(`/api/products`);
     const productData = productResponse.data;
 
     console.log(productData)

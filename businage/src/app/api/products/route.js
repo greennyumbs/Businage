@@ -7,9 +7,9 @@ import axios from "axios";
 import latestUpdate from "../../utils/latestUpdate";
 import getBrand from "../../utils/getBrand";
 
-const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
+
+
 
 // GET all products
 export async function GET(req) {
@@ -69,7 +69,7 @@ export async function POST(req) {
   console.log("Res");
   console.log(res);
 
-  // const brandResponse = await axios.get(`${URL}api/brand`);
+  // const brandResponse = await axios.get(`/api/brand`);
   // const brandData = brandResponse.data;
   const brandData = await getBrand();
 
