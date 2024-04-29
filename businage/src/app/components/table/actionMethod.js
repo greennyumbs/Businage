@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import VerticalDotIcon from "./verticalDotIcon";
+import VerticalDotIcon from "./VerticalDotIcon";
 import axios from "axios";
 import EditModal from "./editModal";
 const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
