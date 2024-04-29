@@ -27,7 +27,7 @@ export default async function updateTradeIn(size) {
     );
 
     if (existingQuantity) {
-      const updatedQuantity = existingQuantity.quantity + item.quantity;
+      const updatedQuantity = existingQuantity.quantity - item.quantity;
       return supabase
         .from('Trade_in_stock')
         .update({ quantity: updatedQuantity })
