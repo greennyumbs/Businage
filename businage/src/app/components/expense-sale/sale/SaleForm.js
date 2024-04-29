@@ -14,8 +14,6 @@ function SaleForm() {
 
     const [page, setPage] = useState(1);
 
-    const URL = `${NEXT_PUBLIC_BASE_API_URL}`
-
     const fetchData = async () => {
         const res = await axios.get('/api/products')
         setData(res.data);

@@ -26,7 +26,6 @@ const getTradeInData = async () => {
   const url2 = `/api/trade_in_stock`;
 
   try {
-    // const res = await axios.get("${NEXT_PUBLIC_BASE_API_URL}/api/trade_in_stock");
     const res = await Promise.all([fetch(url1), fetch(url2)]);
     return res;
   } catch (error) {

@@ -16,9 +16,6 @@ function ExpenseForm() {
     const offsetMilliseconds = 7 * 60 * 60 * 1000;
     const pathname = usePathname()
     const router = useRouter()
-    
-
-    const URL = `${NEXT_PUBLIC_BASE_API_URL}`
 
     const fetchData = async () => {
         const res = await axios.get('/api/products')

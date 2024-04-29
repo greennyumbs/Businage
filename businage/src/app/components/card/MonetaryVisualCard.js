@@ -4,7 +4,7 @@ import { Card, CardBody, Spinner,} from "@nextui-org/react";
 
 
 function MonetaryVisualizeCard() {
-  const Url = `${NEXT_PUBLIC_BASE_API_URL}/api/visualization/`;
+  const Url = `/api/visualization/`;
 
   const [monetaryData, setMonetaryData] = useState([
     { result: <Spinner />, title: "Total Sale" },

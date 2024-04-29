@@ -46,7 +46,7 @@ function TopProductSold() {
     const fetchData = async () => {
       try {
         
-        const response = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/api/visualization/top_products_sold`);
+        const response = await fetch(`/api/visualization/top_products_sold`);
         const apiData = await response.json();
 
         

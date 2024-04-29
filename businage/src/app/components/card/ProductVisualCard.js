@@ -4,7 +4,7 @@ import { Card, CardBody, Spinner } from "@nextui-org/react";
 
 
 function ProductVisualizeCard() {
-  const Url = `${NEXT_PUBLIC_BASE_API_URL}/api/visualization/`;
+  const Url = `/api/visualization/`;
 
   const [products, setProducts] = useState([
     { result: <Spinner />, title: "Most product sold" },
