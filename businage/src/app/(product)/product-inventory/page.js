@@ -46,6 +46,7 @@ const colData = [
 
 const getProduct = async () => {
   try {
+    console.log(`${NEXT_PUBLIC_BASE_API_URL}`)
     const res = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/api/products`);
     return res.data; // Return the data instead of the entire response
   } catch (error) {
