@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
+
 const config = {
   type: "bar",
   data: {
@@ -43,7 +46,7 @@ function TopProductSold() {
     const fetchData = async () => {
       try {
         
-        const response = await fetch("http://localhost:3000/api/visualization/top_products_sold");
+        const response = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/api/visualization/top_products_sold`);
         const apiData = await response.json();
 
         

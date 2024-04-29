@@ -8,8 +8,6 @@ import postBrand from "../../utils/postBrand";
 import postProducts from "../../utils/postProducts";
 import postExpense from "../../utils/postExpense";
 
-const URL = "http://localhost:3000/";
-
 export async function GET() {
   try {
     const { data, error } = await supabase

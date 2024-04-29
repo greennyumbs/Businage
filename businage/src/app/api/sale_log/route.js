@@ -7,7 +7,9 @@ import addNewCustomer from '../../utils/newCustomer';
 import postTradeIn from '../../utils/postTradeIn';
 import postSales from '../../utils/postSales';
 
-const URL = 'http://localhost:3000/';
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
+const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
 
 export async function POST(req){
     const body = await req.json()

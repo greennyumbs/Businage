@@ -9,8 +9,10 @@ import {
 import VerticalDotIcon from "./verticalDotIcon";
 import axios from "axios";
 import EditModal from "./editModal";
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-const URL = "http://localhost:3000/";
+
+const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
 
 export default function ActionMethod({ row, setHandleAction, setPage }) {
   const [isOpen, setIsOpen] = useState(false);

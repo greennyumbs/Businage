@@ -5,7 +5,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
 import getBrand from '../../utils/getBrand';
 
-const URL = 'http://localhost:3000/';
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
+const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
 
 export async function POST(request) {
 

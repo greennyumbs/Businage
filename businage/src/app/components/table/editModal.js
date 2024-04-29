@@ -15,6 +15,9 @@ import {
 import axios from "axios";
 import { type } from "os";
 
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
+
 export default function EditModal({
   formName,
   row,
@@ -49,7 +52,7 @@ export default function EditModal({
       // editData.latest_update = new Date().toISOString();
       console.log(editData);
 
-      await axios.put("http://localhost:3000/api/products", {
+      await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/api/products`, {
         product: editData,
       });
       setHandleAction(true);

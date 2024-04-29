@@ -14,6 +14,9 @@ import {
 import { useAsyncList } from "@react-stately/data";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import PopoverDetails from "../PopoverDetail";
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+const URL = `${NEXT_PUBLIC_BASE_API_URL}`;
+
 const columns = [
   {
     key: "expense_date",
@@ -62,7 +65,7 @@ export default function ExpenseLog() {
   // For fetching & sorting
   let list = useAsyncList({
     async load({ signal, filterText }) {
-      let res = await fetch("/api/expense_log", {
+      let res = await fetch(`/api/expense_log`, {
         signal,
       });
       let json = await res.json();

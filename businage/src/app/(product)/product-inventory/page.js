@@ -3,6 +3,8 @@
 import ProductTable from "@/app/components/table/table";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 
 const colData = [
   {
@@ -44,7 +46,7 @@ const colData = [
 
 const getProduct = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/products");
+    const res = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/api/products`);
     return res.data; // Return the data instead of the entire response
   } catch (error) {
     return { error };

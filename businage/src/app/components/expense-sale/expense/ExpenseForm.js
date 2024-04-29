@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {Button, Input, Autocomplete, AutocompleteSection, AutocompleteItem, Checkbox, Spinner} from "@nextui-org/react";
 import axios from 'axios';
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
 function ExpenseForm() {    
     const [isLoading,setIsloading] = useState(true)
@@ -17,7 +18,7 @@ function ExpenseForm() {
     const router = useRouter()
     
 
-    const URL = 'http://localhost:3000'
+    const URL = `${NEXT_PUBLIC_BASE_API_URL}`
 
     const fetchData = async () => {
         const res = await axios.get(URL+'/api/products')

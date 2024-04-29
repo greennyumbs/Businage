@@ -7,7 +7,9 @@ import axios from "axios";
 import latestUpdate from "../../utils/latestUpdate";
 import getBrand from "../../utils/getBrand";
 
-const URL = "http://localhost:3000/";
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
+const URL = `${NEXT_PUBLIC_BASE_API_URL}/`;
 
 // GET all products
 export async function GET(req) {

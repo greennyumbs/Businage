@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Spinner,} from "@nextui-org/react";
 
+const NEXT_PUBLIC_BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 function MonetaryVisualizeCard() {
-  const Url = "http://localhost:3000/api/visualization/";
+  const Url = `${NEXT_PUBLIC_BASE_API_URL}/api/visualization/`;
 
   const [monetaryData, setMonetaryData] = useState([
     { result: <Spinner />, title: "Total Sale" },
