@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductTable from "@/app/components/table/table";
 import TradeInForm from "@/app/components/table/TradeInForm";
+import TradeOutLog from "@/app/components/table/TradeOutLog";
 
 const colData = [
   {
@@ -67,6 +68,9 @@ function TradeIn() {
           <TradeInForm saleData={rowData} />
         </>
       )}
+
+      <TradeOutLog />
+      
     </div>
   );
 }

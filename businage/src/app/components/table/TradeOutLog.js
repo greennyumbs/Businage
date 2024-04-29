@@ -24,7 +24,7 @@ const columns = [
     label: "Trade Out id",
   },
   {
-    key: "total_income",
+    key: "total_income_display",
     label: "Total Income",
   },
 ];
@@ -113,8 +113,8 @@ export default function ExpenseLog() {
 
   return (
     <Table
-      className="w-5/6 mx-auto"
-      
+    className="flex justify-center w-auto mx-20 py-5"
+
       isHeaderSticky={true}
       aria-label="Trade Out log table"
       sortDescriptor={list.sortDescriptor}
