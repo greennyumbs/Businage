@@ -67,7 +67,9 @@ export default function ExpenseLog() {
         };
       });
       if (filterText) {
-        data = data.filter((item) => item.trade_out_id === parseInt(filterText));
+        data = data.filter(
+          (item) => item.trade_out_id === parseInt(filterText)
+        );
       }
 
       setPages(Math.ceil(data.length / rowsPerPage));
@@ -113,8 +115,7 @@ export default function ExpenseLog() {
 
   return (
     <Table
-    className="flex justify-center w-auto mx-20 py-5"
-
+      className="flex justify-center w-auto mx-20 py-5"
       isHeaderSticky={true}
       aria-label="Trade Out log table"
       sortDescriptor={list.sortDescriptor}
