@@ -8,10 +8,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 
-
-
-
-const TradeInForm = ({ saleData }) => {
+const TradeInForm = ({ saleData, setHandleAction }) => {
   const [sizeData, setSizeData] = useState([
     {
       size_id: null,
@@ -77,20 +74,29 @@ const TradeInForm = ({ saleData }) => {
     e.preventDefault();
     let total = 0;
 
+    // sizeData.forEach((data) => {
+    //   total += data.income * data.quantity; // Calculate new totalIncome
+    // });
+
+    // setTotalIncome(total); // Update totalIncome
+    // setData({ totalIncome: total, size: sizeData }); // Update data
+
     sizeData.forEach((data) => {
       total += data.income * data.quantity; // Calculate new totalIncome
     });
 
     setTotalIncome(total); // Update totalIncome
-    // setData({ totalIncome: total, size: sizeData }); // Update data
-
     const data = { totalIncome: total, size: sizeData };
 
     if (window.confirm("Are you sure that you want to insert?")) {
       // console.log(data);
       await axios
         .post(`/api/trade_out_log`, data)
-        .then((response) => console.log(response))
+        .then((response) => {
+          console.log(response);
+          setHandleAction(true);
+          window.location.reload();
+        })
         .catch((error) => console.log(error));
     }
   }
@@ -108,9 +114,10 @@ const TradeInForm = ({ saleData }) => {
         {sizeData.map((data, index) => (
           <div
             key={index}
-            className="grid grid-flow-row grid-cols-2 gap-5 mt-5  p-5 "
+            className="grid grid-flow-row grid-cols-2 gap-5 mt-5  p-5"
           >
             <Autocomplete
+              allowsCustomValue={false}
               isRequired
               defaultItems={saleData}
               label="Size name"
@@ -154,27 +161,25 @@ const TradeInForm = ({ saleData }) => {
             />
             {index !== 0 && (
               <Button
-                type="submit"
                 variant="flat"
                 color="danger"
                 className="w-10/12 h-12 p-7"
-                onClick={() =>
+                onClick={() => {
                   setSizeData((prevSizeData) =>
                     prevSizeData.filter((_, i) => i !== index)
-                  )
-                }
+                  );
+                }}
               >
                 Remove
               </Button>
             )}
           </div>
         ))}
-        {/* <div className=" text-gray-200 font-bold">
-          _________________________________________________________________________________________________________________________________________________________________________________________________
-        </div> */}
-        <Button type="add" className="mt-5" onClick={handleAdd}>
-          +
-        </Button>
+        <div className="flex justify-center">
+          <Button className="mt-5  rounded-full" onClick={handleAdd}>
+            Add
+          </Button>
+        </div>
         <div className="box w-full mt-10">
           Total are {currencyFormat(totalIncome)}
           {
@@ -184,14 +189,18 @@ const TradeInForm = ({ saleData }) => {
           }
           {/* {sizeData.map((data) => {
             data.income === null || data.quantity === null
-              ? currencyFormat(0)
-              : currencyFormat(data.income * data.quantity);
+            ? currencyFormat(0)
+            : currencyFormat(data.income * data.quantity);
           })} */}
           {/* {income === null || quantity === null
-            ? currencyFormat(0)
+              ? currencyFormat(0)
             : currencyFormat(income * quantity)} */}
         </div>
-        <Button color="primary" type="submit" className="mt-10 w-full">
+        <Button
+          color="primary"
+          type="submit"
+          className="mt-10 w-full text-medium"
+        >
           Submit
         </Button>
       </form>

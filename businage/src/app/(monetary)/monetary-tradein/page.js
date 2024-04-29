@@ -66,12 +66,11 @@ function TradeIn() {
       />
       {!loading && (
         <>
-          <TradeInForm saleData={rowData} />
+          <TradeInForm saleData={rowData} setHandleAction={setHandleAction} />
         </>
       )}
 
       <TradeOutLog />
-      
     </div>
   );
 }
