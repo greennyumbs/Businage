@@ -38,9 +38,9 @@ function MonetaryVisualizeCard() {
     };
 
     Promise.all([
-      fetchMonetaryData(`/total_sale`, "Total Sale"),
-      fetchMonetaryData(`/total_cost`, "Total Cost"),
-      fetchMonetaryData(`/total_profit`, "Total Profit")
+      fetchMonetaryData(`${Url}/total_sale`, "Total Sale"),
+      fetchMonetaryData(`${Url}/total_cost`, "Total Cost"),
+      fetchMonetaryData(`${Url}/total_profit`, "Total Profit")
     ]).then(results => {
       setMonetaryData(results);
     });
