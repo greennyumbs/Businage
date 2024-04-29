@@ -31,8 +31,8 @@ function ProductVisualizeCard() {
     };
 
     Promise.all([
-      fetchProduct(`/top_products_sold`, "Most product sold"),
-      fetchProduct(`/least_products_sold`, "Least product sold"),
+      fetchProduct(`${Url}/top_products_sold`, "Most product sold"),
+      fetchProduct(`${Url}/least_products_sold`, "Least product sold"),
     ]).then(results => {
       setProducts(results);
     });
