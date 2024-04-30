@@ -99,7 +99,7 @@ export default function PieChart() {
     chartRef.current.chart = newChart;
   }, [data]);
   return (
-    <div className=" box mx-auto w-96">
+    <div className="flex-1">
       <h1 className=" font-bold">Profit proportion by products (%)</h1>
       <canvas ref={chartRef} />
     </div>
