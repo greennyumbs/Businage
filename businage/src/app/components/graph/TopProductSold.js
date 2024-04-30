@@ -94,7 +94,7 @@ function TopProductSold() {
   }, [data]);
 
   return (
-    <div className="box mx-auto w-full max-w-[70rem]">
+    <div className="flex-[2]">
       <canvas ref={chartRef}></canvas>
     </div>
   );

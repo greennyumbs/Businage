@@ -11,7 +11,7 @@ import React, { useState } from "react";
 const TradeInForm = ({ saleData, setHandleAction }) => {
   const [sizeData, setSizeData] = useState([
     {
-      size_id: null,
+      size_id: 0,
       income: null,
       quantity: null,
     },
@@ -21,6 +21,7 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
   //   size: [],
   // });
   const [totalIncome, setTotalIncome] = useState(0);
+  const [total, setTotal] = useState(0);
 
   // useEffect(() => {
   //   console.log(data);
@@ -49,13 +50,13 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
 
   function handleChange(e, index, field) {
     const newSizeData = [...sizeData];
-    newSizeData[index][field] = e.target.value;
+    newSizeData[index][field] = parseInt(e.target.value);
     setSizeData(newSizeData);
   }
 
   function handleSizeID(value, index, field) {
     const newSizeData = [...sizeData];
-    newSizeData[index][field] = value;
+    newSizeData[index][field] = parseInt(value);
     setSizeData(newSizeData);
   }
 
@@ -72,7 +73,8 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    let total = 0;
+    let sum = 0;
+    let sumIncome = 0;
 
     // sizeData.forEach((data) => {
     //   total += data.income * data.quantity; // Calculate new totalIncome
@@ -82,22 +84,31 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
     // setData({ totalIncome: total, size: sizeData }); // Update data
 
     sizeData.forEach((data) => {
-      total += data.income * data.quantity; // Calculate new totalIncome
+      // total += data.income * data.quantity; // Calculate new totalIncome
+      sum += data.income * data.quantity;
+      sumIncome += data.income;
     });
 
-    setTotalIncome(total); // Update totalIncome
-    const data = { totalIncome: total, size: sizeData };
+    setTotal(sum);
+    setTotalIncome(sumIncome);
+
+    const data = { totalIncome: sum, size: sizeData };
+    // setTotalIncome(total); // Update totalIncome
 
     if (window.confirm("Are you sure that you want to insert?")) {
-      // console.log(data);
-      await axios
-        .post(`/api/trade_out_log`, data)
-        .then((response) => {
-          console.log(response);
-          setHandleAction(true);
-          window.location.reload();
-        })
-        .catch((error) => console.log(error));
+      if (data.totalIncome != 0) {
+        await axios
+          .post(`/api/trade_out_log`, data)
+          .then((response) => {
+            console.log(data);
+            sum = 0;
+            sumIncome = 0;
+            setHandleAction(true);
+            console.log(response);
+            window.location.reload();
+          })
+          .catch((error) => console.log(error));
+      }
     }
   }
 
@@ -122,7 +133,7 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
               defaultItems={saleData}
               label="Size name"
               className="w-10/12"
-              selectedKey={data.size_id}
+              // selectedKey={data.size_id}
               onSelectionChange={(value) =>
                 handleSizeID(value, index, "size_id")
               }
@@ -181,7 +192,8 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
           </Button>
         </div>
         <div className="box w-full mt-10">
-          Total are {currencyFormat(totalIncome)}
+          Total are {currencyFormat(total)} and Total income are{" "}
+          {currencyFormat(totalIncome)}
           {
             //1. Map all data that associate with income and quantity
             //2. Condition => All quantity and income need to be filled ==> Calculatable

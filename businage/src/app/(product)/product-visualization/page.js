@@ -8,10 +8,8 @@ function ProductVisualize() {
   return (
     <div className="mx-4 mt-4">
       <ProductVisualizeCard />
-      <div className="mt-4">
+      <div className="box flex w-full justify-between mt-4 overflow-x-auto">
         <TopProductSold />
-      </div>
-      <div className="mt-4">
         <PieChart />
       </div>
     </div>
