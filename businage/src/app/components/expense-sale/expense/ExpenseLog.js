@@ -19,15 +19,15 @@ import PopoverDetails from "../PopoverDetail";
 
 const columns = [
   {
-    key: "expense_date",
-    label: "Expense date",
-    sort: true
-  },
-  {
     key: "expense_id",
     label: "Expense id",
     sort: true
 
+  },
+  {
+    key: "expense_date",
+    label: "Expense date",
+    sort: true
   },
   {
     key: "brands",
