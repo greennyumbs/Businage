@@ -23,11 +23,11 @@ export default async function updateTradeIn(size) {
   // Efficiently update quantities in a single database call
   const updatePromises = size.map(item => {
     const existingQuantity = existingQuantities.find(
-      existingItem => existingItem.size_id === item.size_id
+      existingItem => existingItem.size_id === parseInt(item.size_id)
     );
 
     if (existingQuantity) {
-      const updatedQuantity = existingQuantity.quantity - item.quantity;
+      const updatedQuantity = parseInt(existingQuantity.quantity) - parseInt(item.quantity);
       return supabase
         .from('Trade_in_stock')
         .update({ quantity: updatedQuantity })

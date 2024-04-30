@@ -89,7 +89,6 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
     const data = { totalIncome: total, size: sizeData };
 
     if (window.confirm("Are you sure that you want to insert?")) {
-      console.log(data);
       await axios
         .post(`/api/trade_out_log`, data)
         .then((response) => {
