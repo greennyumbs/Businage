@@ -18,6 +18,11 @@ import PopoverDetails from "../PopoverDetail";
 
 const columns = [
   {
+    key: "order_id",
+    label: "Order id",
+    sort: true
+  },
+  {
     key: "order_date",
     label: "Order date",
     sort: true
@@ -155,7 +160,7 @@ export default function SaleLog() {
   }, [page, list.items]);
 
   return (
-    <>
+    <div className="w-5/6 mx-auto">
       <Table
         isHeaderSticky={true}
         aria-label="Sale log table"
@@ -213,6 +218,6 @@ export default function SaleLog() {
           )}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }
