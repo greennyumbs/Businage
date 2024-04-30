@@ -60,11 +60,40 @@ export default function ProfitGainByMonth() {
       } else {
         const data = response.data;
         setChartData(data);
-        setLoading(false)
       }
     };
     fetchData();
   }, []);
+
+  useEffect(()=>{
+    const allYear = [...new Set(chartData.map((cost) => cost.year))].sort(
+      (a, b) => a - b
+    ); // get list of year
+
+    if (allYear.length !== 0) {
+      // have data then make a list of exist year for dropdown {label: , value}
+      setExistYear(labelValueAdapter(allYear));
+    }
+  }, [chartData])
+
+  useEffect(()=>{
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear()
+    if(existYear.includes({label: String(currentYear), value: currentYear}))
+    {
+      setSelectedYear(currentYear)
+    }
+    else if(existYear.length !== 0)
+    {
+      
+      setSelectedYear(existYear[0].value)
+    }
+    else
+    {
+      setSelectedYear()
+    }
+ 
+  }, [existYear])
 
   useEffect(() => {
     if (chartRef.current) {
@@ -73,15 +102,6 @@ export default function ProfitGainByMonth() {
       }
     }
     const context = chartRef.current.getContext("2d");
-
-    const allYear = [...new Set(chartData.map((cost) => cost.year))].sort(
-      (a, b) => a - b
-    );
-
-    if (allYear.length !== 0) {
-      // have data then make a list of exist year for dropdown
-      setExistYear(labelValueAdapter(allYear));
-    }
 
     // Prepare data
     // Filtering year
@@ -134,6 +154,7 @@ export default function ProfitGainByMonth() {
     });
 
     chartRef.current.chart = newChart;
+    setLoading(false);
   }, [chartData, selectedYear]); // change data everytime that selectedYear change
 
   return (
@@ -143,15 +164,16 @@ export default function ProfitGainByMonth() {
         {/* Year dropdown selection */}
         <div className=" w-60 ">
           <Select
+            isLoading={loading}
             scrollShadowProps={{
               isEnabled: false,
             }}
             onChange={(e) => {
               setSelectedYear(e.target.value);
             }}
-            // defaultSelectedKeys={[selectedYear]}
             size="sm"
             label="Select Year"
+            selectedKeys={selectedYear === ""? []: [`${selectedYear}`]}
             placeholder={
                 loading === true? "Loading...":
                 existYear.length === 0 ? "No data" : "Show years"
