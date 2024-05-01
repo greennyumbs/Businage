@@ -1,7 +1,13 @@
+'use client'
+
 import React, { useState, useEffect} from 'react'
-import {Button, Input, Autocomplete, AutocompleteItem, Spinner, Pagination, user} from "@nextui-org/react";
+import {Spinner, Divider, Button} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios';
+import SaleFormSaleSection from './SaleFormSaleSection';
+import SaleFormDiscountSection from './SaleFormDiscountSection';
+import SaleFormTradeinSection from './SaleFormTradeinSection';
+import SaleFormCustomerSection from './SaleFormCustomerSection';
 
 
 function SaleForm() {
@@ -9,12 +15,21 @@ function SaleForm() {
     const [isLoading,setIsloading] = useState(true);
     const [fields,setFields] = useState([uuidv4()]);
     const [data,setData] = useState([]);
+    const [tradeinData,setTradeinData] = useState([]);
+    const [tradeinFields,setTradeinFields] = useState(['trade'+uuidv4()]);
     const [uniqueBrandList,setUniqueBrandList] = useState([]);
-    const [productList,setProductList] = useState([])
+    const [productList,setProductList] = useState([]);
+    const [disableTradein,setDisableTradein] = useState(true);
+    const [customers, setCustomers] = useState([]);
 
     const [page, setPage] = useState(1);
+    const [tradePage, setTradePage] = useState(1);
 
     const fetchData = async () => {
+        const tradeRes = await axios.get('/api/trade_in_stock')
+        setTradeinData(tradeRes.data)
+        const customerRes = await axios.get('/api/customer')
+        setCustomers(customerRes.data)
         const res = await axios.get('/api/products')
         setData(res.data);
       };
@@ -44,67 +59,43 @@ function SaleForm() {
                 className="w-full h-full flex item-center"
                 color="default"
                 label="Loading..."
-            />)
-            :(
-            <form
-                onSubmit={(e)=>{
-                e.preventDefault()
-            }}>
-                <Button onClick={()=>{setFields([...fields,uuidv4()]); setPage(page+1);}}>Add</Button>
-                <Button onClick={()=>{if(fields.length > 1){
-                    if(page == fields.length) setPage(page-1)
-                    setFields(fields.slice(0,fields.length-1))
-                    }}}>Remove</Button>
-                <div className='grid grid-cols-2 gap-x-5 gap-y-10'>
-                    {
-                        fields.map((e,i) => {
-                        return(
-                            <>
-                                <Autocomplete
-                                className={`col-start-1 col-span-2 ${page === i + 1 ? '' : 'hidden'}`}
-                                label='Brand'
-                                placeholder='YUASA'
-                                isRequired
-                                onInputChange={(value)=>handleBrand(value,fields[i])}
-                                key={fields[i]}
-                                >
-                                    {uniqueBrandList.map((brand)=>(
-                                        <AutocompleteItem key={brand} value={brand}>
-                                            {brand}
-                                        </AutocompleteItem>
-                                    ))}
-                                </Autocomplete>
+                />)
+                :(
+                <form
+                    onSubmit={(e)=>{
+                    e.preventDefault()
+                    }}
+                >
+                    <SaleFormCustomerSection
+                        customers={customers} />
+                    
+                    <Divider className='my-8'/>
+                    <SaleFormSaleSection 
+                        fields={fields}
+                        setFields={setFields}
+                        page={page}
+                        setPage={setPage}
+                        uniqueBrandList={uniqueBrandList}
+                        productList={productList}
+                        handleBrand={handleBrand}
+                    />
 
-                                <Autocomplete
-                                className={`col-start-1 col-span-2 ${page === i + 1 ? '' : 'hidden'}`}
-                                label='Product Name'
-                                placeholder='Battery 100 Amp (DIN100L-SMF)'
-                                isRequired
-                                >
-                                    {productList
-                                    .map((element)=>{
-                                        if(element.id === fields[i]){
-                                            return element.prods.map(prod => (
-                                                <AutocompleteItem key={prod.product_name} value={prod.product_name}>
-                                                    {prod.product_name}
-                                                </AutocompleteItem>
-                                            ))
-                                        }
-                                    })}
-                                </Autocomplete>
-                            </>
-                        )
-                    })}
-                </div>
-                <Pagination
-                showControls
-                showShadow
-                page={page}
-                total={fields.length}
-                onChange={(page)=>setPage(page)}
-                />
-                <Button onClick={()=>console.log(productList)}>See productList</Button>
-            </form>
+                    <Divider className='my-8'/>
+                    <SaleFormDiscountSection />
+
+                    <Divider className='my-8'/>
+                    <SaleFormTradeinSection
+                        tradeinFields={tradeinFields}
+                        tradeinData={tradeinData}
+                        tradePage={tradePage}
+                        setTradePage={setTradePage}
+                        setTradeinFields={setTradeinFields}
+                        disableTradein={disableTradein}
+                        setDisableTradein={setDisableTradein}
+                    >
+                    </SaleFormTradeinSection>
+                    <Button type='submit' color='primary' className='w-full'>Submit</Button>
+                </form>
         )}
         </div>
     )
