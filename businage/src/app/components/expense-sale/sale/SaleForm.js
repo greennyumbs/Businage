@@ -22,6 +22,7 @@ function SaleForm() {
     const [disableTradein,setDisableTradein] = useState(true);
     const [customers, setCustomers] = useState([]);
     const [disableTimestamp,setDisableTimestamp] = useState([true]);
+    const [val,setVal] = useState([{uuid:uuidv4(),val:0}])
     const offsetMilliseconds = 7 * 60 * 60 * 1000;
 
     const [page, setPage] = useState(1);
@@ -38,7 +39,6 @@ function SaleForm() {
 
     const productRef = useRef([])
     const quantityRef = useRef([])
-    const priceRef = useRef([])
 
     let discountInfo = useRef({
         discount:0
@@ -99,6 +99,7 @@ function SaleForm() {
     const postData = async (body) => {
         try{
             await axios.post('/api/sale_log',body)
+            // console.log(body)
             window.location.reload()
         }catch(err){
             console.log(err)
@@ -121,7 +122,6 @@ function SaleForm() {
 
     let postBody = {}
     let timestamp = null
-    let price = 0
 
     return (
         <div className='box w-5/6 mx-auto'>
@@ -135,10 +135,10 @@ function SaleForm() {
                 <form
                     onSubmit={(e)=>{
                         e.preventDefault()
-                        const productDetails = formatSales([...productRef.current,...quantityRef.current,...priceRef.current])
+                        const productDetails = formatSales([...productRef.current,...quantityRef.current])
                         
                         postBody['total_price'] = productDetails.reduce((acc,curr)=>{
-                            acc += curr.price*curr.quantity
+                            acc += curr.sell_price*curr.quantity
                             return acc
                         },0) - discountInfo.current.discount
 
@@ -175,7 +175,6 @@ function SaleForm() {
                             timestamp = adjustDateToISO(date,offsetMilliseconds);
                             postBody = {...postBody,"timestamp":timestamp}
                         }
-
                         postData(postBody)
                     }}
                 >
@@ -200,7 +199,8 @@ function SaleForm() {
                         data={data}
                         productRef={productRef}
                         quantityRef={quantityRef}
-                        priceRef={priceRef}
+                        val={val}
+                        setVal={setVal}
                     />
 
                     <Divider className='my-8'/>

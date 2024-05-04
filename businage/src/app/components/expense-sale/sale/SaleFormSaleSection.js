@@ -2,9 +2,10 @@ import React, {useRef, useState} from 'react'
 import {Button, Input, Autocomplete, AutocompleteItem, Pagination} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 
-function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef,priceRef}) {
+function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef,val,setVal}) {
 
     const brandRef = useRef([])
+
 
     const handleBrand = (value, id) => {
         if(value){
@@ -12,29 +13,30 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
             setProductList([...productList.filter((element)=>(element.id !== id)),{id:id,prods:filteredProd,val:value}])
             brandRef.current = [...brandRef.current.filter((element)=>element.uuid != id),{uuid:id,brand:value}]
         }
+        setVal([...val.filter((element)=>element.uuid != id),{uuid:id,val:calculateTotal(id)}])
     }
-
+    
     const handleProd = (key, id) => {
         if(key){
-            productRef.current = [...productRef.current.filter((element)=>element.uuid != id),{uuid:id,product_id:parseInt(key)}]
-        }
+            const product_id = parseInt(key)
+            const sell_price = data.filter((e)=>e.product_id==product_id)[0].sell_price
+            productRef.current = [...productRef.current.filter((element)=>element.uuid != id),
+                {uuid:id,product_id:product_id,sell_price:sell_price}]
+            }
+        setVal([...val.filter((element)=>element.uuid != id),{uuid:id,val:calculateTotal(id)}])
     }
 
     const handleQuantity = (value, id) => {
         if(value){
             quantityRef.current = [...quantityRef.current.filter((element)=>element.uuid != id),{uuid:id,quantity:parseInt(value)}]
         }
-    }
-
-    const handlePrice = (value, id) =>{
-        if(value){
-            priceRef.current = [...priceRef.current.filter((element)=>element.uuid != id),{uuid:id,price:parseFloat(value)}]
-        }
+        setVal([...val.filter((element)=>element.uuid != id),{uuid:id,val:calculateTotal(id)}])
     }
 
     const handleAddPage = () => {
         const uuid = uuidv4()
         setFields([...fields,uuid])
+        setVal([...val,{uuid:uuid,val:0}])
         setPage(page+1)
     }
 
@@ -48,6 +50,16 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
             productRef.current = productRef.current.filter((element)=>element.uuid != fields[lastIndex])
             quantityRef.current = quantityRef.current.filter((element)=>element.uuid != fields[lastIndex])
             setFields(fields.slice(0,lastIndex))
+        }
+    }
+
+    const calculateTotal = (id) =>{
+        const quantity = quantityRef.current.filter((element)=>element.uuid == id)
+        const sell_price = productRef.current.filter((element)=>element.uuid == id)
+        if(quantity.length > 0 && sell_price.length > 0){
+            return quantity[0].quantity * sell_price[0].sell_price
+        } else{
+            return 0
         }
     }
 
@@ -93,13 +105,13 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
                             })}
                         </Autocomplete>
                         <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
-                                type='number' label='Price' isRequired min='0' step='any'
-                                endContent={<p className='text-default-400'>Baht</p>}
-                                onValueChange={(value)=>handlePrice(value,fields[i])}/>
-                        <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
                                 type='number' label='Quantity' isRequired min='1' step='1'
                                 endContent={<p className='text-default-400'>Pcs</p>}
                                 onValueChange={(value)=>handleQuantity(value,fields[i])}/>
+                        <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
+                                isReadOnly label='Total' variant="bordered"
+                                endContent={<p className='text-default-400'>Baht</p>}
+                                value={val.filter(e=>e.uuid==fields[i])[0]?.val}/>
                     </>
                 )
             })}
