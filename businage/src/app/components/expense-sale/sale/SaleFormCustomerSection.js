@@ -1,7 +1,7 @@
-import { Autocomplete, AutocompleteItem, Input, Textarea } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Input, Textarea, Checkbox } from '@nextui-org/react'
 import React, { useState, useRef, useMemo } from 'react';
 
-function SaleFormCustomerSection({customers, customerInfo}) {
+function SaleFormCustomerSection({customers, customerInfo, timestampRef, disableTimestamp, setDisableTimestamp}) {
     
     const fnameList = Array.from(new Set(customers.map((element)=>(element.fname))))
     const [filteredLnameList,setfilteredLnameList] = useState([])
@@ -33,14 +33,12 @@ function SaleFormCustomerSection({customers, customerInfo}) {
                                            .map((element)=>(element.lname))
         setfilteredLnameList(Array.from(new Set(filteredLnameList)))
         validateCustomer()
-        console.log(customerInfo.current)
     }
     
     const handleLname = (lname) => {
         nameRef.current['lname'] = lname
         customerInfo.current['lname'] = lname
         validateCustomer()
-        console.log(customerInfo.current)
     }
     
     const handleAddress = (address) => {
@@ -52,7 +50,6 @@ function SaleFormCustomerSection({customers, customerInfo}) {
         telRef.current.value = string.replace(/[^0-9\+]/g, '')
         setTel(telRef.current.value)
         customerInfo.current['tel'] = telRef.current.value
-        console.log(customerInfo.current)
     }
 
 
@@ -98,13 +95,14 @@ function SaleFormCustomerSection({customers, customerInfo}) {
                 <Input isRequired isDisabled={isNewCustomer} label='Telephone'
                        maxLength={10} isInvalid={isInvalid} errorMessage={isInvalid && "Please enter a valid telephone"}
                        ref={telRef} type='tel' onValueChange={validateTelephone} value={tel}/>
+                <Checkbox onValueChange={(oldstate)=>setDisableTimestamp(!oldstate)}>Include timestamp</Checkbox>
+                <Input isRequired isDisabled={disableTimestamp} className='col-start-1' type='date' label='Date' onChange={(e)=>{
+                    timestampRef.current['Date'] = e.target.value
+                }}/>
+                <Input isRequired isDisabled={disableTimestamp} type='time' label='Time' onChange={(e)=>{
+                    timestampRef.current['Time'] = e.target.value
+                }}/>
             </div>
-            {
-            //TODO: Add customer autocomplete here
-            //All are required -- but only name and sur are enabled at first
-            //IF name&sur in DB -- use old customer id
-            //IF NOT then allow to input tel and address
-            }
         </>
     )
 }

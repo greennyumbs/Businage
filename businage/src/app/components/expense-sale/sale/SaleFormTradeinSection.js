@@ -6,7 +6,7 @@ function SaleFormTradeinSection({tradeinFields, tradeinData, tradePage, disableT
   
     const handleSize = (key, id) =>{
         if(key){
-            tradeSizeRef.current = [...tradeSizeRef.current.filter((element)=>element.uuid != id),{uuid:id,prod:parseInt(key)}]
+            tradeSizeRef.current = [...tradeSizeRef.current.filter((element)=>element.uuid != id),{uuid:id,size_id:parseInt(key)}]
         }
     }
 

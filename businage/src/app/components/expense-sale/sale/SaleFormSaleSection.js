@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import {Button, Input, Autocomplete, AutocompleteItem, Pagination} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 
-function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef}) {
+function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef,priceRef}) {
 
     const brandRef = useRef([])
 
@@ -16,13 +16,19 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
 
     const handleProd = (key, id) => {
         if(key){
-            productRef.current = [...productRef.current.filter((element)=>element.uuid != id),{uuid:id,prod:parseInt(key)}]
+            productRef.current = [...productRef.current.filter((element)=>element.uuid != id),{uuid:id,product_id:parseInt(key)}]
         }
     }
 
     const handleQuantity = (value, id) => {
         if(value){
             quantityRef.current = [...quantityRef.current.filter((element)=>element.uuid != id),{uuid:id,quantity:parseInt(value)}]
+        }
+    }
+
+    const handlePrice = (value, id) =>{
+        if(value){
+            priceRef.current = [...priceRef.current.filter((element)=>element.uuid != id),{uuid:id,price:parseFloat(value)}]
         }
     }
 
@@ -86,6 +92,10 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
                                 }
                             })}
                         </Autocomplete>
+                        <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
+                                type='number' label='Price' isRequired min='0' step='any'
+                                endContent={<p className='text-default-400'>Baht</p>}
+                                onValueChange={(value)=>handlePrice(value,fields[i])}/>
                         <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
                                 type='number' label='Quantity' isRequired min='1' step='1'
                                 endContent={<p className='text-default-400'>Pcs</p>}
