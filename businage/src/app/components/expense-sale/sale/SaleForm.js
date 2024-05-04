@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import {Spinner, Divider, Button} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios';
@@ -25,6 +25,25 @@ function SaleForm() {
     const [page, setPage] = useState(1);
     const [tradePage, setTradePage] = useState(1);
 
+
+    let customerInfo = useRef({
+        fname:'',
+        lname:'',
+        tel:'',
+        address:'',
+        oldCustomer:'',
+    })
+
+    const productRef = useRef([])
+    const quantityRef = useRef([])
+
+    let discountInfo = useRef({
+        discount:0
+    })
+
+    const tradeSizeRef = useRef([])
+    const tradeQuantityRef = useRef([])
+
     const fetchData = async () => {
         const tradeRes = await axios.get('/api/trade_in_stock')
         setTradeinData(tradeRes.data)
@@ -44,13 +63,6 @@ function SaleForm() {
         setIsloading(false);
     },[data])
 
-    const handleBrand = (value, id) => {
-        if(value){
-            const filteredProd = data.filter((prod)=>prod.Brand.brand_name === value)
-            setProductList([...productList.filter((element)=>(element.id !== id)),{id:id,prods:filteredProd,val:value}])
-        }
-    }
-
 
     return (
         <div className='box w-5/6 mx-auto'>
@@ -64,10 +76,12 @@ function SaleForm() {
                 <form
                     onSubmit={(e)=>{
                     e.preventDefault()
+                    console.log({customerInfo,productRef,quantityRef,discountInfo,tradeQuantityRef,tradeSizeRef})
                     }}
                 >
                     <SaleFormCustomerSection
-                        customers={customers} />
+                        customers={customers} 
+                        customerInfo={customerInfo} />
                     
                     <Divider className='my-8'/>
                     <SaleFormSaleSection 
@@ -77,11 +91,16 @@ function SaleForm() {
                         setPage={setPage}
                         uniqueBrandList={uniqueBrandList}
                         productList={productList}
-                        handleBrand={handleBrand}
+                        setProductList={setProductList}
+                        data={data}
+                        productRef={productRef}
+                        quantityRef={quantityRef}
                     />
 
                     <Divider className='my-8'/>
-                    <SaleFormDiscountSection />
+                    <SaleFormDiscountSection
+                        discountInfo={discountInfo}
+                    />
 
                     <Divider className='my-8'/>
                     <SaleFormTradeinSection
@@ -92,6 +111,8 @@ function SaleForm() {
                         setTradeinFields={setTradeinFields}
                         disableTradein={disableTradein}
                         setDisableTradein={setDisableTradein}
+                        tradeQuantityRef={tradeQuantityRef}
+                        tradeSizeRef={tradeSizeRef}
                     >
                     </SaleFormTradeinSection>
                     <Button type='submit' color='primary' className='w-full'>Submit</Button>
