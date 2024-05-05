@@ -6,7 +6,7 @@ import {
   Input,
 } from "@nextui-org/react";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const TradeInForm = ({ saleData, setHandleAction }) => {
   const [sizeData, setSizeData] = useState([
@@ -71,40 +71,31 @@ const TradeInForm = ({ saleData, setHandleAction }) => {
     ]);
   };
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  const calPrice = useMemo(() => {
     let sum = 0;
     let sumIncome = 0;
 
-    // sizeData.forEach((data) => {
-    //   total += data.income * data.quantity; // Calculate new totalIncome
-    // });
-
-    // setTotalIncome(total); // Update totalIncome
-    // setData({ totalIncome: total, size: sizeData }); // Update data
-
     sizeData.forEach((data) => {
-      // total += data.income * data.quantity; // Calculate new totalIncome
       sum += data.income * data.quantity;
       sumIncome += data.income;
     });
 
     setTotal(sum);
     setTotalIncome(sumIncome);
+  }, [sizeData]);
 
-    const data = { totalIncome: sum, size: sizeData };
-    // setTotalIncome(total); // Update totalIncome
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = { totalIncome: total, size: sizeData };
 
     if (window.confirm("Are you sure that you want to insert?")) {
       if (data.totalIncome != 0) {
         await axios
           .post(`/api/trade_out_log`, data)
           .then((response) => {
-            console.log(data);
-            sum = 0;
-            sumIncome = 0;
+            // console.log(data);
             setHandleAction(true);
-            console.log(response);
+            // console.log(response);
             window.location.reload();
           })
           .catch((error) => console.log(error));
