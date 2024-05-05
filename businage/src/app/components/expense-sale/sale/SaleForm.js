@@ -96,9 +96,9 @@ function SaleForm() {
 
     const postData = async (body) => {
         try{
-            // await axios.post('/api/sale_log',body)
-            // window.location.reload()
-            console.log(body)
+            await axios.post('/api/sale_log',body)
+            window.location.reload()
+            // console.log(body)
         }catch(err){
             console.log(err)
         }
