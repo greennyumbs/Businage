@@ -8,8 +8,6 @@ export async function POST(req) {
     const size = body.size
     const trade_out_id = body.trade_out_id
 
-    console.log(size, trade_out_id)
-
     let res = [];
     for (let i = 0; i < size.length; i++) {
         const size_id = size[i].size_id;

@@ -3,11 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import axios from 'axios';
-
-
-
-
+import getTradeInStock from '../utils/getTradeIn';
 
 export async function POST(req){
     const body = await req.json()
@@ -26,19 +22,14 @@ export async function POST(req){
         });
     }
 
-    console.log(res)
-
-    const tradeInStockResponse = await axios.get(`/api/trade_in_stock`);
-    const tradeInStockData = tradeInStockResponse.data;
-
-    console.log(tradeInStockData)
+    // const tradeInStockResponse = await axios.get(`/api/trade_in_stock`);
+    // const tradeInStockData = tradeInStockResponse.data;
+    const tradeInStockData = await getTradeInStock();
 
     const extractedData = tradeInStockData.map(({ size_id, quantity }) => ({
         size_id,
         quantity
     }));
-
-    console.log(extractedData)
 
     const updatedRes = res.map(item => {
         const tradeIn = extractedData.find(tradeIn => tradeIn.size_id === item.size_id);
@@ -48,20 +39,12 @@ export async function POST(req){
         };
     });
 
-    console.log(updatedRes)
-
     for (const { size_id, quantity } of updatedRes) {
         const { data, error } = await supabase
             .from('Trade_in_stock')
             .update({ quantity: quantity })
             .eq('size_id', size_id)
-        
-        console.log(`Updated product with product_id: ${size_id}`)
     }
-
-
-    console.log("RES BEFORE INSERT")
-    console.log(res)
 
     try {
         const { data, error } = await supabase

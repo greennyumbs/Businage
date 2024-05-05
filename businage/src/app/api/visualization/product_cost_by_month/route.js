@@ -10,7 +10,6 @@ export async function GET() {
             .select('cost, quantity, Product_stock (product_name, Brand (brand_name)), Expense_log (expense_date)')
 
         if (error) {
-            console.log('Error fetching data:', error);
             throw new Error(error.message)
         }
         

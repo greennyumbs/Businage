@@ -17,20 +17,14 @@ export default async function postTradeIn(trade_in, order_id) {
         });
     }
 
-    console.log(res)
-
     // const tradeInStockResponse = await axios.get(`/api/trade_in_stock`);
     // const tradeInStockData = tradeInStockResponse.data;
     const tradeInStockData = await getTradeInStock();
-
-    console.log(tradeInStockData)
 
     const extractedData = tradeInStockData.map(({ size_id, quantity }) => ({
         size_id,
         quantity
     }));
-
-    console.log(extractedData)
 
     const updatedRes = res.map(item => {
         const tradeIn = extractedData.find(tradeIn => tradeIn.size_id === item.size_id);
@@ -40,20 +34,12 @@ export default async function postTradeIn(trade_in, order_id) {
         };
     });
 
-    console.log(updatedRes)
-
     for (const { size_id, quantity } of updatedRes) {
         const { data, error } = await supabase
             .from('Trade_in_stock')
             .update({ quantity: quantity })
             .eq('size_id', size_id)
-        
-        console.log(`Updated product with product_id: ${size_id}`)
     }
-
-
-    console.log("RES BEFORE INSERT")
-    console.log(res)
 
     try {
         const { data, error } = await supabase

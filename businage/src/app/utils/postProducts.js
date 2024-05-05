@@ -5,7 +5,6 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import getBrand from "./getBrand";
 
 export default async function postProducts(newProducts) {
-    console.log("NewProducts:", newProducts);
 
     let res = [];
     for (let i = 0; i < newProducts.length; i++) {
@@ -19,13 +18,8 @@ export default async function postProducts(newProducts) {
             quantity: quantity,
         });
     }
-    console.log("Res");
-    console.log(res);
 
     const brandData = await getBrand();
-
-    console.log("brandData");
-    console.log(brandData);
 
     const mappedRes = res.map((item) => {
         const brand = brandData.find(
@@ -37,9 +31,6 @@ export default async function postProducts(newProducts) {
         };
     });
 
-    console.log("mappedRes");
-    console.log(mappedRes);
-
     const finalQuery = mappedRes.map(({ product_name, brand_id, quantity }) => ({
         // expense_id,
         product_name,
@@ -47,9 +38,6 @@ export default async function postProducts(newProducts) {
         brand_id,
         // quantity
     }));
-
-    console.log("finalQuery");
-    console.log(finalQuery);
 
     try {
         const { data, error } = await supabase

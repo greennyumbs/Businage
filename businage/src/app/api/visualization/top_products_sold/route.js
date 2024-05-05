@@ -20,8 +20,6 @@ export async function GET() {
             brand_name: item.Product_stock.Brand.brand_name
         }))
 
-        console.log("Data from supabase", extractedData)
-
         // Calculate total quantities per product
         const productQuantities = extractedData.reduce((acc, row) => {
             const { product_id, quantity, product_name, brand_name } = row;
@@ -34,13 +32,9 @@ export async function GET() {
             return acc;
           }, {});
 
-        console.log(productQuantities)
-
         const top5Products = Object.values(productQuantities)
             .sort((a, b) => b.total_quantity - a.total_quantity)
             .slice(0, 5);
-
-        console.log('Top 5 products with names and brands:', top5Products);
 
         return Response.json(top5Products);
     } catch (error) {

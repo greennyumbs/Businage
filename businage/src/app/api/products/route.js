@@ -3,13 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import axios from "axios";
 import latestUpdate from "../../utils/latestUpdate";
 import getBrand from "../../utils/getBrand";
-
-
-
-
 
 // GET all products
 export async function GET(req) {
@@ -51,9 +46,6 @@ export async function GET(req) {
 export async function POST(req) {
   const newProducts = await req.json();
 
-  console.log("newProducts| newproductAPI");
-  console.log(newProducts);
-
   let res = [];
   for (let i = 0; i < newProducts.length; i++) {
     const brandName = newProducts[i].brand_name;
@@ -66,15 +58,8 @@ export async function POST(req) {
       quantity: quantity,
     });
   }
-  console.log("Res");
-  console.log(res);
 
-  // const brandResponse = await axios.get(`/api/brand`);
-  // const brandData = brandResponse.data;
   const brandData = await getBrand();
-
-  console.log("brandData");
-  console.log(brandData);
 
   const mappedRes = res.map((item) => {
     const brand = brandData.find(
@@ -86,16 +71,10 @@ export async function POST(req) {
     };
   });
 
-  console.log("mappedRes");
-  console.log(mappedRes);
-
   const finalQuery = mappedRes.map(({ product_name, brand_id, quantity }) => ({
     product_name,
     brand_id,
   }));
-
-  console.log("finalQuery");
-  console.log(finalQuery);
 
   try {
     const { data, error } = await supabase
@@ -119,13 +98,9 @@ export async function POST(req) {
 // Edit product
 export async function PUT(req) {
   const body = await req.json();
-  console.log(body);
   const product = body.product;
 
   const { product_id, ...filteredProduct } = product;
-
-  console.log(filteredProduct);
-  console.log(product_id);
 
   try {
     const { error } = await supabase
@@ -149,7 +124,6 @@ export async function PUT(req) {
 export async function DELETE(req) {
   const body = await req.json();
   const product_id = body.product_id;
-  console.log(product_id);
 
   try {
     const { error } = await supabase

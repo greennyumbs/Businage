@@ -4,7 +4,6 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default async function addNewCustomer(newCustomer) {
-    console.log(newCustomer)
     try {
         const { data, error } = await supabase
             .from('Customer')
@@ -14,8 +13,6 @@ export default async function addNewCustomer(newCustomer) {
         if (error) {
             throw new Error(error.message);
         }
-        // console.log("newcustomer route")
-        // console.log(data)
         return {
             data: data,
             message: `New customer added successfully`,
