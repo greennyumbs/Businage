@@ -27,9 +27,8 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
     }
 
     const handleQuantity = (value, id) => {
-        if(value){
-            quantityRef.current = [...quantityRef.current.filter((element)=>element.uuid != id),{uuid:id,quantity:parseInt(value)}]
-        }
+        const curr = value ?? 0
+        quantityRef.current = [...quantityRef.current.filter((element)=>element.uuid != id),{uuid:id,quantity:parseInt(curr)}]
         setVal([...val.filter((element)=>element.uuid != id),{uuid:id,val:calculateTotal(id)}])
     }
 
@@ -50,6 +49,7 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
             productRef.current = productRef.current.filter((element)=>element.uuid != fields[lastIndex])
             quantityRef.current = quantityRef.current.filter((element)=>element.uuid != fields[lastIndex])
             setFields(fields.slice(0,lastIndex))
+            setVal([val.slice(0,lastIndex)])
         }
     }
 
@@ -108,13 +108,15 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
                                 type='number' label='Quantity' isRequired min='1' step='1'
                                 endContent={<p className='text-default-400'>Pcs</p>}
                                 onValueChange={(value)=>handleQuantity(value,fields[i])}/>
-                        <Input  className={`${page === i + 1 ? '' : 'hidden'}`}
-                                isReadOnly label='Total' variant="bordered"
-                                endContent={<p className='text-default-400'>Baht</p>}
-                                value={val.filter(e=>e.uuid==fields[i])[0]?.val}/>
                     </>
                 )
             })}
+            <Input  isReadOnly label='Total' variant="bordered"
+                    endContent={<p className='text-default-400'>Baht</p>}
+                    value={val.reduce((acc,curr)=>{
+                        acc += curr?.val ?? 0
+                        return acc
+                    },0)}/>
             <Pagination
             className='col-start-1'
             showControls
