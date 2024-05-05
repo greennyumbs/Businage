@@ -1,13 +1,13 @@
 import React from 'react'
 import {Input} from "@nextui-org/react";
 
-function SaleFormDiscountSection({discountInfo}) {
+function SaleFormDiscountSection({setDiscountInfo}) {
 
   const handleDiscount = (value) =>{
     if(value){
-      discountInfo.current['discount'] = parseFloat(value)
+      setDiscountInfo(parseFloat(value))
     }else{
-      discountInfo.current['discount'] = 0
+      setDiscountInfo(0)
     }
   }
 

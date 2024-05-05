@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import {Button, Input, Autocomplete, AutocompleteItem, Pagination} from "@nextui-org/react";
 import { v4 as uuidv4 } from "uuid";
 
-function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef,val,setVal}) {
+function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,setPage,setProductList,data,productRef,quantityRef,val,setVal,discountInfo}) {
 
     const brandRef = useRef([])
 
@@ -27,7 +27,7 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
     }
 
     const handleQuantity = (value, id) => {
-        const curr = value ?? 0
+        const curr = value || 0
         quantityRef.current = [...quantityRef.current.filter((element)=>element.uuid != id),{uuid:id,quantity:parseInt(curr)}]
         setVal([...val.filter((element)=>element.uuid != id),{uuid:id,val:calculateTotal(id)}])
     }
@@ -116,7 +116,7 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
                     value={val.reduce((acc,curr)=>{
                         acc += curr?.val ?? 0
                         return acc
-                    },0)}/>
+                    },0) - discountInfo}/>
             <Pagination
             className='col-start-1'
             showControls

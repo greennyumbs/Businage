@@ -40,9 +40,7 @@ function SaleForm() {
     const productRef = useRef([])
     const quantityRef = useRef([])
 
-    let discountInfo = useRef({
-        discount:0
-    })
+    const [discountInfo,setDiscountInfo] = useState(0)
 
     const tradeSizeRef = useRef([])
     const tradeQuantityRef = useRef([])
@@ -98,8 +96,9 @@ function SaleForm() {
 
     const postData = async (body) => {
         try{
-            await axios.post('/api/sale_log',body)
-            window.location.reload()
+            // await axios.post('/api/sale_log',body)
+            // window.location.reload()
+            console.log(body)
         }catch(err){
             console.log(err)
         }
@@ -139,7 +138,7 @@ function SaleForm() {
                         postBody['total_price'] = productDetails.reduce((acc,curr)=>{
                             acc += curr.sell_price*curr.quantity
                             return acc
-                        },0) - discountInfo.current.discount
+                        },0) - discountInfo
 
                         const combinedProduct = combineDataFields(productDetails,['quantity'],'product_id')
 
@@ -162,7 +161,7 @@ function SaleForm() {
                             postBody['newcustomer'] = rest
                         }
                         
-                        postBody['discount'] = discountInfo.current.discount
+                        postBody['discount'] = discountInfo
                         if(!disableTradein){
                             const tradeDetails = formatSales([...tradeSizeRef.current,...tradeQuantityRef.current])
                             const combinedProduct = combineDataFields(tradeDetails,['quantity'],'size_id')
@@ -200,11 +199,12 @@ function SaleForm() {
                         quantityRef={quantityRef}
                         val={val}
                         setVal={setVal}
+                        discountInfo={discountInfo}
                     />
 
                     <Divider className='my-8'/>
                     <SaleFormDiscountSection
-                        discountInfo={discountInfo}
+                        setDiscountInfo={setDiscountInfo}
                     />
 
                     <Divider className='my-8'/>
