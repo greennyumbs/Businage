@@ -51,7 +51,7 @@ function ProductVisualizeCard() {
               <Card className="border-none shadow-none rounded-none">
                 <CardBody className="overflow-visible h-40 p-4 flex flex-col justify-center items-center text-center">
                   <b className="text-blue-500 text-5xl block">{item.result}</b>
-                  <p>{item.title}</p>
+                  <p className="mt-2 font-bold"> {item.title}</p>
                 </CardBody>
               </Card>
             </div>

@@ -17,11 +17,11 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 const columns = [
   {
     key: "trade_out_date",
-    label: "Tradeout date",
+    label: "Trade-Out Date",
   },
   {
     key: "trade_out_id",
-    label: "Trade Out id",
+    label: "Trade-Out ID",
   },
   {
     key: "total_income_display",
@@ -121,14 +121,19 @@ export default function ExpenseLog() {
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
       topContent={
-        <Input
-          placeholder="Search by trade out id..."
+        <div>
+          <p className="pb-4 font-bold text-2xl flex">Trade-Out log</p>
+
+          <Input
+          placeholder="Search by trade-out id..."
           value={list.filterText}
           onValueChange={(value) => {
             list.setFilterText(value);
             setPage(1);
           }}
         />
+        </div>
+
       }
       bottomContent={
         isLoading ? null : (
@@ -159,7 +164,7 @@ export default function ExpenseLog() {
           <Spinner
             className="w-full h-full flex item-center pt-28"
             color="default"
-            label="Loading Trade Out Log..."
+            label="Loading Trade-Out Log..."
           />
         }
       >
