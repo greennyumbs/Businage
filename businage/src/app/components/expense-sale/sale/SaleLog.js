@@ -167,14 +167,17 @@ export default function SaleLog() {
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
         topContent={
-          <Input
-            placeholder="Search by customer name..."
-            value={list.filterText}
-            onValueChange={(value) => {
-              list.setFilterText(value);
-              setPage(1);
-            }}
-          />
+          <div>
+            <p className="pb-4 font-bold text-2xl flex">Sale log</p>
+            <Input
+              placeholder="Search by customer name..."
+              value={list.filterText}
+              onValueChange={(value) => {
+                list.setFilterText(value);
+                setPage(1);
+              }}
+            />
+          </div>
         }
         bottomContent={
           isLoading ? null : (

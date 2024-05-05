@@ -159,7 +159,9 @@ export default function LineChartCost() {
   return (
     <div className=" box mx-auto w-full max-w-[70rem] ">
       <div className="flex justify-between ">
-        <h1 className=" font-bold">Product cost by month</h1>
+      
+      <p className="font-bold text-2xl flex">Product cost by month</p>
+
         {/* Year dropdown selection */}
         <div className=" w-60 ">
           <Select
