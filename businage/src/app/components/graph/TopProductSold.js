@@ -25,16 +25,6 @@ const config = {
         beginAtZero: true,
       },
     },
-    plugins: {
-      title: {
-        display: true,
-        text: "Top 5 Product Sold",
-        padding: { top: 10 },
-        font: { size: 32, weight: "bold" },
-        align: "start",
-        position: "top",
-      },
-    },
   },
 };
 
@@ -95,6 +85,9 @@ function TopProductSold() {
 
   return (
     <div className="flex-[2]">
+
+      <p className="font-bold text-2xl flex">Top 5 Product Sold</p>
+
       <canvas ref={chartRef}></canvas>
     </div>
   );
