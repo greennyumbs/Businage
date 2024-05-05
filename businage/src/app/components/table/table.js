@@ -22,6 +22,10 @@ function ProductTable({
   isEdited,
   setHandleAction,
 }) {
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState();
+  // const [data, setData] = useState({})
+  const rowsPerPage = 6;
   //Problem in isEdited => Occur re-render of component => Have 2 columns of "Action"
   //useMemo() is hook that used for memorizing expensive computation => recompute when dependency (colData and isEdited )change only!
   const modifiedColData = useMemo(() => {
@@ -38,20 +42,26 @@ function ProductTable({
   //useMemo => To make the filteration not heavy ==> Store cache ==> Seach อันเก่า ==> ไม่ต้อง render การ search ใหม่
   const filteredItems = useMemo(() => {
     let filteredProducts = [...rowData];
-
     if (hasSearchFilter) {
       filteredProducts = filteredProducts.filter((product) => {
         if (type == "ProductTable") {
-          return product.product_name
+          const data = product.product_name
             .toLowerCase()
             .includes(filteredValue.toLowerCase());
+
+          setPages(Math.ceil(data.length / rowsPerPage));
+          return data;
         } else if (type == "TradeInTable") {
-          return product.size_name
+          const data = product.size_name
             .toLowerCase()
             .includes(filteredValue.toLowerCase());
+
+          setPages(Math.ceil(data.length / rowsPerPage));
+          return data;
         }
       });
     }
+    setPages(Math.ceil(filteredProducts.length / rowsPerPage));
     return filteredProducts;
   }, [rowData, filteredValue, hasSearchFilter]); //Will render when rowData, filteredValue, hasSearchFilter change
 
@@ -71,20 +81,6 @@ function ProductTable({
   }, []);
   //End - Search filtering
 
-  //Start - Pagination
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
-
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-
-  const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-  //End - Pagination
-
   //Start - Sorting
   const [sortDescriptor, setSortDescriptor] = useState({
     column: "product_name",
@@ -92,20 +88,36 @@ function ProductTable({
   });
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a, b) => {
+    return [...filteredItems].sort((a, b) => {
       const first = a[sortDescriptor.column];
       const second = b[sortDescriptor.column];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
   //End - Sorting
+  //Start - Pagination
+
+  const items = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return sortedItems.slice(start, end);
+  }, [page, sortedItems, rowsPerPage]);
+  //End - Pagination
 
   //Start - Input filteration field
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col items-start">
+        <div className="pb-4 font-bold text-2xl flex">
+          {type == "TradeInTable"
+            ? "Trade-In Log"
+            : type == "ProductTable"
+            ? "Product Stock Table"
+            : null}
+        </div>
         <Input
           isClearable
           className="w-full"
@@ -215,7 +227,7 @@ function ProductTable({
             )}
           </TableHeader>
           <TableBody
-            items={sortedItems}
+            items={items}
             emptyContent={isLoading ? "   " : "No Product data."}
             isLoading={isLoading}
             loadingContent={
