@@ -3,7 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import axios from "axios";
 import postBrand from "../../utils/postBrand";
 import postProducts from "../../utils/postProducts";
 import postExpense from "../../utils/postExpense";
@@ -33,40 +32,23 @@ export async function POST(req) {
 
   let products = [];
 
-  console.log("Products to Post");
-  console.log(productsToPost);
-
   if (productsToPost) {
     products = products.concat(productsToPost);
   }
 
-  console.log("New Brands");
-  console.log(newBrands);
-
   if (newBrands) {
     const addNewProductsResponse = await postBrand(newBrands);
-    console.log(addNewProductsResponse);
   }
 
   if (newProductsToPost) {
     const addNewProductsResponse = await postProducts(newProductsToPost);
-    console.log(addNewProductsResponse);
-
-    console.log("Bounced back!");
-    console.log("Products");
-    console.log(products);
-    console.log("newProducts");
-    console.log(newProductsToPost);
     products = products.concat(newProductsToPost);
-    console.log("Concatenated");
-    console.log(products);
   }
 
   let totalCost = 0;
   for (let i = 0; i < products.length; i++) {
     totalCost += products[i].cost * products[i].quantity;
   }
-  console.log(totalCost);
 
   const getCurrentDateTimeUTC7 = () => {
     // Get the current date and time in UTC
@@ -92,8 +74,6 @@ export async function POST(req) {
     return formattedDateTime;
   };
 
-  console.log(getCurrentDateTimeUTC7());
-
   try {
     const { data, error } = await supabase
       .from("Expense_log")
@@ -109,14 +89,7 @@ export async function POST(req) {
       throw new Error(error.message);
     }
 
-    // const expenseResponse = await axios.post(`/api/expense`, {
-    //   products: products,
-    //   expense_id: data[0].expense_id,
-    // });
     const expenseData = await postExpense(products, data[0].expense_id);
-
-    // const expenseData = expenseResponse.data;
-    // console.log(expenseData);
 
     return Response.json({
       data: data,

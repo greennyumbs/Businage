@@ -2,12 +2,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
-import axios from 'axios'
-
 import postTradeOut from '../../utils/postTradeOutDetail'
 import updateTradeIn from '../../utils/updateTradeInStock'
-
-
 
 export async function GET() {
     try {
@@ -34,7 +30,6 @@ export async function POST(req) {
     const userTimestamp = body.timestamp
     const totalIncome = body.totalIncome
     const size = body.size
-    console.log(size)
 
     const getCurrentDateTimeUTC7 = () => {
         // Get the current date and time in UTC

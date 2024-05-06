@@ -3,10 +3,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
-
-
-
-
+import getProducts from '../../utils/getProducts';
 
 export async function POST(req){
     const body = await req.json()
@@ -25,10 +22,9 @@ export async function POST(req){
         });
     }
 
-    const productResponse = await axios.get(`/api/products`);
-    const productData = productResponse.data;
-
-    console.log(productData)
+    // const productResponse = await axios.get(`/api/products`);
+    // const productData = productResponse.data;
+    const productData = await getProducts();
 
     const extractedData = productData.map(({ product_id, quantity }) => ({
         product_id,
@@ -48,8 +44,6 @@ export async function POST(req){
             .from('Product_stock')
             .update({ quantity: quantity })
             .eq('product_id', product_id)
-        
-        console.log(`Updated product with product_id: ${product_id}`)
     }
 
     try {

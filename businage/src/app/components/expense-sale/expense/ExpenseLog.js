@@ -19,15 +19,15 @@ import PopoverDetails from "../PopoverDetail";
 
 const columns = [
   {
-    key: "expense_date",
-    label: "Expense date",
-    sort: true
-  },
-  {
     key: "expense_id",
     label: "Expense id",
     sort: true
 
+  },
+  {
+    key: "expense_date",
+    label: "Expense date",
+    sort: true
   },
   {
     key: "brands",
@@ -162,14 +162,18 @@ export default function ExpenseLog() {
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
       topContent={
-        <Input
-          placeholder="Search by expense id..."
-          value={list.filterText}
-          onValueChange={(value) => {
-            list.setFilterText(value);
-            setPage(1);
-          }}
-        />
+        <div>
+          <p className="pb-4 font-bold text-2xl flex">Expense log</p>
+
+          <Input
+            placeholder="Search by expense id..."
+            value={list.filterText}
+            onValueChange={(value) => {
+              list.setFilterText(value);
+              setPage(1);
+            }}
+          />
+        </div>
       }
       bottomContent={
         isLoading ? null : (

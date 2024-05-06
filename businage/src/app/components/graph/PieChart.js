@@ -73,7 +73,7 @@ export default function PieChart() {
         plugins: {
           title: {
             display: true,
-            text: "Profit proportion by products (%)",
+            
           },
         },
       },
@@ -99,8 +99,8 @@ export default function PieChart() {
     chartRef.current.chart = newChart;
   }, [data]);
   return (
-    <div className=" box mx-auto w-96">
-      <h1 className=" font-bold">Profit proportion by products (%)</h1>
+    <div className="flex-1">
+      <p className="font-bold text-2xl flex">Profit proportion by products (%)</p>
       <canvas ref={chartRef} />
     </div>
   );

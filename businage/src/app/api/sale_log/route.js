@@ -2,14 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import axios from 'axios';
 import addNewCustomer from '../../utils/newCustomer';
 import postTradeIn from '../../utils/postTradeIn';
 import postSales from '../../utils/postSales';
-
-
-
-
 
 export async function POST(req){
     const body = await req.json()
@@ -23,12 +18,6 @@ export async function POST(req){
 
     const trade_in_status = trade_in ? true : false;
 
-    // console.log(trade_in)
-
-    // console.log("Trade in status")
-    // console.log(trade_in_status)
-
-
     if (customer) {
         var customer_id = customer.customer_id;
     }
@@ -36,8 +25,6 @@ export async function POST(req){
         const addNewCustomerResponse = await addNewCustomer(newCustomer);
         var customer_id = addNewCustomerResponse.data[0].customer_id;
     }
-
-    // console.log(customer_id)
 
     const getCurrentDateTimeUTC7 = () => {
         // Get the current date and time in UTC
@@ -71,32 +58,14 @@ export async function POST(req){
                 }
             )
             .select('order_id')
-        console.log(data)
         if (error) {
             throw new Error(error.message);
         }
 
-        // const salesResponse = await axios.post(`/api/sales`,
-        //     {
-        //         products: products,
-        //         order_id: data[0].order_id
-        //     }
-        // );
-
-        // const salesData = salesResponse.data;
         const salesData = await postSales(products, data[0].order_id);
-        console.log(salesData);
 
         if (trade_in) {
-            // const tradeInResponse = await axios.post(`/api/trade_in`,
-            //     {
-            //         trade_in: trade_in,
-            //         order_id: data[0].order_id
-            //     }
-            // );
-            // const tradeInData = tradeInResponse.data;
             const tradeInData = await postTradeIn(trade_in, data[0].order_id);
-            console.log(tradeInData);
         }
 
         return Response.json({

@@ -7,10 +7,9 @@ export async function GET() {
     try {
         const { data, error } = await supabase
             .from('Expense_detail')
-            .select('cost, Product_stock (product_name, Brand (brand_name)), Expense_log (expense_date)')
+            .select('cost, quantity, Product_stock (product_name, Brand (brand_name)), Expense_log (expense_date)')
 
         if (error) {
-            console.log('Error fetching data:', error);
             throw new Error(error.message)
         }
         
@@ -26,7 +25,7 @@ export async function GET() {
         }))
 
         const productCostByMonth = extractedData.reduce((acc, row) => {
-            const { cost, expense_date, product_name, brand_name } = row;
+            const { cost, quantity, expense_date, product_name, brand_name } = row;
             const month = new Date(expense_date).toLocaleString('en-US', {
                 month: 'long',
                 locale: 'en-US' // This sets the language to English (US)
@@ -36,7 +35,7 @@ export async function GET() {
             if (!acc[key]) {
                 acc[key] = { year, month, product_name, brand_name, total_cost: 0 };
             }
-            acc[key].total_cost += cost;
+            acc[key].total_cost += cost * quantity;
             return acc;
         }, {});
         

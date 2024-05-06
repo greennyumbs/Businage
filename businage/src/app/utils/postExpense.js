@@ -6,7 +6,6 @@ import getBrand from './getBrand';
 import getProducts from './getProducts';
 
 export default async function postExpense(products, expense_id) {
-    console.log("PRODUCTS:", products, "EXPENSE ID:", expense_id)
     let res = [];
     for (let i = 0; i < products.length; i++) {
         const brandName = products[i].brand_name;
@@ -22,12 +21,8 @@ export default async function postExpense(products, expense_id) {
             expense_id: expense_id
         });
     }
-    console.log("Res")
-    console.log(res);
 
     const productData = await getProducts();
-
-    console.log('productData', productData)
 
     const extractedData = productData.map(({ product_id, product_name, brand_id, avg_cost, quantity }) => ({
         product_id,
@@ -37,13 +32,7 @@ export default async function postExpense(products, expense_id) {
         quantity
     }));
 
-    console.log('extractedData')
-    console.log(extractedData)
-
     const brandData = await getBrand();
-
-    console.log('brandData')
-    console.log(brandData)
 
     const mappedRes = res.map(item => {
         const brand = brandData.find(brand => brand.brand_name === item.brand_name);
@@ -65,9 +54,6 @@ export default async function postExpense(products, expense_id) {
         brand_name: brandDataMap[item.brand_id] || null
     }));
 
-    console.log('joinedExtractedData')
-    console.log(joinedExtractedData);
-
     const updatedRes = res.map(item => {
         const matchedProduct = joinedExtractedData.find(product =>
             product.product_name === item.product_name &&
@@ -79,9 +65,6 @@ export default async function postExpense(products, expense_id) {
             product_id: matchedProduct ? matchedProduct.product_id : null
         };
     });
-    
-    console.log('updatedRes')
-    console.log(updatedRes);
 
     const finalQuery = updatedRes.map(({ expense_id, product_id, cost, quantity }) => ({
         expense_id,
@@ -89,9 +72,6 @@ export default async function postExpense(products, expense_id) {
         cost,
         quantity
     }));
-
-    console.log('finalQuery')
-    console.log(finalQuery);
 
     const desiredVariable = finalQuery.map(({ expense_id, product_id, cost, quantity }) => {
         // Find the corresponding entry in extractedData
@@ -115,9 +95,6 @@ export default async function postExpense(products, expense_id) {
             quantity
         };
     });
-    
-    console.log('desiredVariable');
-    console.log(desiredVariable);
 
     // update avg_cost and quantity
     for (const { product_id, avg_cost, quantity } of desiredVariable) {
@@ -125,8 +102,6 @@ export default async function postExpense(products, expense_id) {
             .from('Product_stock')
             .update({ avg_cost, quantity })
             .eq('product_id', product_id);
-        
-        console.log(`Updated product with product_id ${product_id}`)
     }
     
     try {

@@ -4,17 +4,12 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import axios from 'axios';
 import getBrand from '../../utils/getBrand';
-
-
-
-
+import getProducts from '../../utils/getProducts';
 
 export async function POST(request) {
-
     const body = await request.json()
     const products = body.products
     const expense_id = body.expense_id
-    console.log(products[0], expense_id)
     
     let res = [];
     for (let i = 0; i < products.length; i++) {
@@ -32,13 +27,9 @@ export async function POST(request) {
             expense_id: expense_id
         });
     }
-    console.log("Res")
-    console.log(res);
-
-    const productResponse = await axios.get(`/api/products`);
-    const productData = productResponse.data;
-
-    console.log('productData')
+    const productData = await getProducts();
+    // const productResponse = await axios.get(`/api/products`);
+    // const productData = productResponse.data;
 
     const extractedData = productData.map(({ product_id, product_name, brand_id, avg_cost, quantity }) => ({
         product_id,
@@ -48,15 +39,7 @@ export async function POST(request) {
         quantity
     }));
 
-    console.log('extractedData')
-    console.log(extractedData)
-
-    // const brandResponse = await axios.get(`/api/brand`);
-    // const brandData = brandResponse.data;
     const brandData = await getBrand();
-
-    console.log('brandData')
-    console.log(brandData)
 
     const mappedRes = res.map(item => {
         const brand = brandData.find(brand => brand.brand_name === item.brand_name);
@@ -78,9 +61,6 @@ export async function POST(request) {
         brand_name: brandDataMap[item.brand_id] || null
     }));
 
-    console.log('joinedExtractedData')
-    console.log(joinedExtractedData);
-
     const updatedRes = res.map(item => {
         const matchedProduct = joinedExtractedData.find(product =>
             product.product_name === item.product_name &&
@@ -92,9 +72,6 @@ export async function POST(request) {
             product_id: matchedProduct ? matchedProduct.product_id : null
         };
     });
-    
-    console.log('updatedRes')
-    console.log(updatedRes);
 
     const finalQuery = updatedRes.map(({ expense_id, product_id, cost, quantity }) => ({
         expense_id,
@@ -102,9 +79,6 @@ export async function POST(request) {
         cost,
         quantity
     }));
-
-    console.log('finalQuery')
-    console.log(finalQuery);
 
     const desiredVariable = finalQuery.map(({ expense_id, product_id, cost, quantity }) => {
         // Find the corresponding entry in extractedData
@@ -128,9 +102,6 @@ export async function POST(request) {
             quantity
         };
     });
-    
-    console.log('desiredVariable');
-    console.log(desiredVariable);
 
     // update avg_cost and quantity
     for (const { product_id, avg_cost, quantity } of desiredVariable) {
@@ -138,8 +109,6 @@ export async function POST(request) {
             .from('Product_stock')
             .update({ avg_cost, quantity })
             .eq('product_id', product_id);
-        
-        console.log(`Updated product with product_id ${product_id}`)
     }
     
     try {

@@ -3,10 +3,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-
-
-
-
 export async function GET(){
     try {
         const query = supabase
@@ -28,7 +24,6 @@ export async function GET(){
 
 export async function POST(req){
     const customer = await req.json()
-    console.log(customer)
 
     try {
         const { data, error } = await supabase
@@ -39,8 +34,6 @@ export async function POST(req){
         if (error) {
             throw new Error(error.message);
         }
-        // console.log("newcustomer route")
-        // console.log(data)
         return Response.json({
             data: data,
             message: `New customer added successfully`,

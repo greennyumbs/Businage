@@ -10,14 +10,11 @@ export async function GET(req) {
             .select('product_id, Expense_log(expense_date)')
 
         const { data, error } = await query;
-        console.log(data)
         const expenseDates = data.map(item =>
             item.Expense_log.expense_date + '|' + item.product_id);
-        // console.log(expenseDates)
         expenseDates.forEach((item, index) => {
             expenseDates[index] = item.split('|');
         });
-        // console.log(expenseDates)
 
         const latestTimestamps = {};
         
@@ -46,8 +43,6 @@ export async function GET(req) {
         if (error) {
             throw new Error(error.message);
         }
-        // return Response.json(latestTimestamps);
-        // console.log(Response.json(latestTimestampsUTC7));
         return Response.json(latestTimestampsUTC7);
     } catch (error) {
         // Handle any errors gracefully

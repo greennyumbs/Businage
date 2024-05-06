@@ -18,6 +18,11 @@ import PopoverDetails from "../PopoverDetail";
 
 const columns = [
   {
+    key: "order_id",
+    label: "Order id",
+    sort: true
+  },
+  {
     key: "order_date",
     label: "Order date",
     sort: true
@@ -155,21 +160,24 @@ export default function SaleLog() {
   }, [page, list.items]);
 
   return (
-    <>
+    <div className="w-5/6 mx-auto">
       <Table
         isHeaderSticky={true}
         aria-label="Sale log table"
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort}
         topContent={
-          <Input
-            placeholder="Search by customer name..."
-            value={list.filterText}
-            onValueChange={(value) => {
-              list.setFilterText(value);
-              setPage(1);
-            }}
-          />
+          <div>
+            <p className="pb-4 font-bold text-2xl flex">Sale log</p>
+            <Input
+              placeholder="Search by customer name..."
+              value={list.filterText}
+              onValueChange={(value) => {
+                list.setFilterText(value);
+                setPage(1);
+              }}
+            />
+          </div>
         }
         bottomContent={
           isLoading ? null : (
@@ -213,6 +221,6 @@ export default function SaleLog() {
           )}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }

@@ -5,7 +5,6 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import getProducts from './getProducts';
 
 export default async function postSales(products, order_id) {
-    console.log("POST SALES", products, order_id)
     let res = [];
     for (let i = 0 ; i < products.length; i++) {
         const product_id = products[i].product_id;
@@ -21,8 +20,6 @@ export default async function postSales(products, order_id) {
     // const productResponse = await axios.get(`/api/products`);
     // const productData = productResponse.data;
     const productData = await getProducts();
-
-    console.log("productData:", productData)
 
     const extractedData = productData.map(({ product_id, quantity, sell_price }) => ({
         product_id,
@@ -52,8 +49,6 @@ export default async function postSales(products, order_id) {
             .from('Product_stock')
             .update({ quantity: quantity })
             .eq('product_id', product_id)
-        
-        console.log(`Updated product with product_id: ${product_id}`)
     }
 
     try {

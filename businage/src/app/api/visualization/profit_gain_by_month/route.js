@@ -43,7 +43,6 @@ export async function GET() {
             }
         });
 
-
         return Response.json(profit);
     } catch (error) {
         console.error('Error fetching data:', error);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+
 function MenuButton(text, href, icon, pathname) {
     return (
       <Link href={href} className={clsx("w-full inline-block py-3 px-5 rounded-lg hover:bg-gray-200", {"bg-gray-200": pathname === href})} >
@@ -18,14 +19,21 @@ function MenuButton(text, href, icon, pathname) {
 export default function Sidebar(){
     const pathname = usePathname();
     return (
-        <nav className="fixed w-60 h-screen left-0 top-0 px-5 bg-white shadow-sm shadow-slate-300  overflow-auto z-20 ">
+        <nav className="fixed w-60 h-screen left-0 top-0 px-5 bg-white shadow-sm shadow-slate-300  overflow-auto z-50 ">
 
 
             <div className=" text-xl font-semibold h-20 pt-5">
               <div className="flex items-center space-x-3">
-                <div className=" w-8 h-8 bg-gray-950 inline-block rounded-full">
+              
+                <Image 
+                  src="/assets/icon.png"
+                  width={32}
+                  height={32}
+                  alt="Businage icon"
 
-                </div>
+                />
+
+              
 
                 <div>
                   Businage

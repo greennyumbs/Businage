@@ -40,5 +40,4 @@ export default async function updateTradeIn(size) {
   });
 
   await Promise.all(updatePromises); // Execute updates concurrently
-  console.log('Trade-in stock quantities updated successfully!');
 }

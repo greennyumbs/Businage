@@ -11,11 +11,6 @@ export default async function getProducts() {
         .from("Product_stock")
         .select("*, Brand (brand_name)");
         
-        // if (brand_id) {
-        //     // Include brand_id filter if it's not null
-        //     query.eq("brand_id", brand_id);
-        // }
-        
         const { data, error } = await query;
         if (error) {
             throw new Error(error.message);

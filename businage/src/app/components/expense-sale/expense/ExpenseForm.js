@@ -23,7 +23,6 @@ function ExpenseForm() {
       };
 
     const postData = async (body) =>{
-        console.log('sending!',body)
         await axios.post('/api/expense_log',body)
         window.location.reload()
     }
@@ -205,7 +204,7 @@ function ExpenseForm() {
                         ))}
                 </Autocomplete>
 
-                <Input className='col-start-1' type='number' label='Cost' placeholder='1000' isRequired min='0' onChange={(e)=>{
+                <Input className='col-start-1' type='number' label='Cost' placeholder='1000' isRequired min='0' step='any' onChange={(e)=>{
                     dataRef.current['Cost'] = e.target.value
                 }}     endContent={<p className='text-default-400'>Baht</p>}/>
                 <Input  type='number' label='Quantity' isRequired min='1' step='1' onChange={(e)=>{
