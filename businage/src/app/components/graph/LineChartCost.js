@@ -118,7 +118,6 @@ export default function LineChartCost() {
         plugins: {
           title: {
             display: true,
-            text: "Product cost by month",
           },
         },
         scales: {
