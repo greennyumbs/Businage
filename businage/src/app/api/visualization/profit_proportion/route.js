@@ -68,7 +68,7 @@ export async function GET() {
         // }
 
         for (let i=0; i<result.length; i++) {
-            if (i<10 && percentage + result[i].percentage < 95 && result[i].percentage != 0) {
+            if (i<10 && percentage + result[i].percentage < 95 && result[i].percentage != 0 && result[i].percentage > 1) {
                 mainGroup.push(result[i])
                 percentage += result[i].percentage
             }
