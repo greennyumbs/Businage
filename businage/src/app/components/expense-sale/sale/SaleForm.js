@@ -22,7 +22,7 @@ function SaleForm() {
     const [disableTradein,setDisableTradein] = useState(true);
     const [customers, setCustomers] = useState([]);
     const [disableTimestamp,setDisableTimestamp] = useState([true]);
-    const [val,setVal] = useState([{uuid:uuidv4(),val:0}])
+    const [val,setVal] = useState([])
     const offsetMilliseconds = 7 * 60 * 60 * 1000;
 
     const [page, setPage] = useState(1);

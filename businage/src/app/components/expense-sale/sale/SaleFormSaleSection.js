@@ -49,7 +49,7 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
             productRef.current = productRef.current.filter((element)=>element.uuid != fields[lastIndex])
             quantityRef.current = quantityRef.current.filter((element)=>element.uuid != fields[lastIndex])
             setFields(fields.slice(0,lastIndex))
-            setVal([val.slice(0,lastIndex)])
+            setVal([...val.slice(0,lastIndex)])
         }
     }
 
@@ -115,6 +115,7 @@ function SaleFormSaleSection({fields,page,uniqueBrandList,productList,setFields,
                     endContent={<p className='text-default-400'>Baht</p>}
                     value={val.reduce((acc,curr)=>{
                         acc += curr?.val ?? 0
+                        console.log(val)
                         return acc
                     },0) - discountInfo}/>
             <Pagination
