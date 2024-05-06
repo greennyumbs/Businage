@@ -35,7 +35,7 @@ export default async function latestUpdate() {
         for (const productId in latestTimestamps) {
             if (latestTimestamps.hasOwnProperty(productId)) {
                 const currentTimestampUTC = latestTimestamps[productId];
-                const currentTimestampUTC7 = new Date(currentTimestampUTC.getTime());
+                const currentTimestampUTC7 = new Date(currentTimestampUTC.getTime() - 7 * 60 * 60 * 1000);
                 latestTimestampsUTC7[productId] = currentTimestampUTC7;
             }
         }
