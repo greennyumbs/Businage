@@ -48,9 +48,24 @@ export async function GET() {
 
         const result = profitData.sort((a, b) => b.profit - a.profit);
 
-        let percentage = 0
-        const othersGroup = []
+        let percentage = 0;
         const mainGroup = [];
+        const othersGroup = [];
+        const thresholdPercentage = 98;
+        
+        for (const item of result) {
+          if (percentage + item.percentage < thresholdPercentage) {
+            percentage += item.percentage;
+            mainGroup.push(item);
+          } else {
+            othersGroup.push(item);
+            break;
+          }
+        }
+
+        // let percentage = 0
+        // const othersGroup = []
+        // const mainGroup = [];
         // for (const item of result) {
         //     if (percentage + item.percentage < 95 && item.percentage !== 0) {
         //         percentage += item.percentage;
@@ -67,15 +82,15 @@ export async function GET() {
         //     }
         // }
 
-        for (let i=0; i<result.length; i++) {
-            if (i<10 && percentage + result[i].percentage < 95 && result[i].percentage != 0 && result[i].percentage > 1) {
-                mainGroup.push(result[i])
-                percentage += result[i].percentage
-            }
-            else {
-                othersGroup.push(result[i])
-            }
-        }
+        // for (let i=0; i<result.length; i++) {
+        //     if (i<10 && percentage + result[i].percentage < 95 && result[i].percentage != 0 && result[i].percentage > 1) {
+        //         mainGroup.push(result[i])
+        //         percentage += result[i].percentage
+        //     }
+        //     else {
+        //         othersGroup.push(result[i])
+        //     }
+        // }
 
         const finalData =
         {
