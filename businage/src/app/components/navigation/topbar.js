@@ -25,7 +25,7 @@ export default function Topbar() {
     
 
     return (
-        <nav className="fixed top-0 z-10 w-screen h-14 flex gap-x-3  items-center pl-64 shadow-sm shadow-zinc-200 bg-white">
+        <nav className="fixed top-0 z-40 w-screen h-14 flex gap-x-3  items-center pl-64 shadow-sm shadow-zinc-200 bg-white">
             <div className=" bg-black rounded-[0.2rem] py-2 px-3 text-white text-sm">
                 {words[0].toUpperCase()}
             </div>

@@ -19,7 +19,7 @@ function MenuButton(text, href, icon, pathname) {
 export default function Sidebar(){
     const pathname = usePathname();
     return (
-        <nav className="fixed w-60 h-screen left-0 top-0 px-5 bg-white shadow-sm shadow-slate-300  overflow-auto z-20 ">
+        <nav className="fixed w-60 h-screen left-0 top-0 px-5 bg-white shadow-sm shadow-slate-300  overflow-auto z-50 ">
 
 
             <div className=" text-xl font-semibold h-20 pt-5">
