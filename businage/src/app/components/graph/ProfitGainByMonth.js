@@ -116,12 +116,6 @@ export default function ProfitGainByMonth() {
       type: "line",
 
       options: {
-        plugins: {
-          title: {
-            display: true,
-            text: "Profit gain by month",
-          },
-        },
         scales: {
           x: {
             display: true,
@@ -135,6 +129,9 @@ export default function ProfitGainByMonth() {
             title: {
               display: true,
               text: "Profit",
+              padding: {
+                bottom: 20 
+              },
             },
           },
         },

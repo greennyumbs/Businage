@@ -115,11 +115,6 @@ export default function LineChartCost() {
       type: "line",
 
       options: {
-        plugins: {
-          title: {
-            display: true,
-          },
-        },
         scales: {
           x: {
             display: true,
