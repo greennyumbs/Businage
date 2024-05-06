@@ -196,7 +196,7 @@ function ProductTable({
         <Table
           aria-label="product table"
           className="w-full"
-          isStriped
+          // isStriped
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
           topContent={topContent}
