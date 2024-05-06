@@ -62,7 +62,7 @@ export default function Sidebar(){
                   <li className="flex-col space-y-2">
                     {MenuButton("Expense & Sale", "/monetary-expense-sale", "shop-cart", pathname)}
 
-                    {MenuButton("Trade-In Income", "/monetary-tradein", "paper", pathname)}
+                    {MenuButton("Trade Income", "/monetary-tradein", "paper", pathname)}
 
                     {MenuButton("Visualization", "/monetary-visualization", "visualization", pathname)}
                     
