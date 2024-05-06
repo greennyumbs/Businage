@@ -51,19 +51,29 @@ export async function GET() {
         let percentage = 0
         const othersGroup = []
         const mainGroup = [];
-        for (const item of result) {
-            if (percentage + item.percentage < 95 && item.percentage !== 0) {
-                percentage += item.percentage;
-                mainGroup.push(item);
+        // for (const item of result) {
+        //     if (percentage + item.percentage < 95 && item.percentage !== 0) {
+        //         percentage += item.percentage;
+        //         mainGroup.push(item);
+        //     }
+        //     else {
+        //         break
+        //     }
+        // }
+
+        // for (const item of result) {
+        //     if (!mainGroup.includes(item)) {
+        //         othersGroup.push(item)
+        //     }
+        // }
+
+        for (let i=0; i<result.length; i++) {
+            if (i<10 && percentage + result[i].percentage < 95 && result[i].percentage != 0) {
+                mainGroup.push(result[i])
+                percentage += result[i].percentage
             }
             else {
-                break
-            }
-        }
-
-        for (const item of result) {
-            if (!mainGroup.includes(item)) {
-                othersGroup.push(item)
+                othersGroup.push(result[i])
             }
         }
 
@@ -72,6 +82,8 @@ export async function GET() {
             mainGroup: mainGroup,
             othersGroup: othersGroup
         }
+
+        console.log(finalData)
 
         return Response.json(finalData)
     } catch (error) {
