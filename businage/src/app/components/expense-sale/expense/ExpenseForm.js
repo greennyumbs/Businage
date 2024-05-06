@@ -124,6 +124,10 @@ function ExpenseForm() {
 
   return (
     <div className='box w-5/6 mx-auto'>
+        <div>
+            <p className="pb-4 font-bold text-2xl flex">Expense Form</p>
+        </div>
+        
         {isLoading? 
         (<Spinner
             className="w-full h-full flex item-center"

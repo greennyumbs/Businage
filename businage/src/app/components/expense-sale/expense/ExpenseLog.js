@@ -163,7 +163,7 @@ export default function ExpenseLog() {
       onSortChange={list.sort}
       topContent={
         <div>
-          <p className="pb-4 font-bold text-2xl flex">Expense log</p>
+          <p className="pb-4 font-bold text-2xl flex">Expense Log</p>
 
           <Input
             placeholder="Search by expense id..."
